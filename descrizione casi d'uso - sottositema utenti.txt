@@ -1,0 +1,42 @@
+Casi d'uso - sottositema utenti - descrizione testuale
+
+registrazione:
+	l'utente si registra al sistema inserendo la mail una password e le sue generalità.
+	l'account non viene attivato fino a quando la mail non viene verificata secondo il caso d'uso "verifica 	mail"
+verifica email:
+	il sistema invia una mail di conferma all'utente per verificare che la mail sia effettivamente sua.
+invio mail di recupero:
+	l'utente dice di non ricordare la password, il sistema invia una mail di recuper al suo indirizzo con il link
+	alla pagina di recuper password
+recupero password:
+	l'utente inserisce una nuova password.
+	il sistema modifica la password sul database
+consulta profilo:
+	il sistema mostra le informazioni sul profilo all'utente
+cancellazione utente:
+	l'utente chiede di essere cancellato
+	il sistema elimina i dati dell'utente dal database
+richiesta dati:
+	il sistema mostra tutti i dati salvati sul database che riguardano l'utente
+login:
+	l'utente inserisce email e password
+	il sistema verifica che la password sia corretta per quella mail
+	il sistema autentica l'utente
+creazione azienda:
+	l'utente chiede di creare un azienda e diventarne amministratore
+	l'utente carica i documenti che provano che l'azienda esista e che lui ne sia il rappresentante
+	l'azienda non viene attivata fino a quando i documenti non vengono verificati
+verifica documenti:
+	il sistema mostra un elenco di richieste di verifica
+	il moderatore sceglie una richiesta da verificare
+	il moderatore verifica che i documenti caricati dall'utente siano validi
+	il sistema registra l'azienda e rende l'utente amministratore
+ban
+	il moderatore indica un utente da eliminare
+	il sistema invia una email di notifica all'utente
+	il sistema elimina l'utente dal database
+autorizzazione dipendenti:
+	il sistema mostra un elenco di utenti, con una funzione di ricerca
+	l'amministratore sceglie un utente che diventerà dipendente
+	l'amminiostratore sceglie il "livello" del dipendente
+	il sistema aggiunge l'utente ai dipendenti dell'azienda
