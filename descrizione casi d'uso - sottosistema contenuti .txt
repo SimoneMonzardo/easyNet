@@ -1,0 +1,51 @@
+Sottosistema contenuti: descrizione dei casi d'uso
+
+Gli amministratori e i dipendenti possono fare post per conto delle aziende.
+Gli utenti registrati possono visualizzare i post e mettere like e commenti, anche i commenti possono ricevere likes.
+All'utente viene mostrata la homepage con gli ultimi post di aziende consigliate per lui, attraverso un filtro l'utente può decidere se visualizzare solo post di pagine seguite.
+Viene mostrata anchge una pagina/casella di ricerca dove l'utente può cercare le pagine di aziende specifiche.
+Cliccando sul bottone dei commenti vicino a un post viene visualizzata la lista dei commenti di quel post.
+L'utente non registrato può visualizzare solo gli ultimi 4 post del profilo.
+
+Anteprima:
+	l'utente sceglie un profilo
+	il sistema mostra gli ultimi 4 post di quel profilo e le informazioni generali del profilo
+
+Visualizzazione profilo:
+	l'utente sceglie un profilo
+	il sistema mostra tutti i post di quel profilo e le informazioni generali del profilo
+filtro:
+	il sistema mostra una lista di post
+	l'utente sceglie un filtro da applicare
+	il sistema mostra una lista di post aggiornata
+Ricerca:
+	l'utente applica una ricerca per nome, tag o per parole chiave
+	il sistema mostra una lista di aziende che potrebbero soddisfare la ricerca dell'utente
+	l'utente sceglie un azienda 
+	il sistema mostra il profiloi dell'azienda
+
+Gestione pagina:
+	l'admin azienda o il dipendente modificano, la foto profilo, il nome e la descrizione della pagina
+
+Post
+	l'admin o il dipendente inseriscono il contenuto del post, che può essere solo testo, o un immagine/video con 	del testo
+	il sistema salva sul database il post come stringa in formato MD
+	il sistema mostra il post nel profilo dell'azienda
+
+segue un azienda
+	l'utente sceglie di seguire un azienda
+	il sistema aggiunge la relazione nel database
+	il sistema invia una notifica all'azienda
+visualizzazione commenti
+	l'utente sceglie un post
+	il sistema mostra una lista dei commenti degli altri utenti riguardanti il post
+inserimento commenti
+	l'utente sceglie un post
+	l'utente inserisce un commento
+	il sistema salva il commento nel database
+like sui post e sui commenti
+	l'utente sceglie un contenuto a cui mettere like (post o commento)
+	il sistema aggiunge la relazione al database
+cancellazione contenuti
+	il moderatore sceglie un contenuto non idoneo
+	il sistema lo cancella dal database
