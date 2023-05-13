@@ -36,16 +36,44 @@ segue un azienda
 	l'utente sceglie di seguire un azienda
 	il sistema aggiunge la relazione nel database
 	il sistema invia una notifica all'azienda
+
 visualizzazione commenti
 	l'utente sceglie un post
 	il sistema mostra una lista dei commenti degli altri utenti riguardanti il post
+
 inserimento commenti
 	l'utente sceglie un post
 	l'utente inserisce un commento
 	il sistema salva il commento nel database
+
 like sui post e sui commenti
 	l'utente sceglie un contenuto a cui mettere like (post o commento)
 	il sistema aggiunge la relazione al database
+
 cancellazione contenuti
 	il moderatore sceglie un contenuto non idoneo
 	il sistema lo cancella dal database
+
+Menzioni:
+	L’tente menziona un altro utente in un post o in un commento tramite la scrittura @nome Il sistema controlla se l’utente menzionato esiste e manda un notifica all’altro utente menzionato. 
+
+Visualizzazione dei post salvati: 
+	l'utente sceglie quali post salvare
+	il sistema mostra nella pagina dedicata i post che sono stati salvati
+
+Hashtag durante la creazione di un post:
+	l'utente associa durante la creazione del post zero o più hashtag
+	il sistema aggiunge nella descrizione del post creato gli hashtag scelti dall'utente
+
+Hashtag per la ricerca:
+	l'utente può effettuare la ricerca dei post tramite gli hashtag associati ad essi
+	il sistema filtra i post per hashtag associati
+
+Salvare post
+	l'utente clicca sul pulsante "salva post"
+	il sistema lo aggiunge ad una collezione privata di post "salvati"
+	l'utente può vedere la collezione sul proprio profilo
+
+Visualizzazione dei post a cui si è messo like
+	l'utente sceglie di visualizzare i post a cui ha messo like in precedenza
+	il sistema mostra tutti post a cui l'utente ha messo like
