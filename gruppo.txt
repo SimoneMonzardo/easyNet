@@ -1,0 +1,10 @@
+tecnologie = Ferrario, Moussamih															v
+descrizione soluzione = Mouzone, Ardente, Mauri, Galbiati, Pirovano, Veronesi, D'Alessandro 		v
+IU = Hoffer, Boschi, Toloni																
+gruppo database = Padovani, Casati, Pedoto, Molteni, Martino, Di Stefano						v
+sottosistema utenti = Monzardo, Furlan														v
+editing = Crippa, Caglio 											
+sottosistema contenuti = Monzardo															v
+sottosistema bot = Moussamih, Furlan, Proserpio, Pirovano, Ferrario								v
+responsabili github = Monzardo, Crippa, Caglio
+
