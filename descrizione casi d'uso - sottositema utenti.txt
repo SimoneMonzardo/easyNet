@@ -1,5 +1,12 @@
 Casi d'uso - sottositema utenti - descrizione testuale
 
+Per registrarsi l'utente inserisce le credenziali, dopodiché gli viene inviata una mail di conferma per accertarsi che la mail sia effettivamente sua.
+A seguito del login l'utente può cambiare la password e recuperarla in caso se la sia dimenticata, sempre attraverso una mail di conferma.
+L'utente può richiedere i dati salvati che lo riguardano e cancellarli se lo desidera.
+Ogni utente registrato può chiedere di creare un azienda e diventarne amministratore, l'utente deve inviare dei documenti che certificano che lui sia effettivamente rapresentante dell'azienda. I documenti vengono verificati da un moderatore che conferma la richiesta.
+L'amministratore dell'azienda può promuovere degli utenti registrati a dipendenti di quella stessa azienda, decidendo cosa possono o non possono fare per conto dell'azienda.
+I moderatori possono bannare alcuni utenti in base a delle policy comportamentali ancora da definire.
+
 registrazione:
 	l'utente si registra al sistema inserendo la mail una password e le sue generalità.
 	l'account non viene attivato fino a quando la mail non viene verificata secondo il caso d'uso "verifica 	mail"
