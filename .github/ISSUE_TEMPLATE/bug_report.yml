@@ -1,0 +1,36 @@
+name: Bug Report
+description: File a bug report
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: Descrizione
+      description: Descrivi in modo chiaro il bug (In cosa consiste? Come/Quando si verifica? Con quale/i browser si è verificato?).
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Passi per riprodurre il bug
+      description: Descrivi i passi necessari a riprodurre il bug.
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Area del progetto
+      description: Quale area del progetto è coinvolta dal bug? (UI/UX, Database, APIs, Bot)
+      placeholder: UI/UX
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Log file
+      description: |
+        Carica qui i log/screenshot/video relativi al bug
+      placeholder: |
+        - Drag and drop the file to upload as an attachment 
+    validations:
+      required: false
