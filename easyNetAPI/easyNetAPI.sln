@@ -5,7 +5,9 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "easyNetAPI", "easyNetAPI\easyNetAPI.csproj", "{AC50ECEB-CAF2-4FF2-8179-6AD14137E1C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{C1515266-DAAE-47F9-9000-408800B509D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "easyNetAPI.Data", "Data\easyNetAPI.Data.csproj", "{C1515266-DAAE-47F9-9000-408800B509D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "easyNetAPI.Models", "easyNetModels\easyNetAPI.Models.csproj", "{6E6324A5-99E4-4E5B-94A0-ED19E5D95230}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C1515266-DAAE-47F9-9000-408800B509D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1515266-DAAE-47F9-9000-408800B509D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1515266-DAAE-47F9-9000-408800B509D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E6324A5-99E4-4E5B-94A0-ED19E5D95230}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E6324A5-99E4-4E5B-94A0-ED19E5D95230}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E6324A5-99E4-4E5B-94A0-ED19E5D95230}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E6324A5-99E4-4E5B-94A0-ED19E5D95230}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
