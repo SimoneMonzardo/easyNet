@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Data
+namespace easyNetAPI.Data
 {
     public class AppDbContext : DbContext
     {

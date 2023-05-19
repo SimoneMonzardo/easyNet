@@ -1,4 +1,4 @@
-﻿using easyNetModels;
+﻿using easyNetAPI.Models;
 public class Post
 {
     public int Id { get; set; }
