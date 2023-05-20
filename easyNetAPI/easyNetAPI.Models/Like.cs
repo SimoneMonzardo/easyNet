@@ -8,6 +8,6 @@ namespace easyNetAPI.Models
 {
     public class Like
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }
