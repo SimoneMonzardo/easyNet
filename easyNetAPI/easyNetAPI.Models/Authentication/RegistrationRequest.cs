@@ -23,6 +23,8 @@ namespace easyNetAPI.Models.Authentication
         [Required]
         public string ProfilePicture { get; set; } = null!;
         [Required]
+        public string PhoneNumber { get; set; } = null!;
+        [Required]
         public string Password { get; set; } = null!;
         [StringRange(AllowableValues = new[] {SD.ROLE_USER})]
         public string? Role { get; set; }

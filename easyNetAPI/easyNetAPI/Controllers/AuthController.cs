@@ -18,7 +18,7 @@ namespace easyNetAPI.Controllers
         private readonly AppDbContext _db;
         private readonly TokenService _tokenService;
 
-        public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext db, TokenService tokenService)
+        public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext db, TokenService tokenService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -34,6 +34,11 @@ namespace easyNetAPI.Controllers
             {
                 UserName = request.Username,
                 Name = request.Name,
+                Surname = request.Name,
+                Gender = request.Gender,
+                PhoneNumber = request.PhoneNumber,
+                DateOfBirth = request.DateOfBirth,
+                ProfilePicture = request.ProfilePicture,
                 NormalizedEmail = request.Email.ToUpper(),
                 Email = request.Email,
             };
@@ -73,7 +78,7 @@ namespace easyNetAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var managedUser = await _userManager.FindByEmailAsync(request.UserName);
+            var managedUser = await _userManager.FindByNameAsync(request.UserName);
             if (managedUser == null)
             {
                 return BadRequest("Bad credentials");
