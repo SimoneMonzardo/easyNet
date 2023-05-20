@@ -7,13 +7,14 @@ using easyNetAPI.Utility;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Security.Claims;
+using Microsoft.Extensions.Hosting;
 
 namespace easyNetAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class CommentsController : ControllerBase
-{ 
+{
     private readonly ILogger<CommentsController> _logger;
     private static IMongoCollection<Post> _postsCollection;
     public CommentsController(ILogger<CommentsController> logger)
@@ -23,13 +24,13 @@ public class CommentsController : ControllerBase
     [HttpGet("GetCommentsOfAPostAuthUser"), Authorize(Roles = SD.ROLE_USER)]
     public IEnumerable<Comments> Get(int Id)
     {
-        var post = _postsCollection.Find(p=> p.Id == Id).First();
+        var post = _postsCollection.Find(p => p.Id == Id).First();
         return post.Comments;
     }
-    [HttpPost("UpsertCommentOfAPostAuthUser"), Authorize(Roles =SD.ROLE_USER)]
+    [HttpPost("UpsertCommentOfAPostAuthUser"), Authorize(Roles = SD.ROLE_USER)]
     public async Task UpsertAsync(Comments comment, Post post)
     {
-        if(ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             var p = _postsCollection.Find(p => p.Id == post.Id).First();
             if (p != null)
