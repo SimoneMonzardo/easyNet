@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace easyNetModels
+namespace easyNetAPI.Models
 {
-    public class Like
+    public class Hashtag
     {
-        public int UserId { get; set; }
+        public string Keyword { get; set; }
     }
 }

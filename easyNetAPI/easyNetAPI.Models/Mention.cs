@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace easyNetModels
+namespace easyNetAPI.Models
 {
-    public class Hashtag
+    public class Mention
     {
-        public string Keyword { get; set; }
+        public int PostId { get; set; }
     }
 }

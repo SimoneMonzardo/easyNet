@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace easyNetModels
+namespace easyNetAPI.Models
 {
-    internal class Menzioni
+    public class Like
     {
-        public int IdUtente { get; set; }
+        public int UserId { get; set; }
     }
 }
