@@ -1,5 +1,10 @@
 # prova
 
+## Requisiti
+
+Installare la versione LTS di node.js
+https://nodejs.org/en
+
 ## Build Setup
 
 ```bash
