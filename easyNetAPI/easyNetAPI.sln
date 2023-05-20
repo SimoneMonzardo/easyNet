@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "easyNetAPI.Data", "easyNetA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "easyNetAPI.Models", "easyNetAPI.Models\easyNetAPI.Models.csproj", "{6E6324A5-99E4-4E5B-94A0-ED19E5D95230}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "easyNetAPI.Utility", "easyNetAPI.Utility\easyNetAPI.Utility.csproj", "{37C733EA-6E17-427D-9A30-F13B15F31842}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{6E6324A5-99E4-4E5B-94A0-ED19E5D95230}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E6324A5-99E4-4E5B-94A0-ED19E5D95230}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E6324A5-99E4-4E5B-94A0-ED19E5D95230}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37C733EA-6E17-427D-9A30-F13B15F31842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37C733EA-6E17-427D-9A30-F13B15F31842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37C733EA-6E17-427D-9A30-F13B15F31842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37C733EA-6E17-427D-9A30-F13B15F31842}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
