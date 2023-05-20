@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.5" />
     <PackageReference Include="MimeKit" Version="4.0.0" />
   </ItemGroup>
+  <ItemGroup>
     <None Remove="Services\" />
   </ItemGroup>
   <ItemGroup>
