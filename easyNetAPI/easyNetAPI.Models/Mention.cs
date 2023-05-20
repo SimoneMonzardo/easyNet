@@ -8,6 +8,6 @@ namespace easyNetAPI.Models
 {
     public class Mention
     {
-        public string UserId { get; set; }
+        public int PostId { get; set; }
     }
 }

@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Models
 {
-    public class Like
+    public class QA
     {
-        public int UserId { get; set; }
+        public string? Intent { get; set; }
+        public string[] Questions { get; set; }
+        public string? Answer { get; set; }
     }
 }

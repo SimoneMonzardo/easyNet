@@ -22,4 +22,5 @@
   <ItemGroup>
     <ProjectReference Include="..\easyNetAPI.Utility\easyNetAPI.Utility.csproj" />
   </ItemGroup>
+
 </Project>
