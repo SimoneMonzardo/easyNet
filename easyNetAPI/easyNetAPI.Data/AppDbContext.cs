@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using easyNetAPI.Models;
+using System.Reflection.Emit;
 
 namespace easyNetAPI.Data
 {
@@ -9,6 +11,8 @@ namespace easyNetAPI.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         { }
 
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -16,6 +20,5 @@ namespace easyNetAPI.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
-
     }
 }
