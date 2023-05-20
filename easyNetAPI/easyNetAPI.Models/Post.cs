@@ -2,7 +2,7 @@
 public class Post
 {
     public int Id { get; set; }
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public string UserName { get; set; }
     public List<Like> Likes { get; set; }
     public List<Comments> Comments { get; set; }
