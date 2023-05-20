@@ -9,5 +9,17 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Authentication\" />
+    <None Remove="Authentication\Validation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Authentication\" />
+    <Folder Include="Authentication\Validation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\easyNetAPI.Utility\easyNetAPI.Utility.csproj" />
   </ItemGroup>
 </Project>
