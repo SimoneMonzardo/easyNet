@@ -3,6 +3,7 @@ using System;
 using easyNetAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using MongoDB.Driver;
+using easyNetAPI.Utility;
 
 namespace easyNetAPI.Controllers;
 
@@ -16,7 +17,7 @@ public class CommentsController : ControllerBase
     {
         _logger = logger;
     }
-    [HttpGet("GetCommentsOfAPostAuthUser"), Authorize(Roles = ROLE_USER)]
+    [HttpGet("GetCommentsOfAPostAuthUser"), Authorize(Roles = SD.ROLE_USER)]
     public IEnumerable<Comments> Get(int Id)
     {
         var posts = _postsCollection.Find(p=> p.Id == Id).First();
