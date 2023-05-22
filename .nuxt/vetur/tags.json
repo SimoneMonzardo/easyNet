@@ -5,6 +5,10 @@
   "NuxtLogo": {
     "description": "Auto imported from components/NuxtLogo.vue"
   },
+  "SettingSelector": {
+    "description": "Auto imported from components/SettingSelector.vue"
+  },
+
   "Tutorial": {
     "description": "Auto imported from components/Tutorial.vue"
   }

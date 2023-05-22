@@ -8,4 +8,5 @@ You can directly use them in pages and other components without the need to impo
 
 - `<NavBar>` | `<nav-bar>` (components/NavBar.vue)
 - `<NuxtLogo>` | `<nuxt-logo>` (components/NuxtLogo.vue)
+- `<SettingSelector>` | `<setting-selector>` (components/SettingSelector.vue)
 - `<Tutorial>` | `<tutorial>` (components/Tutorial.vue)

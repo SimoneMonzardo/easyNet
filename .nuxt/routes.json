@@ -1,8 +1,16 @@
 [
   {
+    "name": "Settings",
+    "path": "/Settings",
+    "component": "C:\\\\Users\\\\DAVIDERICCARDOHOFFER\\\\Desktop\\\\easyNet-FrontEnd\\\\easyNet-FrontEnd\\\\pages\\\\Settings\\\\index.vue",
+    "chunkName": "pages/Settings/index",
+    "_name": "_773c2298"
+  },
+  {
     "name": "index",
     "path": "/",
-    "component": "C:\\\\Users\\\\TOMMASOTOLONI4IB\\\\EasyNet\\\\easyNet\\\\pages\\\\index.vue",
-    "chunkName": "pages/index"
+    "component": "C:\\\\Users\\\\DAVIDERICCARDOHOFFER\\\\Desktop\\\\easyNet-FrontEnd\\\\easyNet-FrontEnd\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_24457697"
   }
 ]
