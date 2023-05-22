@@ -6,6 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using easyNetAPI.Utility;
 using easyNetAPI.Models;
 using easyNetAPI.Models.Authentication;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Org.BouncyCastle.Crypto.Parameters;
+using System.Security.Claims;
 
 namespace easyNetAPI.Controllers
 {
@@ -102,6 +107,27 @@ namespace easyNetAPI.Controllers
                 Email = applicationUserInDb.Email!,
                 Token = accessToken,
             });
+        }
+    }
+
+    public static class AuthControllerUtility {
+        public static async Task<ClaimsPrincipal> DecodeJWTToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenValidationParameters = new TokenValidationParameters()
+            {
+                ClockSkew = TimeSpan.Zero,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = "https://localhost:7260",
+                ValidAudience = "https://localhost:7260",
+                IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes("!SomethingSecret!")),
+            };
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out _);
+            return principal;
         }
     }
 }
