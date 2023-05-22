@@ -25,6 +25,7 @@ export const routerOptions = {
   }, {
     path: "/",
     component: _24457697,
+
     name: "index"
   }],
 

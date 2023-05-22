@@ -33,7 +33,6 @@
   </div>
 </nav>
 
-
 </template>
 
 
