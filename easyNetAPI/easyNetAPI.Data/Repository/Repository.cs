@@ -22,7 +22,7 @@ namespace easyNetAPI.Data.Repository
 
         public void Add(T entity)
         {
-
+            dbSet.Add(entity);
         }
 
         public IEnumerable<T> GetAll()
