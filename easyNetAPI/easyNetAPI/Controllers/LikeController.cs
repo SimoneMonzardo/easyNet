@@ -24,14 +24,60 @@ namespace easyNetAPI.Controllers
             try
             {
                 var utente = AuthControllerUtility.DecodeJWTToken("stringa").Result.Claims.FirstOrDefault(c => c.Type == "sub" || c.Type == "name").Value;
-                var post = _unitOfWork.Post.GetFirstOrDefault(post => post.Id == postId);
+                if (utente == null)
+                    return BadRequest("Not Logged in");
+                var post = _unitOfWork.Post.GetFirstOrDefault(post => post.PostId == postId);
+                if (post.Likes.Contains(utente))
+                    return BadRequest("User already liked this post");
                 post.Likes.Add(utente);
                 _unitOfWork.Save();
-                return Ok();
+                return Ok("Like Added Succesfully");
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest("Something went wrong");
+            }
+        }
+        [HttpDelete("DeleteLike")]
+        public IActionResult DeleteLike(int postId)
+        {
+            try
+            {
+                var utente = AuthControllerUtility.DecodeJWTToken("stringa").Result.Claims.FirstOrDefault(c => c.Type == "sub" || c.Type == "name").Value;
+                if (utente == null)
+                    return BadRequest("Not Logged in");
+                var post = _unitOfWork.Post.GetFirstOrDefault(post => post.PostId == postId);
+                if (!post.Likes.Contains(utente))
+                    return BadRequest("User never liked this post");
+                post.Likes.Remove(utente);
+                _unitOfWork.Save();
+                return Ok("Like Added Succesfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong");
+            }
+        }
+        [HttpGet("LikedPosts")]
+        public IActionResult LikedPosts()
+        {
+            try
+            {
+                var utente = AuthControllerUtility.DecodeJWTToken("stringa").Result.Claims.FirstOrDefault(c => c.Type == "sub" || c.Type == "name").Value;
+                if(utente == null)
+                    return BadRequest("Not Logged in");
+                var posts = _unitOfWork.Post.GetAll();
+                var likedPosts = new List<Post>();
+                foreach (var item in posts)
+                {
+                    if (item.Likes.Contains(utente))
+                        likedPosts.Add(item);
+                }
+                return Json(likedPosts);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Something went wrong");
             }
         }
     }
