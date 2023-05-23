@@ -147,6 +147,95 @@ namespace easyNetAPI.Controllers
             await _db.SaveChangesAsync();
             return Ok("Passoword Changed Successfully");
         }
+
+        [HttpDelete]
+        [Route("deleteUser")]
+        public async Task<ActionResult<string>> DeleteUser()
+        {
+            var token = Request.Headers["Authorization"].ToString();
+            token = token.Remove(0, 7);
+            var principal = await AuthControllerUtility.DecodeJWTToken(token);
+            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            if (userId == null)
+            {
+                return BadRequest("User not found");
+            }
+            var managedUser = await _userManager.FindByIdAsync(userId);
+            if (managedUser == null)
+            {
+                return BadRequest("User not found");
+            }
+            var result = _userManager.DeleteAsync(managedUser);
+            if (!result.IsCompletedSuccessfully)
+            {
+                return BadRequest("There was a problem deleting the account");
+            }
+            //todo
+            //elimina tutti i dati dell'utente dall'altro db
+            //todo
+            await _db.SaveChangesAsync();
+            return Ok("User deleted successfully");
+        }
+
+        [HttpPost]
+        [Route("editUserData")]
+        public async Task<ActionResult<string>> EditUserData([FromBody] EditUserDataRequest request)
+        {
+            var token = Request.Headers["Authorization"].ToString();
+            token = token.Remove(0, 7);
+            var principal = await AuthControllerUtility.DecodeJWTToken(token);
+            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            if (userId == null)
+            {
+                return BadRequest("User not found");
+            }
+            var managedUser = await _userManager.FindByIdAsync(userId);
+            if (managedUser == null)
+            {
+                return BadRequest("User not found");
+            }
+            var applicationUserInDb = _db.Users.FirstOrDefault(u => u.UserName == managedUser.UserName);
+            if (applicationUserInDb is null)
+            {
+                return Unauthorized();
+            }
+            applicationUserInDb.Name = request.Name;
+            applicationUserInDb.Surname = request.Surname;
+            applicationUserInDb.DateOfBirth = request.DateOfBirth;
+            applicationUserInDb.Gender = request.Gender;
+            applicationUserInDb.ProfilePicture = request.ProfilePicture;
+            await _db.SaveChangesAsync();
+            return Ok("User Details updated successfully");
+        }
+
+        [HttpGet]
+        [Route("getUserData")]
+        public async Task<ActionResult<GetUserDataResponse>> GetUserData() {
+            var token = Request.Headers["Authorization"].ToString();
+            token = token.Remove(0, 7);
+            var principal = await AuthControllerUtility.DecodeJWTToken(token);
+            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            if (userId == null)
+            {
+                return BadRequest("User not found");
+            }
+            var managedUser = await _userManager.FindByIdAsync(userId);
+            if (managedUser == null)
+            {
+                return BadRequest("User not found");
+            }
+            var user = _db.Users.ToList().Where(u => u.Id == managedUser.Id).FirstOrDefault();
+            return Ok(new GetUserDataResponse
+            {
+                Email = user.Email,
+                UserName = user.UserName,
+                Name = user.Name,
+                Surname = user.Surname,
+                Gender = user.Gender,
+                DateOfBirth = user.DateOfBirth,
+                ProfilePicture = user.ProfilePicture
+            });
+        }
     }
 
     public static class AuthControllerUtility {
