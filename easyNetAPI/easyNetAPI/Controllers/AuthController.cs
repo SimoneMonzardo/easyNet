@@ -8,13 +8,8 @@ using easyNetAPI.Models;
 using easyNetAPI.Models.Authentication;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Org.BouncyCastle.Crypto.Parameters;
 using System.Security.Claims;
-using NuGet.Common;
-using Azure.Core;
-using System.Net.Http.Headers;
-using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace easyNetAPI.Controllers
 {
@@ -26,13 +21,15 @@ namespace easyNetAPI.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _db;
         private readonly TokenService _tokenService;
+        private readonly UserBehaviorSettings _userBehaviorSettings;
 
-        public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext db, TokenService tokenService)
+        public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext db, TokenService tokenService, UserBehaviorSettings userBehaviorSettings)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _db = db;
             _tokenService = tokenService;
+            _userBehaviorSettings = userBehaviorSettings;
         }
 
         [HttpPost]
@@ -59,6 +56,13 @@ namespace easyNetAPI.Controllers
                applicationUser, request.Password);
             if (result.Succeeded)
             {
+                //crea l'utente in mongoDB
+                await _userBehaviorSettings.AddAsync(new UserBehavior
+                {
+                    UserId = applicationUser.Id,
+                    Administrator = false,
+                });
+
                 if (!_roleManager.RoleExistsAsync(SD.ROLE_MODERATOR).GetAwaiter().GetResult())
                 {
                     await _roleManager.CreateAsync(new IdentityRole(SD.ROLE_MODERATOR));
@@ -170,10 +174,11 @@ namespace easyNetAPI.Controllers
             {
                 return BadRequest("There was a problem deleting the account");
             }
-            //todo
-            //elimina tutti i dati dell'utente dall'altro db
-            //todo
             await _db.SaveChangesAsync();
+
+            //elimina dati da mongodb
+            await _userBehaviorSettings.RemoveAsync(managedUser.Id);
+
             return Ok("User deleted successfully");
         }
 
@@ -238,7 +243,8 @@ namespace easyNetAPI.Controllers
         }
     }
 
-    public static class AuthControllerUtility {
+    public static class AuthControllerUtility
+    {
         public static async Task<ClaimsPrincipal> DecodeJWTToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

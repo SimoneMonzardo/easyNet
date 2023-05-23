@@ -2,22 +2,25 @@
 using Newtonsoft.Json;
 using System.Xml.Linq;
 
-public class Post
+namespace easyNetAPI.Models
 {
-    [JsonProperty("buttonName")]
-    public int PostId { get; set; }
-    public Comment[]? Comments { get; set; }
-    [JsonProperty("user_id")]
-    public string? UserId { get; set; }
-    public string? Username { get; set; }
-    public string? Content { get; set; }
-    
-    //UserId
-    public List<string>? Likes { get; set; }
+    public class Post
+    {
+        [JsonProperty("buttonName")]
+        public int PostId { get; set; }
+        public Comment[]? Comments { get; set; }
+        [JsonProperty("user_id")]
+        public string? UserId { get; set; }
+        public string? Username { get; set; }
+        public string? Content { get; set; }
 
-    //Keyword hashtag
-    public List<string>? Hastags { get; set; }
+        //UserId
+        public List<string>? Likes { get; set; }
 
-    //UserId mention
-    public List<string>? Tags { get; set; }
+        //Keyword hashtag
+        public List<string>? Hastags { get; set; }
+
+        //UserId mention
+        public List<string>? Tags { get; set; }
+    }
 }

@@ -6,11 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class Company
-{
-    [JsonProperty("company_id")]
-    public int CompanyId { get; set; }
-    [JsonProperty("companyName")]
-    public string? CompanyName { get; set; }
-    public Bot? Bot { get; set; }
+namespace easyNetAPI.Models {
+    public class Company
+    {
+        [JsonProperty("company_id")]
+        public int CompanyId { get; set; }
+        [JsonProperty("companyName")]
+        public string? CompanyName { get; set; }
+        public Bot? Bot { get; set; }
+    }
 }
+    

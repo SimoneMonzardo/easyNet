@@ -11,6 +11,7 @@ using System.Text;
 using easyNetAPI.Models;
 using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Data.Repository;
+using easyNetAPI.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<TokenService, TokenService>();
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDBDatabase"));
-builder.Services.AddSingleton<MongoDBService>();
+builder.Services.AddSingleton<UserBehaviorSettings>();
+//builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -63,9 +65,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 #endregion
 
 builder.Services.Configure<EmailSenderOptions>(builder.Configuration.GetSection("EmailSender"));
-
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>

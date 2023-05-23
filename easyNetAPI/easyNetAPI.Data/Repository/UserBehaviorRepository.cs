@@ -10,10 +10,8 @@ namespace easyNetAPI.Data.Repository
 {
     public class UserBehaviorRepository : Repository<UserBehavior>, IUserBehaviorRepository
     {
-        private readonly MongoDBService _db;
-        public UserBehaviorRepository(MongoDBService db) : base(db)
+        public UserBehaviorRepository(IMongoContext context) : base(context)
         {
-            _db = db;
         }
 
         public void Update(UserBehavior userBehavior)
@@ -32,5 +30,4 @@ namespace easyNetAPI.Data.Repository
             }
         }
     }
-
 }
