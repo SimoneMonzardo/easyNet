@@ -13,7 +13,6 @@
 </template>
 <script setup>
 const loading = ref(true);
-const loading = ref(false);
 const homePosts = ref([
   {
     username: "Marione",
