@@ -13,6 +13,8 @@ using Org.BouncyCastle.Crypto.Parameters;
 using System.Security.Claims;
 using NuGet.Common;
 using Azure.Core;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
 
 namespace easyNetAPI.Controllers
 {
@@ -119,7 +121,9 @@ namespace easyNetAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var principal = await AuthControllerUtility.DecodeJWTToken(request.Token);
+            var token = Request.Headers["Authorization"].ToString();
+            token = token.Remove(0, 7);
+            var principal = await AuthControllerUtility.DecodeJWTToken(token);
             var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
             if (userId == null)
             {
