@@ -1,5 +1,10 @@
 <template>
   <div>
-    <h1>HomePage</h1>
+    <FeedSection title="Home" :loading="loading">
+        HomePage
+    </FeedSection>
   </div>
 </template>
+<script setup>
+const loading = ref(false)
+</script>
