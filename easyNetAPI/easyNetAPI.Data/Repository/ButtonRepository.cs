@@ -13,7 +13,7 @@ namespace easyNetAPI.Data.Repository
         private readonly MongoDBService _db;
         public ButtonRepository(MongoDBService db) : base(db)
         {
-
+            _db = db;
         }
 
         public void Update(Button button)
