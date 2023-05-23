@@ -7,5 +7,8 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  typescript: {
+    strict: true,
+  },
   modules: ["@nuxtjs/tailwindcss"],
 });
