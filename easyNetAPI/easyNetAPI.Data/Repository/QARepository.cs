@@ -10,14 +10,21 @@ namespace easyNetAPI.Data.Repository
 {
     public class QARepository : Repository<QA>, IQARepository
     {
+        private readonly MongoDBService _db;
         public QARepository(MongoDBService db) : base(db)
         {
-
+            _db = db;
         }
 
+        //da correggere
         public void Update(QA qa)
         {
-            throw new NotImplementedException();
+            var QAfromDb = GetFirstOrDefault(q => q.Intent == qa.Intent);
+            if (QAfromDb is not null)
+            {
+                QAfromDb.Answer = qa.Answer;
+                QAfromDb.Questions = qa.Questions;
+            }
         }
     }
 }

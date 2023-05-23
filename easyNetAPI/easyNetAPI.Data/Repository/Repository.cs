@@ -17,12 +17,12 @@ namespace easyNetAPI.Data.Repository
         public Repository(MongoDBService db)
         {
             _db = db;
-            
+
         }
 
         public void Add(T entity)
         {
-            
+            dbSet.Add(entity);
         }
 
         public IEnumerable<T> GetAll()

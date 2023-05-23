@@ -10,14 +10,21 @@ namespace easyNetAPI.Data.Repository
 {
     public class CommentRepository : Repository<Comment>, ICommentRepository
     {
+        private readonly MongoDBService _db;
         public CommentRepository(MongoDBService db) : base(db)
         {
-
+            _db = db;
         }
 
         public void Update(Comment comment)
         {
-            throw new NotImplementedException();
+            var commentFromDb = GetFirstOrDefault(c => c.CommentId == comment.CommentId);
+            if (commentFromDb is not null)
+            {
+                commentFromDb.Content = comment.Content;
+                commentFromDb.Like = comment.Like;
+                commentFromDb.Replies = comment.Replies;
+            }
         }
     }
 }

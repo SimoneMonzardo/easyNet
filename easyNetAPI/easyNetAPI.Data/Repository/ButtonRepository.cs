@@ -10,6 +10,7 @@ namespace easyNetAPI.Data.Repository
 {
     public class ButtonRepository : Repository<Button>, IButtonRepository
     {
+        private readonly MongoDBService _db;
         public ButtonRepository(MongoDBService db) : base(db)
         {
 

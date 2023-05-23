@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using easyNetAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,12 +58,11 @@ builder.Services.AddSwaggerGen(option =>
 //On MacOS:
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+#endregion
 
 builder.Services.Configure<EmailSenderOptions>(builder.Configuration.GetSection("EmailSender"));
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
-
-#endregion
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {

@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace easyNetAPI.Data.Repository
 {
-    
+
     public class UnitOfWork : IUnitOfWork
     {
         public readonly MongoDBService _db;
@@ -36,6 +36,6 @@ namespace easyNetAPI.Data.Repository
         {
             _db.SaveChanges();
         }
-        
+
     }
 }

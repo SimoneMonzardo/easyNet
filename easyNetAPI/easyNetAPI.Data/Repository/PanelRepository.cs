@@ -10,14 +10,21 @@ namespace easyNetAPI.Data.Repository
 {
     public class PanelRepository : Repository<Panel>, IPanelRepository
     {
+        private readonly MongoDBService _db;
         public PanelRepository(MongoDBService db) : base(db)
         {
-
+            _db = db;
         }
 
         public void Update(Panel panel)
         {
-            throw new NotImplementedException();
+            var panelFromDb = GetFirstOrDefault(p => p.PanelId == panel.PanelId);
+            if (panelFromDb is not null)
+            {
+                panelFromDb.PanelName = panelFromDb.PanelName;
+                panelFromDb.Buttons = panelFromDb.Buttons;
+                panelFromDb.Content = panelFromDb.Content;
+            }
         }
     }
 }
