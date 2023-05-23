@@ -18,7 +18,11 @@ namespace easyNetAPI.Data.Repository
 
         public void Update(Button button)
         {
-            throw new NotImplementedException();
+            var buttonFromDb = GetFirstOrDefault(b => b.ButtonName == button.ButtonName);
+            if (buttonFromDb is not null)
+            {
+                buttonFromDb.PanelId = button.PanelId;
+            }
         }
     }
 }

@@ -11,6 +11,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Org.BouncyCastle.Crypto.Parameters;
 using System.Security.Claims;
+using NuGet.Common;
+using Azure.Core;
 
 namespace easyNetAPI.Controllers
 {
@@ -108,6 +110,39 @@ namespace easyNetAPI.Controllers
                 Token = accessToken,
             });
         }
+
+        [HttpPost]
+        [Route("changePassword")]
+        public async Task<ActionResult<string>> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var principal = await AuthControllerUtility.DecodeJWTToken(request.Token);
+            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            if (userId == null)
+            {
+                return BadRequest("User not found");
+            }
+            var managedUser = await _userManager.FindByIdAsync(userId);
+            if (managedUser == null)
+            {
+                return BadRequest("Bad credentials");
+            }
+            var isPasswordValid = await _userManager.CheckPasswordAsync(managedUser, request.OldPassword);
+            if (!isPasswordValid)
+            {
+                return BadRequest("Bad credentials");
+            }
+            var passwordChanged = await _userManager.ChangePasswordAsync(managedUser, request.OldPassword, request.NewPassword);
+            if (!passwordChanged.Succeeded)
+            {
+                return BadRequest("Could not change password");
+            }
+            await _db.SaveChangesAsync();
+            return Ok("Passoword Changed Successfully");
+        }
     }
 
     public static class AuthControllerUtility {
@@ -117,8 +152,8 @@ namespace easyNetAPI.Controllers
             var tokenValidationParameters = new TokenValidationParameters()
             {
                 ClockSkew = TimeSpan.Zero,
-                ValidateIssuer = true,
-                ValidateAudience = true,
+                ValidateIssuer = false,
+                ValidateAudience = false,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = "https://localhost:7260",

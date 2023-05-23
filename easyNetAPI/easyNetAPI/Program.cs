@@ -88,8 +88,8 @@ builder.Services
         options.TokenValidationParameters = new TokenValidationParameters()
         {
             ClockSkew = TimeSpan.Zero,
-            ValidateIssuer = true,
-            ValidateAudience = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = "https://localhost:7260",

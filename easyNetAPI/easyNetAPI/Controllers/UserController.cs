@@ -17,5 +17,7 @@ namespace easyNetAPI.Controllers
 
         //to get username from token
         //var utente = AuthControllerUtility.DecodeJWTToken("stringa").Result.Claims.FirstOrDefault(c => c.Type == "sub" || c.Type == "name");
+
+
     }
 }
