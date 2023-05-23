@@ -11,7 +11,13 @@ public class Post
     public string? UserId { get; set; }
     public string? Username { get; set; }
     public string? Content { get; set; }
+    
+    //UserId
     public string[]? Likes { get; set; }
+
+    //Keyword hashtag
     public string[]? Hastags { get; set; }
+
+    //UserId mention
     public string[]? Tags { get; set; }
 }

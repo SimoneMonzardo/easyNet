@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace easyNetAPI.Models
+namespace easyNetAPI.Data
 {
-    public class Like
+    public class MongoDBService
     {
-        public int UserId { get; set; }
+        public void SaveChanges()
+        {
+
+        }
     }
 }
