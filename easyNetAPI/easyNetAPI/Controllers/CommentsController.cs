@@ -11,6 +11,8 @@ using Microsoft.Extensions.Hosting;
 using easyNetAPI.Data.Repository.IRepository;
 using System.Xml.Linq;
 using NuGet.Versioning;
+using Amazon.Auth.AccessControlPolicy;
+using easyNetAPI.Data;
 
 namespace easyNetAPI.Controllers;
 
@@ -19,11 +21,13 @@ namespace easyNetAPI.Controllers;
 public class CommentsController : ControllerBase
 {
     private readonly ILogger<CommentsController> _logger;
-    public IUnitOfWork _unitOfWork;
-    public CommentsController(ILogger<CommentsController> logger, IUnitOfWork unitOfWork)
+    private  IUnitOfWork _unitOfWork;
+    private readonly AppDbContext _db;
+    public CommentsController(ILogger<CommentsController> logger, IUnitOfWork unitOfWork, AppDbContext db)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _db = db;
     }
     [HttpGet("GetCommentsOfAPostAuthUser"), Authorize(Roles = SD.ROLE_USER)]
     public IEnumerable<Comment> Get(int Id)
@@ -32,51 +36,55 @@ public class CommentsController : ControllerBase
         return post.Comments;
     }
     [HttpPost("UpsertCommentOfAPostAuthUser"), Authorize(Roles = SD.ROLE_USER)]
-    public async Task UpsertAsync(Comment comment)
+    public async Task<ActionResult<string>> UpsertAsync(Comment comment)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Model is not valid");
+        }
+        try
         {
             var oldComment = _unitOfWork.Comment.GetFirstOrDefault(c => c.CommentId == comment.CommentId);
-            if (oldComment==null)
+            if (oldComment == null)
             {
-                //inserisco userId e username
-                var token = Request.Headers["Authorization"];
-                var claim = AuthControllerUtility.DecodeJWTToken(token).Result.Claims.FirstOrDefault(c => c.Type == "sub" || c.Type == "name");
-                comment.Username = claim.Value;
-                comment.UserId = await GetUserIdFromJWTToken(token);
+                var token = Request.Headers["Authorization"].ToString();
+                token = token.Remove(0, 7);
+                var principal = await AuthControllerUtility.DecodeJWTToken(token);
+                var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+                comment.UserId = userId;
+                comment.Username = _db.Users.FirstOrDefault(u => u.Id == userId).UserName;
                 _unitOfWork.Comment.Add(comment);
+                return Ok("Comment created succesfully");
             }
             else
             {
-                //prendo i dati del commento 
                 comment.Username = oldComment.Username;
                 comment.UserId = oldComment.UserId;
-                comment.Like= oldComment.Like;
+                comment.Like = oldComment.Like;
                 comment.Replies = oldComment.Replies;
                 _unitOfWork.Comment.Update(comment);
+                return Ok("Comment modified succesfully");
             }
-
+        }catch(Exception ex) 
+        {
+            return BadRequest("Unandled exception: " + ex.Message);
         }
     }
-    public static async Task<string> GetUserIdFromJWTToken(string token)
+    [HttpDelete("RemoveAComment"), Authorize(Roles =SD.ROLE_USER)]
+    public async Task<ActionResult<string>> Delete(int Id)
     {
-        var principal = await AuthControllerUtility.DecodeJWTToken(token);
-
-        // Retrieve the user ID claim
-        var userIdClaim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-
-
-
-        if (userIdClaim != null)
+        try
         {
-            var userId = userIdClaim.Value;
-            return userId;
+            var comment = _unitOfWork.Comment.GetFirstOrDefault(p => p.CommentId == Id);
+            if(comment==null)
+                return BadRequest("Comment not found");
+            _unitOfWork.Comment.Remove(comment);
+            return Ok("Comment removed succesfully");
+        }catch(Exception ex)
+        {
+            return BadRequest("Unandled exeption: " + ex.Message);
         }
-
-
-
-        // If user ID claim not found
-        return null;
+        
     }
 };
 
