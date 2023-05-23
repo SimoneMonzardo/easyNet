@@ -1,5 +1,5 @@
 <template>
   <div>
-    <h1>HomePage</h1>
+    <SettingSelector />
   </div>
 </template>
