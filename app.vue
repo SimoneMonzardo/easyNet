@@ -4,10 +4,18 @@
       <Header />
     </div>
     <div>
-      <RouterView />
+      <RouterView class="container mx-auto max-w-screen-xl" />
     </div>
-    <div	class="">
+    <div class="">
       <Footer />
     </div>
   </div>
 </template>
+<script setup>
+import { onMounted } from "vue";
+import { initFlowbite } from "flowbite";
+
+onMounted(() => {
+  initFlowbite();
+});
+</script>
