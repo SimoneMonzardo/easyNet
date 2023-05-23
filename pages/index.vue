@@ -6,5 +6,5 @@
   </div>
 </template>
 <script setup>
-const loading = ref(false)
+const loading = ref(true)
 </script>
