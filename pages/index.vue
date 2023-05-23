@@ -1,5 +1,9 @@
 <template>
   <div>
-    <h1>HomePage</h1>
+    <FeedSection title="Home" :loading="true">
+        Content
+    </FeedSection>
   </div>
 </template>
+<script setup>
+</script>
