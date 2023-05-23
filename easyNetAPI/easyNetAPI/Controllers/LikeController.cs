@@ -19,12 +19,12 @@ namespace easyNetAPI.Controllers
             _unitOfWork = unitOfWork;
         }
         [HttpPost("PostLike")]
-        public IActionResult PostLike(int postId)
+        public async Task<IActionResult> PostLikeAsync(int postId)
         {
             try
             {
-                var utente = AuthControllerUtility.DecodeJWTToken("stringa").Result.Claims.FirstOrDefault(c => c.Type == "sub" || c.Type == "name").Value;
-                if (utente == null)
+                var token = Request.Headers["Authorization"];
+                var utente = await GetUserIdFromJWTToken(token); if (utente == null)
                     return BadRequest("Not Logged in");
                 var post = _unitOfWork.Post.GetFirstOrDefault(post => post.PostId == postId);
                 if (post.Likes.Contains(utente))
@@ -39,12 +39,12 @@ namespace easyNetAPI.Controllers
             }
         }
         [HttpDelete("DeleteLike")]
-        public IActionResult DeleteLike(int postId)
+        public async Task<IActionResult> DeleteLikeAsync(int postId)
         {
             try
             {
-                var utente = AuthControllerUtility.DecodeJWTToken("stringa").Result.Claims.FirstOrDefault(c => c.Type == "sub" || c.Type == "name").Value;
-                if (utente == null)
+                var token = Request.Headers["Authorization"];
+                var utente = await GetUserIdFromJWTToken(token); if (utente == null)
                     return BadRequest("Not Logged in");
                 var post = _unitOfWork.Post.GetFirstOrDefault(post => post.PostId == postId);
                 if (!post.Likes.Contains(utente))
@@ -59,11 +59,12 @@ namespace easyNetAPI.Controllers
             }
         }
         [HttpGet("LikedPosts")]
-        public IActionResult LikedPosts()
+        public async Task<IActionResult> LikedPostsAsync()
         {
             try
             {
-                var utente = AuthControllerUtility.DecodeJWTToken("stringa").Result.Claims.FirstOrDefault(c => c.Type == "sub" || c.Type == "name").Value;
+                var token = Request.Headers["Authorization"];
+                var utente = await GetUserIdFromJWTToken(token);
                 if(utente == null)
                     return BadRequest("Not Logged in");
                 var posts = _unitOfWork.Post.GetAll();
@@ -79,6 +80,26 @@ namespace easyNetAPI.Controllers
             {
                 return BadRequest("Something went wrong");
             }
+        }
+        public static async Task<string> GetUserIdFromJWTToken(string token)
+        {
+            var principal = await AuthControllerUtility.DecodeJWTToken(token);
+
+            // Retrieve the user ID claim
+            var userIdClaim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+
+
+            if (userIdClaim != null)
+            {
+                var userId = userIdClaim.Value;
+                return userId;
+            }
+
+
+
+            // If user ID claim not found
+            return null;
         }
     }
 }
