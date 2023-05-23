@@ -1,5 +1,5 @@
 <template>
-    <img class="h-auto max-w-lg rounded-lg" :src="imageUrl" alt="image">
+    <img class="h-auto max-w-xs rounded-lg" :src="imageUrl" alt="image">
 </template>
 
 <script>
