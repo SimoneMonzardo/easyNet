@@ -1,6 +1,6 @@
 <script setup>
-import { SunIcon, MoonIcon } from "@heroicons/vue/24/solid";
 import { useDark, useToggle } from "@vueuse/core";
+import { SunIcon, MoonIcon } from "@heroicons/vue/20/solid";
 
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
@@ -9,8 +9,8 @@ const toggleDark = useToggle(isDark);
 <template>
   <div>
     <button type="button" @click="toggleDark()">
-      <SunIcon v-if="isDark" class="h-6 w-6 text-gray-500" />
-      <MoonIcon v-if="!isDark" class="h-6 w-6 text-black" />
+      <SunIcon v-if="isDark" class="h-6 w-6 text-gray-400" />
+      <MoonIcon v-else-if="!isDark" class="h-6 w-6 text-gray-500" />
     </button>
   </div>
 </template>

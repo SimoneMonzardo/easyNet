@@ -4,7 +4,9 @@
       <Header />
     </div>
     <div>
-      <RouterView class="container mx-auto max-w-screen-xl" />
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
     </div>
     <div class="">
       <Footer />
