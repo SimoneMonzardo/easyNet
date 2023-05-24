@@ -1,7 +1,21 @@
 <template>
-  <div>
-    <Header />
-    <NuxtPage />
-    <Footer />
+  <div class="">
+    <div class="">
+      <Header />
+    </div>
+    <div>
+      <RouterView class="container mx-auto max-w-screen-xl" />
+    </div>
+    <div class="">
+      <Footer />
+    </div>
   </div>
 </template>
+<script setup>
+import { onMounted } from "vue";
+import { initFlowbite } from "flowbite";
+
+onMounted(() => {
+  initFlowbite();
+});
+</script>
