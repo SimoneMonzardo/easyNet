@@ -18,18 +18,18 @@ namespace easyNetAPI.Controllers
             _unitOfWork = unitOfWork;
         }
         [HttpGet]
-        public IEnumerable<Company> GetUsers(string userId)
+        public IEnumerable<UserBehavior> GetUsers(string userId)
         {
             // Qui puoi implementare la logica per ottenere i dati desiderati
             // Ad esempio, puoi creare una lista di oggetti WeatherForecast e restituirla
 
-            var forecasts = _unitOfWork.Company.GetAllAsync().Result;
+            var forecasts = _unitOfWork.UserBehavior.GetAllAsync().Result;
             return forecasts;
         }
         [HttpPost]
-        public void PostUsers(Company user, string userId)
+        public void PostUsers(UserBehavior user, string userId)
         {
-            _unitOfWork.Company.AddAsync(user, userId);
+            _unitOfWork.UserBehavior.AddAsync(user);
         }
         [HttpPatch]
         public void patchUsers(Company user, int userId)
