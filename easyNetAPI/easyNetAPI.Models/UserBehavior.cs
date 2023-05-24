@@ -13,6 +13,7 @@ namespace easyNetAPI.Models
     {
         [BsonRepresentation(BsonType.ObjectId)]
         public string? _id { get; set; }
+        [BsonElement("user_id")]
         public string? UserId { get; set; }
         [BsonElement("administrator")]
         public bool Administrator { get; set; }
