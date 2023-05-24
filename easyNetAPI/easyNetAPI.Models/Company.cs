@@ -1,4 +1,5 @@
 ﻿using easyNetAPI.Models;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,10 @@ using System.Threading.Tasks;
 
 public class Company
 {
-    [JsonProperty("company_id")]
+    [BsonElement("company_id")]
     public int CompanyId { get; set; }
-    [JsonProperty("companyName")]
+    [BsonElement("companyName")]
     public string? CompanyName { get; set; }
+    [BsonElement("bot")]
     public Bot? Bot { get; set; }
 }

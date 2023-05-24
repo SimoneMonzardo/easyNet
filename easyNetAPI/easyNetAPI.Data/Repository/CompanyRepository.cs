@@ -1,16 +1,8 @@
 ﻿using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
-using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MongoDB.Bson.Serialization;
-using System.Runtime.CompilerServices;
 
 namespace easyNetAPI.Data.Repository
 {
@@ -26,10 +18,15 @@ namespace easyNetAPI.Data.Repository
 
         private async Task<List<Company>> Query()
         {
-            var groupStage = new BsonDocument("$group", "$company");
-            // Aggiungi le fasi all'elenco delle fasi di aggregazione
-            var pipeline = new[] { groupStage };
-            // Esegui l'aggregazione
+            var groupStage = new BsonDocument("$group", new BsonDocument
+            {
+                { "_id", "$company" }
+            });
+            var replaceRootStage = new BsonDocument("$replaceRoot", new BsonDocument {
+                {"newRoot","$_id" }      
+            });
+            var pipeline = new[] { groupStage, replaceRootStage };
+     
             var _companyCollection = _usersCollection.Aggregate<BsonDocument>(pipeline).ToList();
 
             //trasforma in lista
@@ -47,6 +44,9 @@ namespace easyNetAPI.Data.Repository
         public async Task<Company?> GetFirstOrDefault(int companyId) =>
         Query().Result.FirstOrDefault(x => x.CompanyId == companyId);
 
+      
+        
+        
         public async Task AddAsync(Company company, string userId)
         {
             UserBehavior user = _users.GetFirstOrDefault(userId).Result;
@@ -56,15 +56,33 @@ namespace easyNetAPI.Data.Repository
                 { user.UserId, user }   
             });
         }
-        public async Task RemoveAsync(Company company){
+      
+        
+        public async Task RemoveAsync(int companyId){
             Dictionary<string, UserBehavior> dict= new();
-            List<UserBehavior> users = _users.GetAllAsync().Result.ToList().Where(user => user.Company.CompanyId == company.CompanyId).ToList();
+            List<UserBehavior> users = _users.GetAllAsync().Result.ToList().Where(user => user.Company.CompanyId == companyId).ToList();
             foreach (var user in users)
             {
                 user.Company = null;
                 dict.Add(user.UserId, user);
             }
             await _users.UpdateAsync(dict);
+        }
+        public async Task UpdateAsync(Dictionary<int, Company> companies)
+        {
+            foreach (var company in companies)
+            {
+                Dictionary<string, UserBehavior> dict = new();
+                
+                List<UserBehavior> users = _users.GetAllAsync().Result.ToList().Where(user => user.Company.CompanyId == company.Key).ToList();
+                
+                foreach (var user in users)
+                {
+                    user.Company = company.Value;
+                    dict.Add(user.UserId, user);
+                }
+                await _users.UpdateAsync(dict);
+            }
         }
     }
 }

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
 using Microsoft.AspNetCore.Components.RenderTree;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace easyNetAPI.Data.Repository
@@ -27,14 +30,28 @@ namespace easyNetAPI.Data.Repository
          await _usersCollection.Find(_ => true).ToListAsync();
 
         public async Task<UserBehavior?> GetFirstOrDefault(string userId) =>
-        await _usersCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
-        public async Task AddAsync(UserBehavior user) =>
-        await _usersCollection.InsertOneAsync(user);
+            _usersCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync().Result;
+        public async Task AddAsync(UserBehavior user)
+        {
+            user._id = null;
+            await _usersCollection.InsertOneAsync(user);
+        }
+        
         public async Task UpdateAsync(Dictionary<string, UserBehavior> users)
         {
             foreach (var user in users){
                 var filter = Builders<UserBehavior>.Filter.Eq(x => x.UserId, user.Key);
-                var update = Builders<UserBehavior>.Update.Set(x => x, user.Value);
+                var update = Builders<UserBehavior>.Update
+            .Set(x => x.UserId, user.Value.UserId)
+            .Set(x => x.Administrator, user.Value.Administrator)
+            .Set(x => x.Description, user.Value.Description)
+            .Set(x => x.Company, user.Value.Company)
+            .Set(x => x.Posts, user.Value.Posts)
+            .Set(x => x.FollowedUsers, user.Value.FollowedUsers)
+            .Set(x => x.FollowedList, user.Value.FollowedList)
+            .Set(x => x.LikedPost, user.Value.LikedPost)
+            .Set(x => x.SavedPost, user.Value.SavedPost)
+            .Set(x => x.MentionedPost, user.Value.MentionedPost);
                 _usersCollection.UpdateOne(filter, update);
             }
         }

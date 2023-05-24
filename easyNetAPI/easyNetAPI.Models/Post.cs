@@ -1,23 +1,33 @@
 ﻿using easyNetAPI.Models;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System.Xml.Linq;
 
 public class Post
 {
-    [JsonProperty("buttonName")]
+    [BsonElement("post_id")]
     public int PostId { get; set; }
+    [BsonElement("comments")]
     public Comment[]? Comments { get; set; }
-    [JsonProperty("user_id")]
+    [BsonElement("user_id")]
     public string? UserId { get; set; }
+    [BsonElement("username")]
     public string? Username { get; set; }
+    [BsonElement("content")]
     public string? Content { get; set; }
-    
+
     //UserId
-    public string[]? Likes { get; set; }
+    [BsonElement("likes")]
+
+    public List<string>? Likes { get; set; }
 
     //Keyword hashtag
-    public string[]? Hastags { get; set; }
+    [BsonElement("hashtags")]
+
+    public List<string>? Hashtags { get; set; }
 
     //UserId mention
-    public string[]? Tags { get; set; }
+    [BsonElement("tags")]
+
+    public List<string>? Tags { get; set; }
 }

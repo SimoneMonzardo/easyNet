@@ -30,7 +30,7 @@ namespace easyNetAPI.Data.Repository
             Panel = new PanelRepository(_usersCollection);
             Button = new ButtonRepository(_usersCollection);
             Post = new PostRepository(_usersCollection);
-            Comment = new CommentRepository(_usersCollection);
+            //Comment = new CommentRepository(_usersCollection);
             Reply = new ReplyRepository(_usersCollection);
         }
         public ICompanyRepository Company { get; private set; } = null!;
