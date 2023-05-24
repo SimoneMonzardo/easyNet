@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository
 {
-    public class ReplyRepository : Repository<Reply>, IReplyRepository
+    public class ReplyRepository
     {
-        private readonly MongoDBService _db;
-        public ReplyRepository(MongoDBService db) : base(db)
+        private readonly UserBehaviorSettings _userBehaviorSettings;
+        public ReplyRepository(UserBehaviorSettings userBehaviorSettings)
         {
-            _db = db;
+            _userBehaviorSettings = userBehaviorSettings;
         }
 
-        public void Update(Reply reply)
-        {
-            var replyFromDb = GetFirstOrDefault(r => r.CommentId == reply.CommentId && r.UserId == reply.UserId);
-            if (replyFromDb is not null)
-            {
-                replyFromDb.Content = reply.Content;
-                replyFromDb.Like = reply.Like;
-            }
-        }
+        //public void Update(Reply reply)
+        //{
+        //    var replyFromDb = GetFirstOrDefault(r => r.CommentId == reply.CommentId && r.UserId == reply.UserId);
+        //    if (replyFromDb is not null)
+        //    {
+        //        replyFromDb.Content = reply.Content;
+        //        replyFromDb.Like = reply.Like;
+        //    }
+        //}
     }
 }

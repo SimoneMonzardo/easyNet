@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace easyNetAPI.Models
 {
     public class Button
     {
-        [JsonProperty("panel_id")]
+        [BsonElement("panel_id")]
         public int PanelId { get; set; }
-        [JsonProperty("buttonName")]
+        [BsonElement("buttonName")]
         public string? ButtonName { get; set; }
     }
 }

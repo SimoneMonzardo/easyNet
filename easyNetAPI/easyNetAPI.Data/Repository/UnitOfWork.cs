@@ -3,39 +3,32 @@ using easyNetAPI.Data.Repository.IRepository;
 using Microsoft.Extensions.Hosting;
 using System.Xml.Linq;
 
-
 namespace easyNetAPI.Data.Repository
 {
 
     public class UnitOfWork : IUnitOfWork
     {
-        public readonly MongoDBService _db;
-        public UnitOfWork(MongoDBService db)
-        {
-            _db = db;
-            UserBehavior = new UserBehaviorRepository(_db);
-            Company = new CompanyRepository(_db);
-            Bot = new BotRepository(_db);
-            QA = new QARepository(_db);
-            Panel = new PanelRepository(_db);
-            Button = new ButtonRepository(_db);
-            Post = new PostRepository(_db);
-            Comment = new CommentRepository(_db);
-            Reply = new ReplyRepository(_db);
-        }
-        public ICompanyRepository Company { get; private set; } = null!;
-        public IUserBehaviorRepository UserBehavior { get; private set;}=null!;
-        public IBotRepository Bot { get; private set;}=null!;
-        public IQARepository QA { get; private set;}=null!;
-        public IPanelRepository Panel { get; private set;}=null!;
-        public IButtonRepository Button { get; private set;}=null!;
-        public IPostRepository Post { get; private set;}=null!;
-        public ICommentRepository Comment { get; private set;}=null!;
-        public IReplyRepository Reply { get; private set;}=null!;
-        public void Save()
-        {
-            _db.SaveChanges();
-        }
+        private readonly UserBehaviorSettings _userBehaviorSettings;
 
+        public UnitOfWork(UserBehaviorSettings userBehaviorSettings)
+        {
+            _userBehaviorSettings = userBehaviorSettings;
+            Post = new PostRepository(_userBehaviorSettings);
+            Comment = new CommentRepository(_userBehaviorSettings);
+            Bot = new BotRepository(_userBehaviorSettings);
+            Button = new ButtonRepository(_userBehaviorSettings);
+            Company = new CompanyRepository(_userBehaviorSettings);
+            Panel = new PanelRepository(_userBehaviorSettings);
+            QA = new QARepository(_userBehaviorSettings);
+            Reply = new ReplyRepository(_userBehaviorSettings);
+        }
+        public PostRepository Post { get; private set; } = null!;
+        public CommentRepository Comment { get; private set; } = null!;
+        public BotRepository Bot { get; private set; } = null!;
+        public ButtonRepository Button { get; private set; } = null!;
+        public CompanyRepository Company { get; private set; } = null!;
+        public PanelRepository Panel { get; private set; } = null!;
+        public QARepository QA { get; private set; } = null!;
+        public ReplyRepository Reply { get; private set; } = null!;
     }
 }

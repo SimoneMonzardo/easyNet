@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,18 @@ namespace easyNetAPI.Models
 {
     public class Comment
     {
-        [JsonProperty("comment_id")]
+        [BsonElement("comment_id")]
         public int CommentId { get; set; }
-        [JsonProperty("user_id")]
+        [BsonElement("user_id")]
         public string? UserId { get; set; }
 
+        [BsonElement("username")]
         public string? Username { get; set; }
+        [BsonElement("content")]
         public string? Content { get; set; }
+        [BsonElement("like")]
         public string[]? Like { get; set; }
+        [BsonElement("replies")]
         public Reply[]? Replies { get; set; }
     }
 

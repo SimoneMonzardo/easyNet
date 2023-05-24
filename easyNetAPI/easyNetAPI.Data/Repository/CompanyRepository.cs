@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository
 {
-    public class CompanyRepository : Repository<Company>, ICompanyRepository
+    public class CompanyRepository 
     {
-        private readonly MongoDBService _db;
-        public CompanyRepository(MongoDBService db) : base(db)
+        private readonly UserBehaviorSettings _userBehaviorSettings;
+        public CompanyRepository(UserBehaviorSettings userBehaviorSettings)
         {
-            _db = db;
+            _userBehaviorSettings = userBehaviorSettings;
         }
 
-        public void Update(Company company)
-        {
-            var companyFromDb = GetFirstOrDefault(c => c.CompanyId == company.CompanyId);
-            if (companyFromDb is not null)
-            {
-                companyFromDb.CompanyName = company.CompanyName;
-                companyFromDb.Bot = company.Bot;
-            }
-        }
+        //public void Update(Company company)
+        //{
+        //    var companyFromDb = GetFirstOrDefault(c => c.CompanyId == company.CompanyId);
+        //    if (companyFromDb is not null)
+        //    {
+        //        companyFromDb.CompanyName = company.CompanyName;
+        //        companyFromDb.Bot = company.Bot;
+        //    }
+        //}
     }
 }

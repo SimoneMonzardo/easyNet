@@ -8,23 +8,23 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository
 {
-    public class PanelRepository : Repository<Panel>, IPanelRepository
+    public class PanelRepository 
     {
-        private readonly MongoDBService _db;
-        public PanelRepository(MongoDBService db) : base(db)
+        private readonly UserBehaviorSettings _userBehaviorSettings;
+        public PanelRepository(UserBehaviorSettings userBehaviorSettings)
         {
-            _db = db;
+            _userBehaviorSettings = userBehaviorSettings;
         }
 
-        public void Update(Panel panel)
-        {
-            var panelFromDb = GetFirstOrDefault(p => p.PanelId == panel.PanelId);
-            if (panelFromDb is not null)
-            {
-                panelFromDb.PanelName = panelFromDb.PanelName;
-                panelFromDb.Buttons = panelFromDb.Buttons;
-                panelFromDb.Content = panelFromDb.Content;
-            }
-        }
+        //public void Update(Panel panel)
+        //{
+        //    var panelFromDb = GetFirstOrDefault(p => p.PanelId == panel.PanelId);
+        //    if (panelFromDb is not null)
+        //    {
+        //        panelFromDb.PanelName = panelFromDb.PanelName;
+        //        panelFromDb.Buttons = panelFromDb.Buttons;
+        //        panelFromDb.Content = panelFromDb.Content;
+        //    }
+        //}
     }
 }

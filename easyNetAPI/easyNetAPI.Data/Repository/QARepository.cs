@@ -8,23 +8,23 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository
 {
-    public class QARepository : Repository<QA>, IQARepository
+    public class QARepository
     {
-        private readonly MongoDBService _db;
-        public QARepository(MongoDBService db) : base(db)
+        private readonly UserBehaviorSettings _userBehaviorSettings;
+        public QARepository(UserBehaviorSettings userBehaviorSettings)
         {
-            _db = db;
+            _userBehaviorSettings = userBehaviorSettings;
         }
 
         //da correggere
-        public void Update(QA qa)
-        {
-            var QAfromDb = GetFirstOrDefault(q => q.Intent == qa.Intent);
-            if (QAfromDb is not null)
-            {
-                QAfromDb.Answer = qa.Answer;
-                QAfromDb.Questions = qa.Questions;
-            }
-        }
+        //public void Update(QA qa)
+        //{
+        //    var QAfromDb = GetFirstOrDefault(q => q.Intent == qa.Intent);
+        //    if (QAfromDb is not null)
+        //    {
+        //        QAfromDb.Answer = qa.Answer;
+        //        QAfromDb.Questions = qa.Questions;
+        //    }
+        //}
     }
 }

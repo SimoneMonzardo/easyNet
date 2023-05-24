@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using easyNetAPI.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -7,11 +8,14 @@ namespace easyNetAPI.Data
 {
     public class UserBehaviorSettings
     {
-        private readonly IMongoCollection<UserBehavior> _userBehaviorCollection;
+        public readonly IMongoCollection<UserBehavior> _userBehaviorCollection;
 
         public UserBehaviorSettings(
             IOptions<MongoDbSettings> mongoDatabaseSettings)
         {
+            var clientSettings = MongoClientSettings.FromConnectionString(mongoDatabaseSettings.Value.ConnectionString);
+
+            clientSettings.ReadEncoding = (UTF8Encoding)Encoding.UTF8;
             var mongoClient = new MongoClient(
                 mongoDatabaseSettings.Value.ConnectionString);
 
@@ -22,8 +26,8 @@ namespace easyNetAPI.Data
                 mongoDatabaseSettings.Value.CollectionName);
         }
 
-        public async Task<List<UserBehavior>> GetAllAsync() =>
-            await _userBehaviorCollection.Find(_ => true).ToListAsync();
+        public async Task<IEnumerable<UserBehavior>> GetAllAsync() =>
+             await _userBehaviorCollection.Find(_ => true).ToListAsync();
 
         public async Task<UserBehavior?> GetAsync(string userId) =>
             await _userBehaviorCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
@@ -38,4 +42,3 @@ namespace easyNetAPI.Data
             await _userBehaviorCollection.DeleteOneAsync(x => x.UserId == userId);
     }
 }
-

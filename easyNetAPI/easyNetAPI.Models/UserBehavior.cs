@@ -4,25 +4,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace easyNetAPI.Models
 {
     public class UserBehavior
     {
-        [JsonProperty("buttonName")]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? _id { get; set; }
         public string? UserId { get; set; }
+        [BsonElement("administrator")]
         public bool Administrator { get; set; }
+        [BsonElement("company")]
         public Company? Company { get; set; }
-        public List<Post>? Posts { get; set; }
-        [JsonProperty("followed_users")]
+        [BsonElement("posts")]
+        public Post[]? Posts { get; set; }
+        [BsonElement("followed_users")]
         public string[]? FollowedUsers { get; set; }
-        [JsonProperty("followers_list")]
+        [BsonElement("followers_list")]
         public string[]? FollowedList { get; set; }
-        [JsonProperty("liked_posts")]
+        [BsonElement("liked_posts")]
         public string[]? LikedPost { get; set; }
-        [JsonProperty("saved_posts")]
+        [BsonElement("saved_posts")]
         public string[]? SavedPost { get; set; }
-        [JsonProperty("mentioned_posts")]
+        [BsonElement("mentioned_posts")]
         public string[]? MentionedPost { get; set; }
     }
 }

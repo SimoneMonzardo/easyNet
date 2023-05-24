@@ -70,11 +70,9 @@ namespace easyNetAPI.Controllers
         {
             try
             {
-                var token = Request.Headers["Authorization"].ToString();
-                token = token.Remove(0, 7);
-                var principal = await AuthControllerUtility.DecodeJWTToken(token);
-                var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
-                if (userId == null)
+                var token = Request.Headers["Authorization"];
+                var utente = await GetUserIdFromJWTToken(token);
+                if (utente == null)
                     return BadRequest("Not Logged in");
                 var posts = _unitOfWork.Post.GetAll();
                 var likedPosts = new List<Post>();

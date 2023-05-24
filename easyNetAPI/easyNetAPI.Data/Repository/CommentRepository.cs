@@ -8,23 +8,35 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository
 {
-    public class CommentRepository : Repository<Comment>, ICommentRepository
+    public class CommentRepository 
     {
-        private readonly MongoDBService _db;
-        public CommentRepository(MongoDBService db) : base(db)
+        private readonly UserBehaviorSettings _userBehaviorSettings;
+
+        public CommentRepository(UserBehaviorSettings userBehaviorSettings)
         {
-            _db = db;
+            _userBehaviorSettings = userBehaviorSettings;
         }
 
-        public void Update(Comment comment)
+        //prende tutti i commenti di un post
+        public async Task<IEnumerable<Comment>?> GetAllOfPostAsync(Post post)
         {
-            var commentFromDb = GetFirstOrDefault(c => c.CommentId == comment.CommentId);
-            if (commentFromDb is not null)
+            var comments = post.Comments.ToList();
+            if (comments.Count() == 0)
             {
-                commentFromDb.Content = comment.Content;
-                commentFromDb.Like = comment.Like;
-                commentFromDb.Replies = comment.Replies;
+                return null;
             }
+            return comments;
         }
+
+        //public void Update(Comment comment)
+        //{
+        //    var commentFromDb = GetFirstOrDefault(c => c.CommentId == comment.CommentId);
+        //    if (commentFromDb is not null)
+        //    {
+        //        commentFromDb.Content = comment.Content;
+        //        commentFromDb.Like = comment.Like;
+        //        commentFromDb.Replies = comment.Replies;
+        //    }
+        //}
     }
 }

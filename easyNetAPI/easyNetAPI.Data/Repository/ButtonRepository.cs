@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository
 {
-    public class ButtonRepository : Repository<Button>, IButtonRepository
+    public class ButtonRepository 
     {
-        private readonly MongoDBService _db;
-        public ButtonRepository(MongoDBService db) : base(db)
+        private readonly UserBehaviorSettings _userBehaviorSettings;
+        public ButtonRepository(UserBehaviorSettings userBehaviorSettings)
         {
-            _db = db;
+            _userBehaviorSettings = userBehaviorSettings;
         }
 
-        public void Update(Button button)
-        {
-            var buttonFromDb = GetFirstOrDefault(b => b.ButtonName == button.ButtonName);
-            if (buttonFromDb is not null)
-            {
-                buttonFromDb.PanelId = button.PanelId;
-            }
-        }
+        //public void Update(Button button)
+        //{
+        //    var buttonFromDb = GetFirstOrDefault(b => b.ButtonName == button.ButtonName);
+        //    if (buttonFromDb is not null)
+        //    {
+        //        buttonFromDb.PanelId = button.PanelId;
+        //    }
+        //}
     }
 }

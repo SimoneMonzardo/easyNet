@@ -8,24 +8,24 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository
 {
-    public class BotRepository : Repository<Bot>, IBotRepository
+    public class BotRepository
     {
-        private readonly MongoDBService _db;
-        public BotRepository(MongoDBService db) : base(db)
+        private readonly UserBehaviorSettings _userBehaviorSettings;
+        public BotRepository(UserBehaviorSettings userBehaviorSettings)
         {
-            _db = db;
+            _userBehaviorSettings = userBehaviorSettings;
         }
 
-        public void Update(Bot bot)
-        {
-            var botFromDb = GetFirstOrDefault(b => b.BotId == bot.BotId);
-            if (botFromDb is not null)
-            {
-                botFromDb.Type = bot.Type;
-                botFromDb.Platform = bot.Platform;
-                botFromDb.QA = bot.QA;
-                botFromDb.Panels = bot.Panels;
-            }
-        }
+        //public void Update(Bot bot)
+        //{
+        //    var botFromDb = GetFirstOrDefault(b => b.BotId == bot.BotId);
+        //    if (botFromDb is not null)
+        //    {
+        //        botFromDb.Type = bot.Type;
+        //        botFromDb.Platform = bot.Platform;
+        //        botFromDb.QA = bot.QA;
+        //        botFromDb.Panels = bot.Panels;
+        //    }
+        //}
     }
 }
