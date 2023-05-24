@@ -1,36 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
+using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 namespace easyNetAPI.Data.Repository
 {
-    public class UserBehaviorRepository : Repository<UserBehavior>, IUserBehaviorRepository
+    public class UserBehaviorRepository : IUserBehaviorRepository
     {
-        private readonly MongoDBService _db;
-        public UserBehaviorRepository(MongoDBService db) : base(db)
+        private readonly IMongoCollection<UserBehavior> _usersCollection;
+        public UserBehaviorRepository(IMongoCollection<UserBehavior> usersCollection)
         {
-            _db = db;
+            _usersCollection = usersCollection;
         }
 
-        public void Update(UserBehavior userBehavior)
+
+
+
+        public async Task<List<UserBehavior>> GetAllAsync() =>
+         await _usersCollection.Find(_ => true).ToListAsync();
+
+        public async Task<UserBehavior?> GetFirstOrDefault(string userId) =>
+        await _usersCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+        public async Task AddAsync(UserBehavior user) =>
+        await _usersCollection.InsertOneAsync(user);
+        public async Task UpdateAsync(Dictionary<string, UserBehavior> users)
         {
-            var userBehaviorFromDb = GetFirstOrDefault(u => u.UserId == userBehavior.UserId);
-            if (userBehaviorFromDb is not null)
-            {
-                userBehaviorFromDb.Administrator = userBehavior.Administrator;
-                userBehaviorFromDb.Company = userBehavior.Company;
-                userBehaviorFromDb.FollowedList = userBehavior.FollowedList;
-                userBehaviorFromDb.FollowedUsers = userBehaviorFromDb.FollowedUsers;
-                userBehaviorFromDb.LikedPost = userBehavior.LikedPost;
-                userBehaviorFromDb.MentionedPost = userBehavior.MentionedPost;
-                userBehaviorFromDb.Posts = userBehavior.Posts;
-                userBehaviorFromDb.SavedPost = userBehavior.SavedPost;
+            foreach (var user in users){
+                var filter = Builders<UserBehavior>.Filter.Eq(x => x.UserId, user.Key);
+                var update = Builders<UserBehavior>.Update.Set(x => x, user.Value);
+                _usersCollection.UpdateOne(filter, update);
             }
         }
+
+        public async Task RemoveAsync(string userId) =>
+        await _usersCollection.DeleteOneAsync(x => x.UserId == userId);
+        
+        
     }
 
 }

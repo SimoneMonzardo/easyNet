@@ -2,26 +2,36 @@
 using easyNetAPI.Data.Repository.IRepository;
 using Microsoft.Extensions.Hosting;
 using System.Xml.Linq;
-
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 namespace easyNetAPI.Data.Repository
 {
 
     public class UnitOfWork : IUnitOfWork
     {
-        public readonly MongoDBService _db;
-        public UnitOfWork(MongoDBService db)
+        private readonly IOptions<MongoDbSettings> _settings;
+        private readonly IMongoCollection<UserBehavior> _usersCollection;
+        public UnitOfWork(IOptions<MongoDbSettings> settings)
         {
-            _db = db;
-            UserBehavior = new UserBehaviorRepository(_db);
-            Company = new CompanyRepository(_db);
-            Bot = new BotRepository(_db);
-            QA = new QARepository(_db);
-            Panel = new PanelRepository(_db);
-            Button = new ButtonRepository(_db);
-            Post = new PostRepository(_db);
-            Comment = new CommentRepository(_db);
-            Reply = new ReplyRepository(_db);
+            _settings = settings;
+            var mongoClient = new MongoClient(
+            settings.Value.ConnectionString);
+
+            var mongoDatabase = mongoClient.GetDatabase(
+                settings.Value.DatabaseName);
+
+            _usersCollection = mongoDatabase.GetCollection<UserBehavior>(
+                settings.Value.CollectionName);
+            UserBehavior = new UserBehaviorRepository(_usersCollection);
+            Company = new CompanyRepository(_usersCollection, UserBehavior);
+            Bot = new BotRepository(_usersCollection);
+            QA = new QARepository(_usersCollection);
+            Panel = new PanelRepository(_usersCollection);
+            Button = new ButtonRepository(_usersCollection);
+            Post = new PostRepository(_usersCollection);
+            Comment = new CommentRepository(_usersCollection);
+            Reply = new ReplyRepository(_usersCollection);
         }
         public ICompanyRepository Company { get; private set; } = null!;
         public IUserBehaviorRepository UserBehavior { get; private set;}=null!;
@@ -32,10 +42,6 @@ namespace easyNetAPI.Data.Repository
         public IPostRepository Post { get; private set;}=null!;
         public ICommentRepository Comment { get; private set;}=null!;
         public IReplyRepository Reply { get; private set;}=null!;
-        public void Save()
-        {
-            _db.SaveChanges();
-        }
 
     }
 }

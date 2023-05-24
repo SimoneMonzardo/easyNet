@@ -1,5 +1,7 @@
 ﻿using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,21 +10,22 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository
 {
-    public class ButtonRepository : Repository<Button>, IButtonRepository
+    public class ButtonRepository : IButtonRepository
     {
-        private readonly MongoDBService _db;
-        public ButtonRepository(MongoDBService db) : base(db)
+        private readonly IMongoCollection<UserBehavior> _usersCollection;
+        public ButtonRepository(IMongoCollection<UserBehavior> usersCollection)
         {
-            _db = db;
+            _usersCollection = usersCollection;
         }
 
-        public void Update(Button button)
-        {
-            var buttonFromDb = GetFirstOrDefault(b => b.ButtonName == button.ButtonName);
-            if (buttonFromDb is not null)
-            {
-                buttonFromDb.PanelId = button.PanelId;
-            }
-        }
+        public async Task<List<UserBehavior>> GetAllAsync() =>
+         await _usersCollection.Find(_ => true).ToListAsync();
+
+        public async Task<UserBehavior?> GetFirstOrDefault(string userId) =>
+        await _usersCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+        public async Task AddAsync(UserBehavior user) =>
+        await _usersCollection.InsertOneAsync(user);
+        public async Task RemoveAsync(string userId) =>
+        await _usersCollection.DeleteOneAsync(x => x.UserId == userId);
     }
 }

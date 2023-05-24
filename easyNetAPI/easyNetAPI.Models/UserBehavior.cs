@@ -12,6 +12,7 @@ namespace easyNetAPI.Models
         [JsonProperty("buttonName")]
         public string? UserId { get; set; }
         public bool Administrator { get; set; }
+        public string Description { get; set; }
         public Company? Company { get; set; }
         public List<Post>? Posts { get; set; }
         [JsonProperty("followed_users")]

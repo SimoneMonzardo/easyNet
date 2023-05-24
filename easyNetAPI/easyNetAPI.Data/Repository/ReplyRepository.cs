@@ -1,5 +1,7 @@
 ﻿using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,22 +10,22 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository
 {
-    public class ReplyRepository : Repository<Reply>, IReplyRepository
+    public class ReplyRepository : IReplyRepository
     {
-        private readonly MongoDBService _db;
-        public ReplyRepository(MongoDBService db) : base(db)
+        private readonly IMongoCollection<UserBehavior> _usersCollection;
+        public ReplyRepository(IMongoCollection<UserBehavior> usersCollection)
         {
-            _db = db;
+            _usersCollection = usersCollection;
         }
 
-        public void Update(Reply reply)
-        {
-            var replyFromDb = GetFirstOrDefault(r => r.CommentId == reply.CommentId && r.UserId == reply.UserId);
-            if (replyFromDb is not null)
-            {
-                replyFromDb.Content = reply.Content;
-                replyFromDb.Like = reply.Like;
-            }
-        }
+        public async Task<List<UserBehavior>> GetAllAsync() =>
+         await _usersCollection.Find(_ => true).ToListAsync();
+
+        public async Task<UserBehavior?> GetFirstOrDefault(string userId) =>
+        await _usersCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+        public async Task AddAsync(UserBehavior user) =>
+        await _usersCollection.InsertOneAsync(user);
+        public async Task RemoveAsync(string userId) =>
+        await _usersCollection.DeleteOneAsync(x => x.UserId == userId);
     }
 }

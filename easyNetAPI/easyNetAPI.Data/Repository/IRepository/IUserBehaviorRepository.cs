@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository.IRepository
 {
-    public interface IUserBehaviorRepository : IRepository<UserBehavior>
+    public interface IUserBehaviorRepository
     {
-        void Update(UserBehavior userBehavior);
+        public Task<List<UserBehavior>> GetAllAsync();
+        public Task<UserBehavior?> GetFirstOrDefault(string userId);
+        public Task AddAsync(UserBehavior user);
+        public Task UpdateAsync(Dictionary<string, UserBehavior> users);
+        public Task RemoveAsync(string userId);
     }
 }

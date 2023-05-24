@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository.IRepository
 {
-    public interface IPostRepository : IRepository<Post>
+    public interface IPostRepository
     {
-        void Update(Post post);
+        public Task<List<UserBehavior>> GetAllAsync();
+        public Task<UserBehavior?> GetFirstOrDefault(string userId);
+        public Task AddAsync(UserBehavior user);
+        public Task RemoveAsync(string userId);
     }
 }

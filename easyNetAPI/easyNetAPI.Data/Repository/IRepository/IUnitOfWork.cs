@@ -12,6 +12,6 @@
         IPostRepository Post { get; }
         ICommentRepository Comment { get; }
         IReplyRepository Reply { get; }
-        void Save();
+
     }
 }
