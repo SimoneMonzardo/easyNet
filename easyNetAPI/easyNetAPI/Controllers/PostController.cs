@@ -7,11 +7,7 @@ using easyNetAPI.Utility;
 using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Data;
 
-
-
 namespace easyNetAPI.Controllers;
-
-
 
 [ApiController]
 [Route("[controller]")]
@@ -27,8 +23,6 @@ public class PostController : ControllerBase
         _db = db;
     }
 
-
-
     //get di un post tramite il suo id
     [HttpGet("GetPostOfAAuthUser"), Authorize(Roles = SD.ROLE_USER)]
     public IEnumerable<Post> Get(string? id)
@@ -37,8 +31,6 @@ public class PostController : ControllerBase
         return posts;
     }
 
-
-
     //get di tutti i post
     [HttpGet("GetPost"), Authorize(Roles = SD.ROLE_USER)]
     public IEnumerable<Post> GetAll()
@@ -46,8 +38,6 @@ public class PostController : ControllerBase
         var posts = _unitOfWork.Post.GetAll();
         return posts;
     }
-
-
 
     [HttpDelete("RemoveAPost"), Authorize(Roles = SD.ROLE_USER)]
     public async Task<ActionResult<string>> Delete(int Id)
@@ -64,12 +54,7 @@ public class PostController : ControllerBase
         {
             return BadRequest("Unandled exeption: " + ex.Message);
         }
-
-
-
     }
-
-
 
     [HttpPost("UpsertPostOfAuthUser"), Authorize(Roles = SD.ROLE_USER)]
     public async Task<ActionResult<string>> UpsertAsync(Post post)
@@ -100,8 +85,6 @@ public class PostController : ControllerBase
                 post.Content = oldPost.Content;
                 post.Hastags = oldPost.Hastags;
                 post.Tags = oldPost.Tags;
-
-
 
                 _unitOfWork.Post.Update(post);
                 return Ok("Post modified succesfully");
