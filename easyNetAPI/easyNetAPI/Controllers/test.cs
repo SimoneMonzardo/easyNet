@@ -34,7 +34,6 @@ namespace easyNetAPI.Controllers
         [HttpPatch]
         public void patchUsers(Company user, int userId)
         {
-            _unitOfWork.Company.UpdateAsync(new Dictionary<int, Company> () { {userId,user} });
         }
         [HttpDelete]
         public void delete(int userId)

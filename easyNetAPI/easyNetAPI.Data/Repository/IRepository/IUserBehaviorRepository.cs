@@ -18,7 +18,8 @@ namespace easyNetAPI.Data.Repository.IRepository
         /// </summary>
         /// <param name="users"></param>
         /// <returns></returns>
-        public Task UpdateAsync(Dictionary<string, UserBehavior> users);
+        public Task UpdateManyAsync(Dictionary<string, UserBehavior> users);
+        public Task UpdateOneAsync(string userId, UserBehavior user);
         public Task RemoveAsync(string userId);
     }
 }

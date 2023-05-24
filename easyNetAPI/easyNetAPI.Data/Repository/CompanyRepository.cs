@@ -18,14 +18,11 @@ namespace easyNetAPI.Data.Repository
 
         private async Task<List<Company>> Query()
         {
-            var groupStage = new BsonDocument("$group", new BsonDocument
-            {
-                { "_id", "$company" }
-            });
+            
             var replaceRootStage = new BsonDocument("$replaceRoot", new BsonDocument {
-                {"newRoot","$_id" }      
+                {"newRoot","$company" }      
             });
-            var pipeline = new[] { groupStage, replaceRootStage };
+            var pipeline = new[] { replaceRootStage };
      
             var _companyCollection = _usersCollection.Aggregate<BsonDocument>(pipeline).ToList();
 
@@ -51,10 +48,7 @@ namespace easyNetAPI.Data.Repository
         {
             UserBehavior user = _users.GetFirstOrDefault(userId).Result;
             user.Company = company;
-            await _users.UpdateAsync(new Dictionary<string, UserBehavior>()
-            {
-                { user.UserId, user }   
-            });
+            await _users.UpdateOneAsync(userId, user);
         }
       
         
@@ -66,9 +60,24 @@ namespace easyNetAPI.Data.Repository
                 user.Company = null;
                 dict.Add(user.UserId, user);
             }
-            await _users.UpdateAsync(dict);
+            await _users.UpdateManyAsync(dict);
         }
-        public async Task UpdateAsync(Dictionary<int, Company> companies)
+        public async Task UpdateOneAsync(int companyId, Company company)
+        {
+           
+                Dictionary<string, UserBehavior> dict = new();
+
+                List<UserBehavior> users = _users.GetAllAsync().Result.ToList().Where(user => user.Company.CompanyId == companyId).ToList();
+
+                foreach (var user in users)
+                {
+                    user.Company = company;
+                    dict.Add(user.UserId, user);
+                }
+                await _users.UpdateManyAsync(dict);
+            
+        }
+        public async Task UpdateManyAsync(Dictionary<int, Company> companies)
         {
             foreach (var company in companies)
             {
@@ -81,7 +90,7 @@ namespace easyNetAPI.Data.Repository
                     user.Company = company.Value;
                     dict.Add(user.UserId, user);
                 }
-                await _users.UpdateAsync(dict);
+                await _users.UpdateManyAsync(dict);
             }
         }
     }

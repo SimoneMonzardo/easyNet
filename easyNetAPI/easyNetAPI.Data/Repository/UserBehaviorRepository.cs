@@ -37,7 +37,7 @@ namespace easyNetAPI.Data.Repository
             await _usersCollection.InsertOneAsync(user);
         }
         
-        public async Task UpdateAsync(Dictionary<string, UserBehavior> users)
+        public async Task UpdateManyAsync(Dictionary<string, UserBehavior> users)
         {
             foreach (var user in users){
                 var filter = Builders<UserBehavior>.Filter.Eq(x => x.UserId, user.Key);
@@ -54,6 +54,24 @@ namespace easyNetAPI.Data.Repository
             .Set(x => x.MentionedPost, user.Value.MentionedPost);
                 _usersCollection.UpdateOne(filter, update);
             }
+        }
+        public async Task UpdateOneAsync(string userId, UserBehavior user)
+        {
+     
+                var filter = Builders<UserBehavior>.Filter.Eq(x => x.UserId, userId);
+                var update = Builders<UserBehavior>.Update
+            .Set(x => x.UserId, user.UserId)
+            .Set(x => x.Administrator, user.Administrator)
+            .Set(x => x.Description, user.Description)
+            .Set(x => x.Company, user.Company)
+            .Set(x => x.Posts, user.Posts)
+            .Set(x => x.FollowedUsers, user.FollowedUsers)
+            .Set(x => x.FollowedList, user.FollowedList)
+            .Set(x => x.LikedPost, user.LikedPost)
+            .Set(x => x.SavedPost, user.SavedPost)
+            .Set(x => x.MentionedPost, user.MentionedPost);
+                _usersCollection.UpdateOne(filter, update);
+
         }
 
         public async Task RemoveAsync(string userId) =>

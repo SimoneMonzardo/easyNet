@@ -9,9 +9,11 @@ namespace easyNetAPI.Data.Repository.IRepository
 {
     public interface IBotRepository
     {
-        public Task<List<UserBehavior>> GetAllAsync();
-        public Task<UserBehavior?> GetFirstOrDefault(string userId);
-        public Task AddAsync(UserBehavior user);
-        public Task RemoveAsync(string userId);
+        public Task<List<Bot>> GetAllAsync();
+        public Task<Bot?> GetFirstOrDefault(int botId);
+        public Task AddAsync(Bot bot, int companyId);
+        public Task UpdateOneAsync(int botId, Bot bot);
+        public Task UpdateManyAsync(Dictionary<int, Bot> bots);
+        public Task RemoveAsync(int botId);
     }
 }

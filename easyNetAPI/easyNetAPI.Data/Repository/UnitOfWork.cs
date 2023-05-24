@@ -25,7 +25,7 @@ namespace easyNetAPI.Data.Repository
                 settings.Value.CollectionName);
             UserBehavior = new UserBehaviorRepository(_usersCollection);
             Company = new CompanyRepository(_usersCollection, UserBehavior);
-            Bot = new BotRepository(_usersCollection);
+            Bot = new BotRepository(_usersCollection, Company);
             QA = new QARepository(_usersCollection);
             Panel = new PanelRepository(_usersCollection);
             Button = new ButtonRepository(_usersCollection);
