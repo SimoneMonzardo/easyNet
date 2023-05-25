@@ -11,10 +11,12 @@ namespace easyNetAPI.Data.Repository
     public class CommentRepository 
     {
         private readonly UserBehaviorSettings _userBehaviorSettings;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CommentRepository(UserBehaviorSettings userBehaviorSettings)
+        public CommentRepository(UserBehaviorSettings userBehaviorSettings, UnitOfWork unitOfWork)
         {
             _userBehaviorSettings = userBehaviorSettings;
+            _unitOfWork = unitOfWork;
         }
 
         //prende tutti i commenti di un post
@@ -26,6 +28,28 @@ namespace easyNetAPI.Data.Repository
                 return null;
             }
             return comments;
+        }
+
+        public async Task<Comment?> GetCommentAsync(int commentId)
+        {
+            var posts = await _unitOfWork.Post.GetAllAsync();
+            foreach (var post in posts)
+            {
+                foreach(var comment in post.Comments)
+                {
+                    if(comment.CommentId == commentId)
+                        return comment;
+                }
+            }
+            return null;
+        }
+
+        public async Task<List<String>>? GetLikesOfComment(int commentId)
+        {
+            var comment = await GetCommentAsync(commentId);
+            if (comment is null)
+                return null;
+            return comment.Like.ToList();
         }
 
         //public void Update(Comment comment)

@@ -1,5 +1,6 @@
 ﻿using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,12 @@ namespace easyNetAPI.Data.Repository
         public async Task<Post>? GetPostAsync(int postId) {
             var post = (await GetAllAsync()).FirstOrDefault(p => p.PostId == postId);
             return post;
+        }
+
+        public async Task<List<String>>? GetLikesOfPost(int postId)
+        {
+            var post = await GetPostAsync(postId);
+            return post.Likes.ToList();
         }
 
         //public void Update(Post post)
