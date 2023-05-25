@@ -1,13 +1,6 @@
 export default() => {
 
-    //mettere gli auth token negli header
-
-    const useAuthToken = () => useState('auth_token')
-
-    const setToken = (newToken) => {
-        const authToken = useAuthToken()
-        authToken.value = newToken
-    }
+    //to do: mettere gli auth token negli header
 
     const register = ({email, username, name, surname, dateOfBirth, gender, profilePicture, phoneNumber, password, role})=>{
         return new Promise(async (resolve, reject)=> {
@@ -45,7 +38,10 @@ export default() => {
                         password
                     }
                 })
-                setToken(response.token)
+                
+                // to do: mettere gli auth token nel localstorage
+                localStorage.setItem('token',response.token)
+
                 resolve(response)
             } catch (error) {
                 reject(error)
