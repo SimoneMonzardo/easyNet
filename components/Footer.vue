@@ -75,8 +75,7 @@
       <div class="sm:flex sm:items-center sm:justify-between">
         <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400"
           >© 2023
-          <a href="./" class="hover:underline">easyNet™</a>.
-          Tutti i diritti riservati.
+          <a href="./" class="hover:underline">easyNet™</a>
         </span>
       </div>
     </div>
