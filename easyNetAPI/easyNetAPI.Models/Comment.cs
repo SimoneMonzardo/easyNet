@@ -14,7 +14,6 @@ namespace easyNetAPI.Models
         public int CommentId { get; set; }
         [BsonElement("user_id")]
         public string? UserId { get; set; }
-
         [BsonElement("username")]
         public string? Username { get; set; }
         [BsonElement("content")]
@@ -24,5 +23,4 @@ namespace easyNetAPI.Models
         [BsonElement("replies")]
         public Reply[]? Replies { get; set; }
     }
-
 }

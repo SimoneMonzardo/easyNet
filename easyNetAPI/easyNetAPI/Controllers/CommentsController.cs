@@ -14,6 +14,7 @@ using NuGet.Versioning;
 using Amazon.Auth.AccessControlPolicy;
 using easyNetAPI.Data;
 using easyNetAPI.Data.Repository;
+using easyNetAPI.Models.UpsertModels;
 
 namespace easyNetAPI.Controllers;
 
@@ -44,6 +45,24 @@ public class CommentsController : ControllerBase
         }
         return null;
     }
+
+    //fatto per provare l'add su commentRepository
+    [HttpPost("AddComment"), Authorize(Roles = SD.ROLE_USER)]
+    public async Task<string> AddCommentAsync(UpsertComment comment)
+    {
+        var token = Request.Headers["Authorization"].ToString();
+        token = token.Remove(0, 7);
+        var principal = await AuthControllerUtility.DecodeJWTToken(token);
+        var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+        if (userId == null)
+        {
+            return "Not Logged in";
+        }
+        var userName = _db.Users.Where(u => u.Id.Equals(userId)).Select(u => u.UserName).FirstOrDefault();
+        var s = await _unitOfWork.Comment.AddComment(comment,userId,userName);
+        return s;
+    }
+
     //[HttpPost("UpsertCommentOfAPostAuthUser"), Authorize(Roles = SD.ROLE_USER)]
     //public async Task<ActionResult<string>> UpsertAsync(Comment comment)
     //{
@@ -80,6 +99,7 @@ public class CommentsController : ControllerBase
     //        return BadRequest("Unandled exception: " + ex.Message);
     //    }
     //}
+
     //[HttpDelete("RemoveAComment"), Authorize(Roles = SD.ROLE_USER)]
     //public async Task<ActionResult<string>> Delete(int Id)
     //{

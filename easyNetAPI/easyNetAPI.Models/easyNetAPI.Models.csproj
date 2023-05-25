@@ -11,15 +11,17 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="MongoDB.Bson" Version="2.19.1" />
+    <PackageReference Include="MongoDB.Bson" Version="2.19.2" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Authentication\" />
     <None Remove="Authentication\Validation\" />
+    <None Remove="UpsertModels\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Authentication\" />
     <Folder Include="Authentication\Validation\" />
+    <Folder Include="UpsertModels\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\easyNetAPI.Utility\easyNetAPI.Utility.csproj" />
