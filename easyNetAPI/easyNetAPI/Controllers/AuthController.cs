@@ -61,7 +61,14 @@ namespace easyNetAPI.Controllers
                 {
                     UserId = applicationUser.Id,
                     Administrator = false,
-                });
+                    Company = new Company(),
+                    Posts = Array.Empty<Post>(),
+                    FollowedUsers = Array.Empty<string>(),
+                    FollowedList = Array.Empty<string>(),
+                    LikedPost = Array.Empty<string>(),
+                    SavedPost = Array.Empty<string>(),
+                    MentionedPost = Array.Empty<string>()
+                }) ;
 
                 if (!_roleManager.RoleExistsAsync(SD.ROLE_MODERATOR).GetAwaiter().GetResult())
                 {
