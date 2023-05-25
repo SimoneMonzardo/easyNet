@@ -30,6 +30,7 @@ namespace easyNetAPI.Models
         public List<string>? FollowedUsers { get; set; }
         [BsonElement("followers_list")]
         public List<string>? FollowedList { get; set; }
+
         [BsonElement("liked_posts")]
         public List<int>? LikedPost { get; set; }
         [BsonElement("saved_posts")]

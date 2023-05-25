@@ -64,7 +64,7 @@ namespace easyNetAPI.Controllers
                     Company = new Company(),
                     Posts = Array.Empty<Post>(),
                     FollowedUsers = Array.Empty<string>(),
-                    FollowedList = Array.Empty<string>(),
+                    FollowersList = Array.Empty<string>(),
                     LikedPost = Array.Empty<string>(),
                     SavedPost = Array.Empty<string>(),
                     MentionedPost = Array.Empty<string>()
@@ -184,7 +184,114 @@ namespace easyNetAPI.Controllers
             await _db.SaveChangesAsync();
 
             //elimina dati da mongodb
+            var userFromDb = await _userBehaviorSettings.GetAsync(managedUser.Id);
             await _userBehaviorSettings.RemoveAsync(managedUser.Id);
+
+            //eliminare tutta l'attività dell'utente dall'intero database
+            var users = await _userBehaviorSettings.GetAllAsync();
+            foreach (var user in users)
+            {
+                var followersList = user.FollowersList.ToList();
+                if (followersList.Count !=0)
+                {
+                    if (followersList.Contains(managedUser.Id))
+                    {
+                        followersList.Remove(managedUser.Id);
+                        user.FollowersList = followersList.ToArray();
+                    }
+                }
+
+                var followedUsersList = user.FollowedUsers.ToList();
+                if (followedUsersList.Count != 0)
+                {
+                    if (followedUsersList.Contains(managedUser.Id))
+                    {
+                        followedUsersList.Remove(managedUser.Id);
+                        user.FollowedUsers = followedUsersList.ToArray();
+                    }
+                }
+
+                //questo si può mettere in un altro metodo nel postrepository
+                var postsListToDelete = userFromDb.Posts.ToList();
+                foreach (var post in postsListToDelete)
+                {
+                    var likedPost = user.LikedPost.ToList();
+                    if (likedPost.Count() != 0)
+                    {
+                        if (likedPost.Contains(post.PostId.ToString()))
+                        {
+                            likedPost.Remove(post.PostId.ToString());
+                            user.LikedPost = likedPost.ToArray();
+                        }
+                    }
+
+
+                    var savedPosts = user.SavedPost.ToList();
+                    if (savedPosts.Count() != 0)
+                    {
+                        if (savedPosts.Contains(post.PostId.ToString()))
+                        {
+                            savedPosts.Remove(post.PostId.ToString());
+                            user.SavedPost = savedPosts.ToArray();
+                        }
+                    }
+
+                    var mentionedPosts = user.MentionedPost.ToList();
+                    if (mentionedPosts.Count() != 0)
+                    {
+                        if (mentionedPosts.Contains(post.PostId.ToString()))
+                        {
+                            mentionedPosts.Remove(post.PostId.ToString());
+                            user.MentionedPost = mentionedPosts.ToArray();
+                        }
+                    }
+
+                }
+
+                var postsList = user.Posts.ToList();
+                foreach (var post in postsList)
+                {
+                    //cancella commenti sui post di altri utenti
+                    var commentsList = post.Comments.ToList();
+                    if (commentsList.Count() != 0)
+                    {
+                        foreach (var comment in commentsList)
+                        {
+                            if (comment.UserId == managedUser.Id)
+                            {
+                                commentsList.Remove(comment);
+                            }
+                        }
+                        post.Comments = commentsList.ToArray();
+                    }
+
+                    //cancella like su post di altri uenti
+                    var likesList = post.Likes.ToList();
+                    if (likesList.Count != 0)
+                    {
+                        if (likesList.Contains(managedUser.Id))
+                        {
+                            likesList.Remove(managedUser.Id);
+                        }
+                        post.Likes = likesList.ToArray();
+                    }
+                    
+
+                    //cancella tags su post di altri utenti
+                    var tagsList = post.Tags.ToList();
+                    if (tagsList.Count() != 0)
+                    {
+                        if (tagsList.Contains(managedUser.Id))
+                        {
+                            tagsList.Remove(managedUser.Id);
+                        }
+                        post.Tags = tagsList.ToArray();
+                    }
+                }
+                user.Posts = postsList.ToArray();
+
+                await _userBehaviorSettings.UpdateAsync(user.UserId, user);
+            }
 
             return Ok("User deleted successfully");
         }
