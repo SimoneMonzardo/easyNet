@@ -9,9 +9,11 @@ namespace easyNetAPI.Data.Repository.IRepository
 {
     public interface IButtonRepository
     {
-        public Task<List<UserBehavior>> GetAllAsync();
-        public Task<UserBehavior?> GetFirstOrDefault(string userId);
-        public Task AddAsync(UserBehavior user);
-        public Task RemoveAsync(string userId);
+        public Task<List<Button>> GetAllAsync();
+        public Task<Button?> GetFirstOrDefault(string buttonName);
+        public Task AddAsync(Button button, int panelId, int botId);
+        public Task UpdateOneAsync(string buttonName, Button button, int panelId, int botId);
+        public Task UpdateManyAsync(Dictionary<string, Button> buttons, int panelId, int botId);
+        public Task RemoveAsync(int panelId, int botId, string buttonName);
     }
 }

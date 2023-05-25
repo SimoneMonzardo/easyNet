@@ -9,9 +9,11 @@ namespace easyNetAPI.Data.Repository.IRepository
 {
     public interface IReplyRepository
     {
-        public Task<List<UserBehavior>> GetAllAsync();
-        public Task<UserBehavior?> GetFirstOrDefault(string userId);
-        public Task AddAsync(UserBehavior user);
-        public Task RemoveAsync(string userId);
+        public Task<List<Reply>> GetAllAsync();
+        public Task<Reply?> GetFirstOrDefault(int replyId);
+        public Task AddAsync(Reply reply, int commentId, int postId);
+        public Task UpdateOneAsync(int replyId, Reply reply, int commentId, int postId);
+        public Task UpdateManyAsync(Dictionary<int, Reply> replies, int commentId, int postId);
+        public Task RemoveAsync(int replyId, int commentId, int postId);
     }
 }

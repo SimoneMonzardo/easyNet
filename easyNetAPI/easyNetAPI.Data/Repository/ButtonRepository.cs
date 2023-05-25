@@ -1,31 +1,90 @@
 ﻿using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Org.BouncyCastle.Pqc.Crypto.Lms;
 namespace easyNetAPI.Data.Repository
 {
     public class ButtonRepository : IButtonRepository
     {
+        private readonly IPanelRepository _panels;
         private readonly IMongoCollection<UserBehavior> _usersCollection;
-        public ButtonRepository(IMongoCollection<UserBehavior> usersCollection)
+        public ButtonRepository(IMongoCollection<UserBehavior> usersCollection, IPanelRepository panels)
         {
             _usersCollection = usersCollection;
+            _panels = panels;
         }
-
-        public async Task<List<UserBehavior>> GetAllAsync() =>
-         await _usersCollection.Find(_ => true).ToListAsync();
-
-        public async Task<UserBehavior?> GetFirstOrDefault(string userId) =>
-        await _usersCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
-        public async Task AddAsync(UserBehavior user) =>
-        await _usersCollection.InsertOneAsync(user);
-        public async Task RemoveAsync(string userId) =>
-        await _usersCollection.DeleteOneAsync(x => x.UserId == userId);
+        private async Task<List<Button>> Query()
+        {
+            var unwindStage = new BsonDocument("$unwind", new BsonDocument {
+        {
+          "path",
+          "$company.bot.panels"
+        }
+      });
+            var secondUnwindStage = new BsonDocument("$unwind", new BsonDocument {
+        {
+          "path",
+          "$company.bot.panels.buttons"
+        }
+      });
+            var replaceRootStage = new BsonDocument("$replaceRoot", new BsonDocument {
+        {
+          "newRoot",
+          "$company.bot.panels.buttons"
+        }
+      });
+            var pipeline = new[] {
+        unwindStage,
+        secondUnwindStage,
+        replaceRootStage
+      };
+            var _buttonsCollection = _usersCollection.Aggregate<BsonDocument>(pipeline).ToList();
+            List<Button> buttons = new();
+            foreach (var bsonDocument in _buttonsCollection)
+            {
+                buttons.Add(BsonSerializer.Deserialize<Button>(bsonDocument));
+            }
+            return buttons;
+        }
+        public async Task<List<Button>> GetAllAsync() => await Query();
+        public async Task<Button?> GetFirstOrDefault(string buttonName) => Query().Result.FirstOrDefault(x => x.ButtonName == buttonName);
+        public async Task AddAsync(Button button, int panelId, int botId)
+        {
+            Panel panel = _panels.GetFirstOrDefault(panelId).Result;
+            panel.Buttons.Add(button);
+            await _panels.UpdateOneAsync(panel.PanelId, panel, botId);
+        }
+        public async Task UpdateOneAsync(string buttonName, Button button, int panelId, int botId)
+        {
+            Panel panel = _panels.GetAllAsync().Result.ToList().FirstOrDefault(panel => panel.PanelId == panelId);
+            Button _button = panel.Buttons.Where(x => x.ButtonName == buttonName).FirstOrDefault();
+            _button = button;
+            await _panels.UpdateOneAsync(panel.PanelId, panel, botId);
+        }
+        public async Task UpdateManyAsync(Dictionary<string, Button> buttons, int panelId, int botId)
+        {
+            foreach (var button in buttons)
+            {
+                Panel panel = _panels.GetAllAsync().Result.FirstOrDefault(panel => panel.PanelId == panelId);
+                Button _button = panel.Buttons.Where(x => x.ButtonName == button.Key).FirstOrDefault();
+                _button = button.Value;
+                await _panels.UpdateOneAsync(panel.PanelId, panel, botId);
+            }
+        }
+        public async Task RemoveAsync(int panelId, int botId, string buttonName)
+        {
+            Panel panel = _panels.GetFirstOrDefault(panelId).Result;
+            Button button = panel.Buttons.Where(x => x.ButtonName == buttonName).FirstOrDefault();
+            panel.Buttons.Remove(button);
+            await _panels.UpdateOneAsync(panelId, panel, botId);
+        }
     }
 }

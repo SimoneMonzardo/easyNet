@@ -8,7 +8,7 @@ public class Post
     [BsonElement("post_id")]
     public int PostId { get; set; }
     [BsonElement("comments")]
-    public Comment[]? Comments { get; set; }
+    public List<Comment>? Comments { get; set; }
     [BsonElement("user_id")]
     public string? UserId { get; set; }
     [BsonElement("username")]

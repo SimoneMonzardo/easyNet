@@ -26,12 +26,12 @@ namespace easyNetAPI.Data.Repository
             UserBehavior = new UserBehaviorRepository(_usersCollection);
             Company = new CompanyRepository(_usersCollection, UserBehavior);
             Bot = new BotRepository(_usersCollection, Company);
-            QA = new QARepository(_usersCollection);
-            Panel = new PanelRepository(_usersCollection);
-            Button = new ButtonRepository(_usersCollection);
-            Post = new PostRepository(_usersCollection);
-            //Comment = new CommentRepository(_usersCollection);
-            Reply = new ReplyRepository(_usersCollection);
+            QA = new QARepository(_usersCollection, Bot);
+            Panel = new PanelRepository(_usersCollection, Bot);
+            Button = new ButtonRepository(_usersCollection, Panel);
+            Post = new PostRepository(_usersCollection,UserBehavior);
+            Comment = new CommentRepository(_usersCollection, Post);
+            Reply = new ReplyRepository(_usersCollection, Comment);
         }
         public ICompanyRepository Company { get; private set; } = null!;
         public IUserBehaviorRepository UserBehavior { get; private set;}=null!;

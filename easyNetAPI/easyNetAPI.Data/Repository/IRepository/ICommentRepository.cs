@@ -9,16 +9,12 @@ namespace easyNetAPI.Data.Repository.IRepository
 {
     public interface ICommentRepository
     {
+
         public Task<List<Comment>> GetAllAsync();
-        public Task<Comment?> GetFirstOrDefault(int commentsId);
-        public Task AddAsync(Comment comment, string userId);
-        /// <summary>
-        /// updates one or more Company objects from DB.
-        /// param: "companies" dictionary of all the companies to update key: companyId value: updated company
-        /// </summary>
-        /// <param name="companies"></param>
-        /// <returns></returns>
-        public Task UpdateAsync(Dictionary<int, Comment> comments);
-        public Task RemoveAsync(Comment comment);
+        public Task<Comment?> GetFirstOrDefault(int commentId);
+        public Task AddAsync(Comment comment, int postId);
+        public Task UpdateOneAsync(int commentId, Comment comment, int postId);
+        public Task UpdateManyAsync(Dictionary<int, Comment> comments, int postId);
+        public Task RemoveAsync(int postId, int commentId);
     }
 }

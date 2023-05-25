@@ -9,9 +9,11 @@ namespace easyNetAPI.Data.Repository.IRepository
 {
     public interface IPanelRepository
     {
-        public Task<List<UserBehavior>> GetAllAsync();
-        public Task<UserBehavior?> GetFirstOrDefault(string userId);
-        public Task AddAsync(UserBehavior user);
-        public Task RemoveAsync(string userId);
+        public Task<List<Panel>> GetAllAsync();
+        public Task<Panel?> GetFirstOrDefault(int panelId);
+        public Task AddAsync(Panel panel, int botId);
+        public Task UpdateOneAsync(int panelId, Panel panel, int botId);
+        public Task UpdateManyAsync(Dictionary<int, Panel> panels, int botId);
+        public Task RemoveAsync(int panelId, int botId);
     }
 }

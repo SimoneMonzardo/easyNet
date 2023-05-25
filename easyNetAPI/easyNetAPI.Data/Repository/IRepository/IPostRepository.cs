@@ -9,9 +9,11 @@ namespace easyNetAPI.Data.Repository.IRepository
 {
     public interface IPostRepository
     {
-        public Task<List<UserBehavior>> GetAllAsync();
-        public Task<UserBehavior?> GetFirstOrDefault(string userId);
-        public Task AddAsync(UserBehavior user);
-        public Task RemoveAsync(string userId);
+        public Task<List<Post>> GetAllAsync();
+        public Task<Post?> GetFirstOrDefault(int postId);
+        public Task AddAsync(Post post, string userId);
+        public Task UpdateOneAsync(int postId, Post post, string userId);
+        public Task UpdateManyAsync(Dictionary<int, Post> posts, string userId);
+        public Task RemoveAsync(int postId, string userId);
     }
 }
