@@ -113,7 +113,6 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("User", policy => policy.RequireRole(SD.ROLE_USER));
 });
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

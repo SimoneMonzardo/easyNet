@@ -23,15 +23,11 @@ namespace easyNetAPI.Data.Repository
         }
         private async Task<List<Post>> Query()
         {
+            var unwindStage = new BsonDocument("$unwind", new BsonDocument { { "path", "$posts" } });
             var replaceRootStage = new BsonDocument("$replaceRoot", new BsonDocument {
-        {
-          "newRoot",
-          "$posts"
-        }
-      });
-            var pipeline = new[] {
-        replaceRootStage
-      };
+ {"newRoot", "$posts"}
+ });
+            var pipeline = new[] { unwindStage, replaceRootStage };
             var _botsCollection = _usersCollection.Aggregate<BsonDocument>(pipeline).ToList();
             List<Post> posts = new();
             foreach (var bsonDocument in _botsCollection)
