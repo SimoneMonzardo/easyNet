@@ -23,5 +23,4 @@ namespace easyNetAPI.Models
         [BsonElement("replies")]
         public List<Reply>? Replies { get; set; }
     }
-
 }
