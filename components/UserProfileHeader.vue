@@ -1,22 +1,3 @@
-<script>
-export default {
-  props: 
-  {
-    user_name :String,
-    profile_picture: String,
-    followers_count:String,
-    following_count:String,
-    description:String, 
-    haveBanner: Boolean
-  }, 
-  computed:{
-    image(){
-        return this.profile_picture;
-    }
-  }
-}
-</script>
-
 <template>
     <div class="max-w p-8 sm:flex sm:space-x-6 dark:bg-gray-900 dark:text-gray-100 place-content-center"  >
         <div class="flex flex-col space-y-4" style="margin-right:40%; ">
@@ -57,3 +38,22 @@ export default {
         </div>       
     </div>
 </template>
+
+<script>
+export default {
+  props: 
+  {
+    user_name :String,
+    profile_picture: String,
+    followers_count:String,
+    following_count:String,
+    description:String, 
+    haveBanner: Boolean
+  }, 
+  computed:{
+    image(){
+        return this.profile_picture;
+    }
+  }
+}
+</script>
