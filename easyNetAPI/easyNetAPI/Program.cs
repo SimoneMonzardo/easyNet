@@ -20,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<TokenService, TokenService>();
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDBDatabase"));
-builder.Services.AddSingleton<UserBehaviorSettings>();
+builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -64,8 +64,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 #endregion
 
 builder.Services.Configure<EmailSenderOptions>(builder.Configuration.GetSection("EmailSender"));
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
@@ -111,7 +113,6 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("Employee", policy => policy.RequireRole(SD.ROLE_EMPLOYEE));
     options.AddPolicy("User", policy => policy.RequireRole(SD.ROLE_USER));
 });
-
 
 var app = builder.Build();
 

@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository.IRepository
 {
-    public interface ICommentRepository : IRepository<Comment>
+    public interface ICommentRepository
     {
-        void Update(Comment comment);
+
+        public Task<List<Comment>> GetAllAsync();
+        public Task<Comment?> GetFirstOrDefault(int commentId);
+        public Task AddAsync(Comment comment, int postId);
+        public Task UpdateOneAsync(int commentId, Comment comment, int postId);
+        public Task UpdateManyAsync(Dictionary<int, Comment> comments, int postId);
+        public Task RemoveAsync(int postId, int commentId);
     }
 }

@@ -10,15 +10,17 @@ namespace easyNetAPI.Models
 {
     public class Reply
     {
-        [BsonElement("comment_id")]
-        public int CommentId { get; set; }
+        [BsonElement("reply_id")]
+        public int ReplyId { get; set; }
         [BsonElement("user_id")]
         public string? UserId { get; set; }
         [BsonElement("username")]
         public string? Username { get; set; }
         [BsonElement("content")]
         public string? Content { get; set; }
+
         [BsonElement("like")]
-        public string[]? Like { get; set; }
+
+        public List<string>? Like { get; set; }
     }
 }

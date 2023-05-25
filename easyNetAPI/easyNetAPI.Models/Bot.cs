@@ -10,15 +10,15 @@ namespace easyNetAPI.Models
 {
     public class Bot
     {
-        [BsonElement("botId")]
+        [BsonElement("bot_id")]
         public int BotId { get; set; }
         [BsonElement("type")]
         public string? Type { get; set; }
         [BsonElement("platform")]
         public string? Platform { get; set; }
         [BsonElement("Q&A")]
-        public QA[]? QA { get; set; }
+        public List<QA>? QA { get; set; }
         [BsonElement("panels")]
-        public Panel[]? Panels { get; set; }
+        public List<Panel>? Panels { get; set; }
     }
 }

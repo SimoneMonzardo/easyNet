@@ -4,32 +4,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
 namespace easyNetAPI.Models
 {
     public class UserBehavior
     {
+        [BsonId]
+        //[BsonIgnore]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? _id { get; set; }
+        [BsonElement("_id")]
+        public string _id { get; set; }
         [BsonElement("user_id")]
         public string? UserId { get; set; }
         [BsonElement("administrator")]
-        public bool Administrator { get; set; }
+        public bool? Administrator { get; set; }
+        [BsonElement("description")]
+        public string? Description { get; set; }
         [BsonElement("company")]
         public Company? Company { get; set; }
         [BsonElement("posts")]
-        public Post[]? Posts { get; set; }
+        public List<Post>? Posts { get; set; }
         [BsonElement("followed_users")]
-        public string[]? FollowedUsers { get; set; }
+        public List<string>? FollowedUsers { get; set; }
         [BsonElement("followers_list")]
-        public string[]? FollowedList { get; set; }
+        public List<string>? FollowedList { get; set; }
         [BsonElement("liked_posts")]
-        public string[]? LikedPost { get; set; }
+        public List<int>? LikedPost { get; set; }
         [BsonElement("saved_posts")]
-        public string[]? SavedPost { get; set; }
+        public List<int>? SavedPost { get; set; }
         [BsonElement("mentioned_posts")]
-        public string[]? MentionedPost { get; set; }
+        public List<int>? MentionedPost { get; set; }
     }
 }

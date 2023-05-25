@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace easyNetAPI.Models
         [BsonElement("intent")]
         public string? Intent { get; set; }
         [BsonElement("questions")]
-        public string[]? Questions { get; set; }
+        public string[] Questions { get; set; }
         [BsonElement("answer")]
         public string? Answer { get; set; }
     }

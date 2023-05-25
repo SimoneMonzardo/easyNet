@@ -2,13 +2,16 @@
 {
     public interface IUnitOfWork 
     {
-        CompanyRepository Company { get; }
-        BotRepository Bot { get; }
-        QARepository QA { get; }
-        PanelRepository Panel { get; }
-        ButtonRepository Button { get; }
-        PostRepository Post { get; }
-        CommentRepository Comment { get; }
-        ReplyRepository Reply { get; }
+
+        ICompanyRepository Company { get; }
+        IUserBehaviorRepository UserBehavior { get; }
+        IBotRepository Bot { get; }
+        IQARepository QA { get; }
+        IPanelRepository Panel { get; }
+        IButtonRepository Button { get; }
+        IPostRepository Post { get; }
+        ICommentRepository Comment { get; }
+        IReplyRepository Reply { get; }
+
     }
 }

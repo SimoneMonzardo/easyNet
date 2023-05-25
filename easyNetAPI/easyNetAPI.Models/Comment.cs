@@ -14,15 +14,14 @@ namespace easyNetAPI.Models
         public int CommentId { get; set; }
         [BsonElement("user_id")]
         public string? UserId { get; set; }
-
         [BsonElement("username")]
         public string? Username { get; set; }
         [BsonElement("content")]
         public string? Content { get; set; }
         [BsonElement("like")]
-        public string[]? Like { get; set; }
+        public List<string>? Like { get; set; }
         [BsonElement("replies")]
-        public Reply[]? Replies { get; set; }
+        public List<Reply>? Replies { get; set; }
     }
 
 }

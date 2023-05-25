@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository.IRepository
 {
-    public interface IButtonRepository : IRepository<Button>
+    public interface IButtonRepository
     {
-        void Update(Button button);
+        public Task<List<Button>> GetAllAsync();
+        public Task<Button?> GetFirstOrDefault(string buttonName);
+        public Task AddAsync(Button button, int panelId, int botId);
+        public Task UpdateOneAsync(string buttonName, Button button, int panelId, int botId);
+        public Task UpdateManyAsync(Dictionary<string, Button> buttons, int panelId, int botId);
+        public Task RemoveAsync(int panelId, int botId, string buttonName);
     }
 }

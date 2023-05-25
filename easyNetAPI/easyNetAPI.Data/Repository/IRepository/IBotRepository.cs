@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data.Repository.IRepository
 {
-    public interface IBotRepository : IRepository<Bot>
+    public interface IBotRepository
     {
-        void Update(Bot bot);
+        public Task<List<Bot>> GetAllAsync();
+        public Task<Bot?> GetFirstOrDefault(int botId);
+        public Task AddAsync(Bot bot, int companyId);
+        public Task UpdateOneAsync(int botId, Bot bot);
+        public Task UpdateManyAsync(Dictionary<int, Bot> bots);
+        public Task RemoveAsync(int botId);
     }
 }
