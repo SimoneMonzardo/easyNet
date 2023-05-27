@@ -1,9 +1,7 @@
 <template>
   <div>
-    <SettingSelector/>
+    <SettingSelector />
   </div>
 </template>
 
-<script setup>
-
-</script>
+<script setup></script>
