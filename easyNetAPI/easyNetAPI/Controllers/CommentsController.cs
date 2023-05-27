@@ -61,7 +61,7 @@ public class CommentsController : ControllerBase
             return "Not Logged in";
         }
         var userName = _db.Users.Where(u => u.Id.Equals(userId)).Select(u => u.UserName).FirstOrDefault();
-        var comment = new Comment() { Content = upsertComment.Content, UserId= userId, Username = userName, Like = new List<string>(), Replies = new List<Reply>() };
+        var comment = new Comment() { Content = upsertComment.Content, UserId= userId, Username = userName, Likes = new List<string>(), Replies = new List<Reply>() };
         await _unitOfWork.Comment.AddAsync(comment, upsertComment.PostId);
         return "comment added";
     }

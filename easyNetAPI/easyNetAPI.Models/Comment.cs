@@ -19,7 +19,7 @@ namespace easyNetAPI.Models
         [BsonElement("content")]
         public string? Content { get; set; }
         [BsonElement("like")]
-        public List<string>? Like { get; set; }
+        public List<string>? Likes { get; set; }
         [BsonElement("replies")]
         public List<Reply>? Replies { get; set; }
     }
