@@ -12,7 +12,6 @@ namespace easyNetAPI.Models
     public class UserBehavior
     {
         [BsonId]
-        //[BsonIgnore]
         [BsonRepresentation(BsonType.ObjectId)]
         [BsonElement("_id")]
         public string _id { get; set; }
@@ -29,8 +28,7 @@ namespace easyNetAPI.Models
         [BsonElement("followed_users")]
         public List<string>? FollowedUsers { get; set; }
         [BsonElement("followers_list")]
-        public List<string>? FollowedList { get; set; }
-
+        public List<string>? FollowersList { get; set; }
         [BsonElement("liked_posts")]
         public List<int>? LikedPost { get; set; }
         [BsonElement("saved_posts")]

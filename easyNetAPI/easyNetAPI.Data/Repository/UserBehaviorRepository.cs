@@ -23,14 +23,12 @@ namespace easyNetAPI.Data.Repository
             _usersCollection = usersCollection;
         }
 
-
-
-
         public async Task<List<UserBehavior>> GetAllAsync() =>
          await _usersCollection.Find(_ => true).ToListAsync();
 
         public async Task<UserBehavior?> GetFirstOrDefault(string userId) =>
             _usersCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync().Result;
+
         public async Task AddAsync(UserBehavior user)
         {
             user._id = null;
@@ -48,7 +46,7 @@ namespace easyNetAPI.Data.Repository
             .Set(x => x.Company, user.Value.Company)
             .Set(x => x.Posts, user.Value.Posts)
             .Set(x => x.FollowedUsers, user.Value.FollowedUsers)
-            .Set(x => x.FollowedList, user.Value.FollowedList)
+            .Set(x => x.FollowersList, user.Value.FollowersList)
             .Set(x => x.LikedPost, user.Value.LikedPost)
             .Set(x => x.SavedPost, user.Value.SavedPost)
             .Set(x => x.MentionedPost, user.Value.MentionedPost);
@@ -66,7 +64,7 @@ namespace easyNetAPI.Data.Repository
             .Set(x => x.Company, user.Company)
             .Set(x => x.Posts, user.Posts)
             .Set(x => x.FollowedUsers, user.FollowedUsers)
-            .Set(x => x.FollowedList, user.FollowedList)
+            .Set(x => x.FollowersList, user.FollowersList)
             .Set(x => x.LikedPost, user.LikedPost)
             .Set(x => x.SavedPost, user.SavedPost)
             .Set(x => x.MentionedPost, user.MentionedPost);
@@ -76,8 +74,32 @@ namespace easyNetAPI.Data.Repository
 
         public async Task RemoveAsync(string userId) =>
         await _usersCollection.DeleteOneAsync(x => x.UserId == userId);
-        
-        
+
+        public async Task RemoveUserActivity(UserBehavior userToDelete) {
+            var users = await GetAllAsync();
+            if (users.Count() !=0)
+            {
+                foreach (var user in users)
+                {
+                    if (user.FollowersList.Count() != 0)
+                    {
+                        if (user.FollowersList.Contains(userToDelete.UserId))
+                        {
+                            user.FollowersList.Remove(userToDelete.UserId);
+                        }
+                    }
+                    if (user.FollowedUsers.Count != 0)
+                    {
+                        if (user.FollowedUsers.Contains(userToDelete.UserId))
+                        {
+                            user.FollowedUsers.Remove(userToDelete.UserId);
+                        }
+                    }
+                    //cancellare il resto dal db
+                    await UpdateOneAsync(user.UserId, user);
+                }
+            }
+        }
     }
 
 }
