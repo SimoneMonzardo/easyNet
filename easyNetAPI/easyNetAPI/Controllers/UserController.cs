@@ -5,6 +5,7 @@ using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
 using easyNetAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 
@@ -14,18 +15,20 @@ namespace easyNetAPI.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<UserController> _logger;
         private readonly AppDbContext _db;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UserController(ILogger<UserController> logger, AppDbContext db, IUnitOfWork unitOfWork)
+        public UserController(UserManager<IdentityUser> userManager, ILogger<UserController> logger, AppDbContext db, IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _db = db;
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
-        [HttpPost("Follow"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpPost("Follow_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
         public async Task<ActionResult<string>> FollowUserAsync(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -64,7 +67,7 @@ namespace easyNetAPI.Controllers
             return Ok("User followed successfully");    
         }
 
-        [HttpPost("Unfollow"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpPost("Unfollow_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
         public async Task<ActionResult<string>> UnfollowUserAsync(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -123,7 +126,7 @@ namespace easyNetAPI.Controllers
         }
 
         //prende i follower di un utente specificato
-        [HttpGet("GetUserFollowers"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetUserFollowers_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
         public async Task<List<string>?> GetUserFollowers(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -159,7 +162,7 @@ namespace easyNetAPI.Controllers
         }
 
         //prende i follower dell'utente che ha fatto la richiesta
-        [HttpGet("GetFollowers"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetFollowers_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
         public async Task<List<string>?> GetUserFollowers()
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -190,7 +193,7 @@ namespace easyNetAPI.Controllers
 
 
         //prende i follower di un utente specificato
-        [HttpGet("GetUserFollowedList"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetUserFollowedList_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
         public async Task<List<string>?> GetUserFollowedList(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -226,7 +229,7 @@ namespace easyNetAPI.Controllers
         }
 
         //prende i followed dell'utente che ha fatto la richiesta
-        [HttpGet("GetFollowed"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetFollowed_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
         public async Task<List<string>?> GetUserFollowed()
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -253,6 +256,23 @@ namespace easyNetAPI.Controllers
             }
 
             return returnList;
+        }
+
+        [HttpPost("ConvertToAdmin_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+        public async Task<ActionResult<string>> ConvertToAdmin(string userId)
+        {
+            if (userId is null || userId.Equals(string.Empty))
+                return BadRequest("Insert userId");
+
+            var user = _db.Users.Find(userId);
+            if (user is null)
+                return BadRequest("User not found");
+            //await _userManager.RemoveFromRoleAsync(user, SD.ROLE_USER);
+            var result = await _userManager.AddToRoleAsync(user, SD.ROLE_COMPANY_ADMIN);
+            if (result.Succeeded)
+                return Ok("user is now admin");
+
+            return BadRequest("could not make user admin see exception: " + result.Errors);
         }
     }
 }
