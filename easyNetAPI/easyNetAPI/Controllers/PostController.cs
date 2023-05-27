@@ -57,8 +57,9 @@ public class PostController : ControllerBase
     }
 
     [HttpPost("UpsertPostOfAuthUser"), Authorize(Roles = SD.ROLE_USER)]
-    public async Task<ActionResult<string>> UpsertAsync(Post post)
+    public async Task<ActionResult<string>> UpsertAsync(int? postId, string content)
     {
+        Post post = new Post();
         if (!ModelState.IsValid)
         {
             return BadRequest("Model is not valid");
@@ -69,21 +70,26 @@ public class PostController : ControllerBase
             token = token.Remove(0, 7);
             var principal = await AuthControllerUtility.DecodeJWTToken(token);
             var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
-            var oldPost = await _unitOfWork.Post.GetFirstOrDefault(post.PostId);
+            Post oldPost = new Post();
+            if(postId != null)
+                oldPost = await _unitOfWork.Post.GetFirstOrDefault((int)postId);
             if (oldPost == null)
             {
                 post.UserId = userId;
                 post.Username = _db.Users.FirstOrDefault(u => u.Id == userId).UserName;
+                post.Content= content;
+                if (postId != null)
+                    post.PostId = (int)postId;
                 await _unitOfWork.Post.AddAsync(post, userId);
                 return Ok("Post created succesfully");
             }
-            if (oldPost.UserId == userId)
+            if (oldPost.UserId != userId)
                 return BadRequest("userid not authorized to update post");
-
+            post.PostId = oldPost.PostId;
             post.Username = oldPost.Username;
             post.UserId = oldPost.UserId;
             post.Likes = oldPost.Likes;
-            post.Content = oldPost.Content;
+            post.Content = content;
             post.Tags = oldPost.Tags;
             await _unitOfWork.Post.UpdateOneAsync(post.PostId, post, post.UserId);
             return Ok("Post modified succesfully");
