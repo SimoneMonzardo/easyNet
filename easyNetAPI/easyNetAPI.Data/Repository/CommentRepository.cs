@@ -61,8 +61,9 @@ namespace easyNetAPI.Data.Repository
                 return false;
             }
             post.Comments.Add(comment);
-            await _posts.UpdateOneAsync(post);
+            return await _posts.UpdateOneAsync(post);
         }
+
         public async Task<bool> UpdateOneAsync(Comment newComment, int postId)
         {
             Post post = await _posts.GetFirstOrDefault(postId);
@@ -95,92 +96,41 @@ namespace easyNetAPI.Data.Repository
             return await _posts.UpdateOneAsync(postFromDb);
         }
 
-        public async Task UpdateManyAsync(Dictionary<int, Comment> comments, int postId)
+        public async Task<bool> UpdateManyAsync(Dictionary<int, Comment> comments, int postId)
         {
-            foreach (var comment in comments)
+            try
             {
-                Post post = _posts.GetAllAsync().Result.FirstOrDefault(post => post.PostId == postId);
-                Comment _comment = post.Comments.Where(x => x.CommentId == comment.Key).FirstOrDefault();
-                _comment = comment.Value;
-                await _posts.UpdateOneAsync(post);
+                foreach (var comment in comments)
+                {
+                    Post post = _posts.GetAllAsync().Result.FirstOrDefault(post => post.PostId == postId);
+                    Comment oldComment = post.Comments.Where(x => x.CommentId == comment.Key).FirstOrDefault();
+                    oldComment = comment.Value;
+                    await _posts.UpdateOneAsync(post);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 
-        public async Task RemoveAsync(int postId, int commentId)
+        public async Task<bool> RemoveAsync(int postId, int commentId)
         {
             Post post = _posts.GetFirstOrDefault(postId).Result;
             Comment comment = post.Comments.Where(x => x.CommentId == commentId).FirstOrDefault();
             post.Comments.Remove(comment);
-            await _posts.UpdateOneAsync(post);
+            return await _posts.UpdateOneAsync(post);
         }
 
-        //public async Task<Comment?> GetCommentAsync(int commentId)
-        //{
-        //    _unitOfWork = new UnitOfWork(_userBehaviorSettings);
-        //    var posts = await _unitOfWork.Post.GetAllAsync();
-        //    foreach (var post in posts)
-        //    {
-        //        foreach (var comment in post.Comments)
-        //        {
-        //            if (comment.CommentId == commentId)
-        //            {
-        //                return comment;
-        //            }
-        //        }
-        //    }
-        //    return null;
-        //}
-
-        //public async Task<List<string>>? GetLikesOfComment(int commentId)
-        //{
-        //    var comment = await GetCommentAsync(commentId);
-        //    if (comment is null)
-        //    {
-        //        return null;
-        //    }
-        //    return comment.Like.ToList();
-        //}
-
-        //public async Task<string> AddComment(UpsertComment comment, string userId, string userName)
-        //{
-        //    _unitOfWork = new UnitOfWork(_userBehaviorSettings);
-        //    var post = await _unitOfWork.Post.GetPostAsync(comment.PostId);
-        //    if (post is null)
-        //    {
-        //        return "Post not found";
-        //    }
-        //    var commentsList = post.Comments.ToList();
-        //    var newComment = new Comment
-        //    {
-        //        Content = comment.Content,
-        //        UserId = userId,
-        //        Username = userName,
-        //        Like = Array.Empty<string>(),
-        //        Replies = Array.Empty<Reply>()
-        //    };
-        //    if (commentsList.Count == 0)
-        //    {
-        //        newComment.CommentId = 1;
-        //    }
-        //    else
-        //    {
-        //        newComment.CommentId = commentsList.LastOrDefault().CommentId + 1;
-        //    }
-        //    commentsList.Add(newComment) ;
-        //    post.Comments = commentsList.ToArray();
-        //    await _unitOfWork.Post.ManagePostComments(post);
-        //    return "Comment added successfully";
-        //}
-
-        //public void Update(Comment comment)
-        //{
-        //    var commentFromDb = GetFirstOrDefault(c => c.CommentId == comment.CommentId);
-        //    if (commentFromDb is not null)
-        //    {
-        //        commentFromDb.Content = comment.Content;
-        //        commentFromDb.Like = comment.Like;
-        //        commentFromDb.Replies = comment.Replies;
-        //    }
-        //}
+        public async Task<List<string>>? GetCommentLikes(int commentId)
+        {
+            var comment = await GetFirstOrDefault(commentId);
+            if (comment is null)
+            {
+                return null;
+            }
+            return comment.Likes.ToList();
+        }
     }
 }
