@@ -56,8 +56,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 #region Connection String
-//Identity DB connection strings:
-//On Windows:
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 builder.Services.AddDbContext<AppDbContext>(
@@ -68,9 +67,6 @@ builder.Services.AddDbContext<AppDbContext>(
  .EnableDetailedErrors()
 );
 
-//On MacOS:
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 #endregion
 
 builder.Services.Configure<EmailSenderOptions>(builder.Configuration.GetSection("EmailSender"));

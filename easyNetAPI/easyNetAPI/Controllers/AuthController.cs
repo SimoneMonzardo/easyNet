@@ -79,7 +79,7 @@ namespace easyNetAPI.Controllers
                 }
                 //verifico il ruolo
 
-                await _userManager.AddToRoleAsync(applicationUser, request.Role ?? SD.ROLE_USER);
+                await _userManager.AddToRoleAsync(applicationUser, SD.ROLE_USER);
                 request.Password = "";
                 return CreatedAtAction(nameof(Register), new { email = request.Email }, request);
             }
