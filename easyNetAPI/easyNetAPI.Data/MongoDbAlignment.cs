@@ -43,7 +43,7 @@ namespace easyNetAPI.Data
                 int postId = unitOfWork.Post.GetAllAsync().Result.ToList()
                     .Where(post => post.Comments.Contains(comment)).FirstOrDefault().PostId;
                 reply.Likes.Remove(reply.Likes.FirstOrDefault(userId));
-                await unitOfWork.Reply.UpdateOneAsync(reply.ReplyId, reply, postId, comment.CommentId);
+                await unitOfWork.Reply.UpdateOneAsync(reply, postId, comment.CommentId);
             }
         }
         public static async Task RemoveAllTagsAsync(string userId, IUnitOfWork unitOfWork)
