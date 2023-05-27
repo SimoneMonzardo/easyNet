@@ -75,7 +75,7 @@ namespace easyNetAPI.Data.Repository
         public async Task RemoveAsync(string userId) =>
         await _usersCollection.DeleteOneAsync(x => x.UserId == userId);
 
-        public async Task RemoveUserActivity(UserBehavior userToDelete) {
+        public async Task RemoveUserActivityAsync(UserBehavior userToDelete, IUnitOfWork _unitOfWork) {
             var users = await GetAllAsync();
             if (users.Count() !=0)
             {
@@ -95,7 +95,11 @@ namespace easyNetAPI.Data.Repository
                             user.FollowedUsers.Remove(userToDelete.UserId);
                         }
                     }
-                    //cancellare il resto dal db
+                    var postsListToDelete = userToDelete.Posts.ToList();
+                    foreach (var post in postsListToDelete)
+                    {
+                        await MongoDbAlignment.RemovePostDataAsync(post.PostId, user ,_unitOfWork);
+                    }
                     await UpdateOneAsync(user.UserId, user);
                 }
             }

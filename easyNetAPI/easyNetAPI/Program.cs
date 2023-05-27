@@ -20,9 +20,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddScoped<TokenService, TokenService>();
-builder.Services.AddSingleton<UserBehaviorSettings>();
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDBDatabase"));
 builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -55,7 +52,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-#region Connection String
+#region Connection Strings
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var serverVersion = ServerVersion.AutoDetect(connectionString);
@@ -66,6 +63,9 @@ builder.Services.AddDbContext<AppDbContext>(
  .EnableSensitiveDataLogging()
  .EnableDetailedErrors()
 );
+
+builder.Services.Configure<MongoDbSettings>(
+    builder.Configuration.GetSection("MongoDBDatabase"));
 
 #endregion
 
