@@ -1,6 +1,6 @@
 <template>
   <div id="sidebar" tabindex="-1" aria-labelledby="sidebar"
-    class="absolute top-16 right-0 z-40 h-[calc(100vh-4rem)] w-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-80 dark:bg-gray-800 sm:w-48 lg:w-64">
+    class="absolute top-16 right-0 z-40 h-[calc(100vh-4rem)] w-screen p-4 overflow-y-auto aria-hidden:hidden transition-transform translate-x-full bg-white w-80 dark:bg-gray-800 sm:w-48 lg:w-64">
     <ul class="space-y-2 font-medium">
       <li class="text-center mx-auto mb-4">
         <Toggle text="Seguiti" />
@@ -45,8 +45,6 @@ export default {
 
       const sidebar = new Drawer(element, options);
       const sidebarToggle = document.getElementById('sidebar-toggle');
-
-      
 
       if (this.$nuxt._route.path != '/') {
         sidebarToggle.classList.add('hidden');
