@@ -21,6 +21,10 @@ namespace easyNetAPI.Controllers
         [HttpPost("PostLike")]
         public async Task<IActionResult> PostLikeAsync(int postId)
         {
+            /*
+             Questo metodo fa sia la post che la delete 
+             in base a se hai o no lasciato like al post
+             */
             try
             {
                 var token = Request.Headers["Authorization"].ToString();
