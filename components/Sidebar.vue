@@ -45,6 +45,15 @@ export default {
       }
 
       const sidebar = new Drawer(element, options);
+      const sidebarToggle = document.getElementById('sidebar-toggle');
+
+      if (this.$nuxt._route.path != '/') {
+        sidebarToggle.classList.add('hidden');
+        sidebar.hide();
+        return;
+      }
+
+      sidebarToggle.classList.remove('hidden');
 
       if (window.innerWidth >= 768 && sidebar.isHidden()) {
         sidebar.show();
