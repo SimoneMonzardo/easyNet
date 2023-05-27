@@ -1,16 +1,14 @@
 <template>
   <div class="">
-    <div class="">
-      <Header />
-    </div>
-    <div>
+    <Header email="temp@mail.com" userName="Temp User"
+      profilePicture="https://st2.depositphotos.com/1007995/8863/i/600/depositphotos_88637478-stock-photo-side-profile-picture-of-a.jpg" />
+    <div class="h-screen flex flex-row">
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
+      <Sidebar />
     </div>
-    <div class="">
-      <Footer />
-    </div>
+    <Footer />
   </div>
 </template>
 <script setup>
