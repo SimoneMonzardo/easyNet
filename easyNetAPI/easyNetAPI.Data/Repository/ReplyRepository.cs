@@ -61,14 +61,14 @@ namespace easyNetAPI.Data.Repository
 
             Comment comment = _comments.GetFirstOrDefault(commentId).Result;
             comment.Replies.Add(reply);
-            await _comments.UpdateOneAsync(commentId, comment, postId);
+            await _comments.UpdateOneAsync(comment, postId);
         }
         public async Task UpdateOneAsync(int replyId, Reply reply, int commentId, int postId)
         {
             Comment comment = _comments.GetAllAsync().Result.ToList().FirstOrDefault(comment => comment.CommentId == commentId);
             Reply _reply = comment.Replies.Where(x => x.ReplyId == replyId).FirstOrDefault();
             _reply = reply;
-            await _comments.UpdateOneAsync(commentId,comment,postId);
+            await _comments.UpdateOneAsync(comment,postId);
 
         }
         public async Task UpdateManyAsync(Dictionary<int, Reply> replies, int commentId, int postId)
@@ -79,7 +79,7 @@ namespace easyNetAPI.Data.Repository
             {
                 Reply _reply = comment.Replies.Where(x => x.ReplyId == reply.Key).FirstOrDefault();
                 _reply = reply.Value;
-                await _comments.UpdateOneAsync(commentId, comment, postId);
+                await _comments.UpdateOneAsync(comment, postId);
             }
         }
         public async Task RemoveAsync(int replyId,int commentId, int postId)
@@ -87,7 +87,7 @@ namespace easyNetAPI.Data.Repository
             Comment comment = _comments.GetFirstOrDefault(commentId).Result;
             Reply reply = comment.Replies.Where(x => x.ReplyId == replyId).FirstOrDefault();
             comment.Replies.Remove(reply);
-            await _comments.UpdateOneAsync(commentId, comment, postId);
+            await _comments.UpdateOneAsync(comment, postId);
         }
     }
 }

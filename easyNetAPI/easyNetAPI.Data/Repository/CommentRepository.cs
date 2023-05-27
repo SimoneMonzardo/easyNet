@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using easyNetAPI.Models.UpsertModels;
 
 namespace easyNetAPI.Data.Repository
 {
@@ -16,18 +17,20 @@ namespace easyNetAPI.Data.Repository
     {
         private readonly IPostRepository _posts;
         private readonly IMongoCollection<UserBehavior> _usersCollection;
+
         public CommentRepository(IMongoCollection<UserBehavior> usersCollection, IPostRepository posts)
         {
             _usersCollection = usersCollection;
             _posts = posts; 
         }
+
         private async Task<List<Comment>> Query()
         {
             var unwindStage = new BsonDocument("$unwind", new BsonDocument {
                 {"path","$posts" }
             });
             var secondUnwindStage = new BsonDocument("$unwind", new BsonDocument {
-                {"path","$$posts.comments" }
+                {"path","$posts.comments" }
             });
             var replaceRootStage = new BsonDocument("$replaceRoot", new BsonDocument {
                 {"newRoot","$posts.comments" }
@@ -50,23 +53,50 @@ namespace easyNetAPI.Data.Repository
         public async Task<Comment?> GetFirstOrDefault(int commentId) =>
         Query().Result.FirstOrDefault(x => x.CommentId == commentId);
 
-        public async Task AddAsync(Comment comment, int postId)
+        public async Task<bool> AddAsync(Comment comment, int postId)
         {
             Post post = _posts.GetFirstOrDefault(postId).Result;
+            if (post is null)
+            {
+                return false;
+            }
             post.Comments.Add(comment);
             await _posts.UpdateOneAsync(post);
         }
-        public async Task UpdateOneAsync(int commentId, Comment comment, int postId)
+        public async Task<bool> UpdateOneAsync(Comment newComment, int postId)
         {
-            Post post = _posts.GetAllAsync().Result.ToList().FirstOrDefault(post => post.PostId == postId);
-            Comment _comment = post.Comments.Where(x => x.CommentId == commentId).FirstOrDefault();
-            _comment = comment;
-            await _posts.UpdateOneAsync(post);
-
+            Post post = await _posts.GetFirstOrDefault(postId);
+            if (post is null)
+            {
+                return false;
+            }
+            Comment comment = await GetFirstOrDefault(newComment.CommentId);
+            if (comment is null || !post.Comments.Contains(comment))
+            {
+                return false;
+            }
+            comment = newComment;
+            return await _posts.UpdateOneAsync(post);
         }
+
+        public async Task<bool> UpdateContentAsync(UpsertComment upsertComment)
+        {
+            var postFromDb = await _posts.GetFirstOrDefault(upsertComment.PostId);
+            if (postFromDb is null)
+            {
+                return false;
+            }
+            var commentFromDb = postFromDb.Comments.Where(c => c.CommentId == upsertComment.CommentId).FirstOrDefault();
+            if (commentFromDb is null)
+            {
+                return false;
+            }
+            commentFromDb.Content = upsertComment.Content;
+            return await _posts.UpdateOneAsync(postFromDb);
+        }
+
         public async Task UpdateManyAsync(Dictionary<int, Comment> comments, int postId)
         {
-
             foreach (var comment in comments)
             {
                 Post post = _posts.GetAllAsync().Result.FirstOrDefault(post => post.PostId == postId);
@@ -75,6 +105,7 @@ namespace easyNetAPI.Data.Repository
                 await _posts.UpdateOneAsync(post);
             }
         }
+
         public async Task RemoveAsync(int postId, int commentId)
         {
             Post post = _posts.GetFirstOrDefault(postId).Result;

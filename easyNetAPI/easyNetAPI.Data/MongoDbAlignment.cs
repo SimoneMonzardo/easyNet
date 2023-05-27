@@ -33,7 +33,7 @@ namespace easyNetAPI.Data
                     .Where(post => post.Comments.Contains(comment))
                     .FirstOrDefault().PostId;
                 comment.Likes.Remove(comment.Likes.FirstOrDefault(userId));
-                await unitOfWork.Comment.UpdateOneAsync(comment.CommentId, comment, postId);
+                await unitOfWork.Comment.UpdateOneAsync(comment, postId);
             }
 
             foreach (var reply in replies)

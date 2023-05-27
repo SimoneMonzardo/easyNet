@@ -25,16 +25,18 @@ public class CommentsController : ControllerBase
     private readonly ILogger<CommentsController> _logger;
     private IUnitOfWork _unitOfWork;
     private readonly AppDbContext _db;
+
     public CommentsController(ILogger<CommentsController> logger, AppDbContext db, IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _db = db;
     }
+
     [HttpGet("GetCommentsOfAPostAuthUser"), Authorize(Roles = SD.ROLE_USER)]
-    public async Task<IEnumerable<Comment>?> GetAsync(int Id)
+    public async Task<IEnumerable<Comment>?> GetAsync(int postId)
     {
-        var post = await _unitOfWork.Post.GetFirstOrDefault(Id);
+        var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
         if (post is not null)
         {
             var comments = post.Comments;
@@ -47,61 +49,71 @@ public class CommentsController : ControllerBase
     }
 
     //fatto per provare l'add su commentRepository
-    [HttpPost("AddComment"), Authorize(Roles = SD.ROLE_USER)]
-    public async Task<string> AddCommentAsync(UpsertComment upsertComment)
-    {
-        if (!ModelState.IsValid ||upsertComment is null)
-            return "comment model is not valid or comment is null";
-        var token = Request.Headers["Authorization"].ToString();
-        token = token.Remove(0, 7);
-        var principal = await AuthControllerUtility.DecodeJWTToken(token);
-        var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
-        if (userId == null)
-        {
-            return "Not Logged in";
-        }
-        var userName = _db.Users.Where(u => u.Id.Equals(userId)).Select(u => u.UserName).FirstOrDefault();
-        var comment = new Comment() { Content = upsertComment.Content, UserId= userId, Username = userName, Likes = new List<string>(), Replies = new List<Reply>() };
-        await _unitOfWork.Comment.AddAsync(comment, upsertComment.PostId);
-        return "comment added";
-    }
-
-    //[HttpPost("UpsertCommentOfAPostAuthUser"), Authorize(Roles = SD.ROLE_USER)]
-    //public async Task<ActionResult<string>> UpsertAsync(Comment comment)
+    //[HttpPost("AddComment"), Authorize(Roles = SD.ROLE_USER)]
+    //public async Task<string> AddCommentAsync(UpsertComment upsertComment)
     //{
-    //    if (!ModelState.IsValid)
+    //    if (!ModelState.IsValid ||upsertComment is null)
+    //        return "comment model is not valid or comment is null";
+    //    var token = Request.Headers["Authorization"].ToString();
+    //    token = token.Remove(0, 7);
+    //    var principal = await AuthControllerUtility.DecodeJWTToken(token);
+    //    var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+    //    if (userId == null)
     //    {
-    //        return BadRequest("Model is not valid");
+    //        return "Not Logged in";
     //    }
-    //    try
-    //    {
-    //        var oldComment = _unitOfWork.Comment.GetFirstOrDefault(c => c.CommentId == comment.CommentId);
-    //        if (oldComment == null)
-    //        {
-    //            var token = Request.Headers["Authorization"].ToString();
-    //            token = token.Remove(0, 7);
-    //            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-    //            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
-    //            comment.UserId = userId;
-    //            comment.Username = _db.Users.FirstOrDefault(u => u.Id == userId).UserName;
-    //            _unitOfWork.Comment.Add(comment);
-    //            return Ok("Comment created succesfully");
-    //        }
-    //        else
-    //        {
-    //            comment.Username = oldComment.Username;
-    //            comment.UserId = oldComment.UserId;
-    //            comment.Like = oldComment.Like;
-    //            comment.Replies = oldComment.Replies;
-    //            _unitOfWork.Comment.Update(comment);
-    //            return Ok("Comment modified succesfully");
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return BadRequest("Unandled exception: " + ex.Message);
-    //    }
+    //    var userName = _db.Users.Where(u => u.Id.Equals(userId)).Select(u => u.UserName).FirstOrDefault();
+    //    var comment = new Comment() { Content = upsertComment.Content, UserId= userId, Username = userName, Likes = new List<string>(), Replies = new List<Reply>() };
+    //    await _unitOfWork.Comment.AddAsync(comment, upsertComment.PostId);
+    //    return "comment added";
     //}
+
+    [HttpPost("UpsertComment"), Authorize(Roles = SD.ROLE_USER)]
+    public async Task<ActionResult<string>> UpsertAsync(UpsertComment comment)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Model is not valid");
+        }
+        try
+        {
+            var token = Request.Headers["Authorization"].ToString();
+            token = token.Remove(0, 7);
+            var principal = await AuthControllerUtility.DecodeJWTToken(token);
+            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            if (comment.CommentId == 0)
+            {
+                var newComment = new Comment()
+                {
+                    CommentId = await IdAutoincrementService.GetCommentAutoincrementId(_unitOfWork),
+                    UserId = userId,
+                    Username = _db.Users.Where(u=>u.Id == userId).Select(u=> u.UserName).FirstOrDefault(),
+                    Content = comment.Content,
+                    Likes = new List<string>(),
+                    Replies = new List<Reply>()
+                };
+                var result = await _unitOfWork.Comment.AddAsync(newComment, comment.PostId);
+                if (result)
+                {
+                    return Ok("Comment created succesfully");
+                }
+                return BadRequest("There was an error creating the comment");
+            }
+            else
+            {
+                var result = await _unitOfWork.Comment.UpdateContentAsync(comment);
+                if (result)
+                {
+                    return Ok("Comment modified succesfully");
+                }
+                return BadRequest("There was an error updating the comment");
+            }
+        }
+        catch (Exception ex)
+        {
+            return BadRequest("Unandled exception: " + ex.Message);
+        }
+    }
 
     //[HttpDelete("RemoveAComment"), Authorize(Roles = SD.ROLE_USER)]
     //public async Task<ActionResult<string>> Delete(int Id)
