@@ -71,12 +71,14 @@ namespace easyNetAPI.Data.Repository
             {
                 return false;
             }
-            Comment comment = await GetFirstOrDefault(newComment.CommentId);
-            if (comment is null || !post.Comments.Contains(comment))
+            Comment comment = post.Comments.Where(c => c.CommentId == newComment.CommentId).FirstOrDefault();
+            if (comment is null)
             {
                 return false;
             }
-            comment = newComment;
+            post.Comments.Remove(comment);
+            post.Comments.Add(newComment);
+
             return await _posts.UpdateOneAsync(post);
         }
 

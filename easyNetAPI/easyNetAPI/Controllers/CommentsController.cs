@@ -48,26 +48,6 @@ public class CommentsController : ControllerBase
         return null;
     }
 
-    //fatto per provare l'add su commentRepository
-    //[HttpPost("AddComment"), Authorize(Roles = SD.ROLE_USER)]
-    //public async Task<string> AddCommentAsync(UpsertComment upsertComment)
-    //{
-    //    if (!ModelState.IsValid ||upsertComment is null)
-    //        return "comment model is not valid or comment is null";
-    //    var token = Request.Headers["Authorization"].ToString();
-    //    token = token.Remove(0, 7);
-    //    var principal = await AuthControllerUtility.DecodeJWTToken(token);
-    //    var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
-    //    if (userId == null)
-    //    {
-    //        return "Not Logged in";
-    //    }
-    //    var userName = _db.Users.Where(u => u.Id.Equals(userId)).Select(u => u.UserName).FirstOrDefault();
-    //    var comment = new Comment() { Content = upsertComment.Content, UserId= userId, Username = userName, Likes = new List<string>(), Replies = new List<Reply>() };
-    //    await _unitOfWork.Comment.AddAsync(comment, upsertComment.PostId);
-    //    return "comment added";
-    //}
-
     [HttpPost("UpsertComment"), Authorize(Roles = SD.ROLE_USER)]
     public async Task<ActionResult<string>> UpsertAsync(UpsertComment comment)
     {
@@ -113,6 +93,17 @@ public class CommentsController : ControllerBase
         {
             return BadRequest("Unandled exception: " + ex.Message);
         }
+    }
+
+    [HttpGet("GetComment"), Authorize(Roles = SD.ROLE_USER)]
+    public async Task<Comment?> GetComment (int commentId)
+    {
+        var comment = await _unitOfWork.Comment.GetFirstOrDefault(commentId);
+        if (comment is null)
+        {
+            return null;
+        }
+        return comment;
     }
 
     //[HttpDelete("RemoveAComment"), Authorize(Roles = SD.ROLE_USER)]

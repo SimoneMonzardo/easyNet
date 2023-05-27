@@ -1,4 +1,5 @@
 ﻿using easyNetAPI.Models;
+using easyNetAPI.Models.UpsertModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace easyNetAPI.Data.Repository.IRepository
         public Task<bool> UpdateOneAsync(Reply reply, int commentId, int postId);
         public Task<bool> UpdateManyAsync(Dictionary<int, Reply> replies, int commentId, int postId);
         public Task<bool> RemoveAsync(int replyId, int commentId, int postId);
+        public Task<bool> UpdateContentAsync(UpsertReply reply);
     }
 }

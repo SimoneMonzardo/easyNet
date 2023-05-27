@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.Design;
+using easyNetAPI.Models.UpsertModels;
 
 namespace easyNetAPI.Data.Repository
 {
@@ -34,7 +35,7 @@ namespace easyNetAPI.Data.Repository
                 {"path","$posts.comments" }
             });
             var thirdUnwindStage = new BsonDocument("$unwind", new BsonDocument {
-                { "path", " $posts.comments.replies"}
+                { "path", "$posts.comments.replies"}
             } );
 
             var replaceRootStage = new BsonDocument("$replaceRoot", new BsonDocument {
@@ -70,6 +71,25 @@ namespace easyNetAPI.Data.Repository
             Reply oldReply = comment.Replies.Where(x => x.ReplyId == reply.ReplyId).FirstOrDefault();
             oldReply = reply;
             return await _comments.UpdateOneAsync(comment,postId);
+        }
+
+        public async Task<bool> UpdateContentAsync(UpsertReply reply)
+        {
+            Comment comment = await _comments.GetFirstOrDefault(reply.CommentId);
+            if (comment is null)
+            {
+                return false;
+            }
+
+            Reply oldReply = comment.Replies.Where(r => r.ReplyId == reply.ReplyId).FirstOrDefault();
+            if (oldReply is null)
+            {
+                return false;
+            }
+
+            oldReply.Content = reply.Content;
+
+            return await _comments.UpdateOneAsync(comment, reply.PostId);
         }
 
         public async Task<bool> UpdateManyAsync(Dictionary<int, Reply> replies, int commentId, int postId)
