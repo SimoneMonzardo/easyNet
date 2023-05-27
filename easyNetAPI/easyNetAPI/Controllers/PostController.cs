@@ -24,22 +24,22 @@ public class PostController : ControllerBase
     }
 
     //get di un post tramite il suo id
-    [HttpGet("GetPostOfAAuthUser"), Authorize(Roles = SD.ROLE_USER)]
-    public async Task<IEnumerable<Post>> GetAsync(string? id)
+    [HttpGet("GetPostOfUser_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+    public async Task<IEnumerable<Post>> GetAsync(string username)
     {
-        var posts = (await _unitOfWork.Post.GetAllAsync()).Where(post => post.UserId == id);
+        var posts = (await _unitOfWork.Post.GetAllAsync()).Where(post => post.Username == username);
         return posts;
     }
 
     //get di tutti i post
-    [HttpGet("GetPost"), Authorize(Roles = SD.ROLE_USER)]
+    [HttpGet("GetAllPost_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
     public async Task<IEnumerable<Post>> GetAllAsync()
     {
         var posts = await _unitOfWork.Post.GetAllAsync();
         return posts;
     }
 
-    [HttpDelete("RemoveAPost"), Authorize(Roles = SD.ROLE_USER)]
+    [HttpDelete("RemovePost_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
     public async Task<ActionResult<string>> Delete(int postId, string userId)
     {
         try
@@ -56,7 +56,7 @@ public class PostController : ControllerBase
         }
     }
 
-    [HttpPost("UpsertPostOfAuthUser"), Authorize(Roles = SD.ROLE_USER)]
+    [HttpPost("UpsertPost_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
     public async Task<ActionResult<string>> UpsertAsync(int? postId, string content)
     {
         Post post = new Post();
