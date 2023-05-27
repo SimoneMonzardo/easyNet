@@ -1,4 +1,8 @@
 <template>
+  <head>
+    <title>Impostazioni • easyNet</title>
+  </head>
+
   <div>
     <SettingSelector />
   </div>

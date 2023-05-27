@@ -106,14 +106,14 @@
             >
               <li>
                 <a
-                  href="/profile"
+                  href="#"
                   class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
                   >Profilo</a
                 >
               </li>
               <li>
                 <a
-                  href="/settings"
+                  href="#"
                   class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
                   >Impostazioni Account</a
                 >
