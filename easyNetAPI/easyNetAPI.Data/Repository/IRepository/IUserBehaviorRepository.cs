@@ -21,5 +21,6 @@ namespace easyNetAPI.Data.Repository.IRepository
         public Task UpdateManyAsync(Dictionary<string, UserBehavior> users);
         public Task UpdateOneAsync(string userId, UserBehavior user);
         public Task RemoveAsync(string userId);
+        public Task RemoveUserActivity(UserBehavior userToDelete);
     }
 }

@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using easyNetAPI.Models.UpsertModels;
+
 namespace easyNetAPI.Data.Repository
 {
     public class PostRepository : IPostRepository
@@ -54,71 +56,73 @@ namespace easyNetAPI.Data.Repository
         }
         public async Task UpdateOneAsync(int postId, Post post, string userId)
         {
-            var userBehavior = await _userBehaviorSettings.GetAsync(userId);
-            if (userBehavior is null)
-            {
-                return "User not found";
-            }
+            //var userBehavior = await _userBehaviorSettings.GetAsync(userId);
+            //if (userBehavior is null)
+            //{
+            //    return "User not found";
+            //}
 
-            var posts = userBehavior.Posts.ToList();
-            var newPost = new Post {
-                Comments = Array.Empty<Comment>(),
-                UserId = userId,
-                Username = userName,
-                Content = post.Content,
-                Likes = Array.Empty<string>(),
-                Hashtags = Array.Empty<string>(),
-                Tags = Array.Empty<string>()
-            };
+            //var posts = userBehavior.Posts.ToList();
+            //var newPost = new Post
+            //{
+            //    Comments = Array.Empty<Comment>(),
+            //    UserId = userId,
+            //    Username = userName,
+            //    Content = post.Content,
+            //    Likes = Array.Empty<string>(),
+            //    Hashtags = Array.Empty<string>(),
+            //    Tags = Array.Empty<string>()
+            //};
 
-            var allUsersPosts = await GetAllAsync();
-            if (allUsersPosts.Count() == 0)
-            {
-                newPost.PostId = 1;
-            }
-            else
-            {
-                var idList = allUsersPosts.Select(i => i.PostId).Order();
-                newPost.PostId = idList.LastOrDefault() + 1;
-            }
+            //var allUsersPosts = await GetAllAsync();
+            //if (allUsersPosts.Count() == 0)
+            //{
+            //    newPost.PostId = 1;
+            //}
+            //else
+            //{
+            //    var idList = allUsersPosts.Select(i => i.PostId).Order();
+            //    newPost.PostId = idList.LastOrDefault() + 1;
+            //}
 
-            posts.Add(newPost);
+            //posts.Add(newPost);
 
-            userBehavior.Posts = posts.ToArray();
-            await _userBehaviorSettings.UpdateAsync(userId, userBehavior);
-            return "Post added successfully";
+            //userBehavior.Posts = posts.ToArray();
+            //await _userBehaviorSettings.UpdateAsync(userId, userBehavior);
+            //return "Post added successfully";
         }
 
         public async Task<string> DeletePost(int postId, string userId)
         {
-            var userBehavior = await _userBehaviorSettings.GetAsync(userId);
-            if (userBehavior is null)
-            {
-                return "User not found";
-            }
-            var posts = userBehavior.Posts.ToList();
-            if (posts.Count() == 0)
-            {
-                return "Post not found";
-            }
-            var postFromDb = posts.Where(p => p.PostId == postId).FirstOrDefault();
-            if (postFromDb is null)
-            {
-                return "Post not found";
-            }
-            posts.Remove(postFromDb);
-            userBehavior.Posts = posts.ToArray();
-            await _userBehaviorSettings.UpdateAsync(userId, userBehavior);
+            //var userBehavior = await _userBehaviorSettings.GetAsync(userId);
+            //if (userBehavior is null)
+            //{
+            //    return "User not found";
+            //}
+            //var posts = userBehavior.Posts.ToList();
+            //if (posts.Count() == 0)
+            //{
+            //    return "Post not found";
+            //}
+            //var postFromDb = posts.Where(p => p.PostId == postId).FirstOrDefault();
+            //if (postFromDb is null)
+            //{
+            //    return "Post not found";
+            //}
+            //posts.Remove(postFromDb);
+            //userBehavior.Posts = posts.ToArray();
+            //await _userBehaviorSettings.UpdateAsync(userId, userBehavior);
             return "Post deleted successfully";
         }
 
         public async Task<string> UpdatePostContent(UpsertPost post, string userId)
         {
-            UserBehavior user = _users.GetAllAsync().Result.ToList().Find(x => x.UserId == userId);
-            Post poste = user.Posts.Find(x => x.PostId == postId);
-            poste = post;
-            user.Posts.Add(poste);
-            await _users.UpdateOneAsync(userId, user);
+            //UserBehavior user = _users.GetAllAsync().Result.ToList().Find(x => x.UserId == userId);
+            //Post poste = user.Posts.Find(x => x.PostId == postId);
+            //poste = post;
+            //user.Posts.Add(poste);
+            //await _users.UpdateOneAsync(userId, user);
+            return "ciao";
         }
         public async Task UpdateManyAsync(Dictionary<int, Post> posts, string userId)
         {

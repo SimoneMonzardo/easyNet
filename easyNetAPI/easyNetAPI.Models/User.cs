@@ -30,7 +30,6 @@ namespace easyNetAPI.Models
 
         [PersonalData]
         [Required]
-        [NotMapped]
         public DateOnly DateOfBirth { get; set; }
 
         [PersonalData]

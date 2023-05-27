@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using easyNetAPI.Data.Repository.IRepository;
 
 namespace easyNetAPI.Controllers
 {
@@ -21,20 +22,20 @@ namespace easyNetAPI.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _db;
         private readonly TokenService _tokenService;
-        private readonly UserBehaviorSettings _userBehaviorSettings;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext db, TokenService tokenService, UserBehaviorSettings userBehaviorSettings)
+        public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext db, TokenService tokenService, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _db = db;
             _tokenService = tokenService;
-            _userBehaviorSettings = userBehaviorSettings;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register(RegistrationRequest request)
+        public async Task<string> Register(RegistrationRequest request)
         {
             User applicationUser = new()
             {
@@ -50,24 +51,24 @@ namespace easyNetAPI.Controllers
             };
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return "Model state invalid";
             }
             var result = await _userManager.CreateAsync(
                applicationUser, request.Password);
             if (result.Succeeded)
             {
                 //crea l'utente in mongoDB
-                await _userBehaviorSettings.AddAsync(new UserBehavior
+                await _unitOfWork.UserBehavior.AddAsync(new UserBehavior
                 {
                     UserId = applicationUser.Id,
                     Administrator = false,
                     Company = new Company(),
-                    Posts = Array.Empty<Post>(),
-                    FollowedUsers = Array.Empty<string>(),
-                    FollowersList = Array.Empty<string>(),
-                    LikedPost = Array.Empty<string>(),
-                    SavedPost = Array.Empty<string>(),
-                    MentionedPost = Array.Empty<string>()
+                    Posts = new List<Post>(),
+                    FollowedUsers = new List<string>(),
+                    FollowersList = new List<string>(),
+                    LikedPost = new List<int>(),
+                    SavedPost = new List<int>(),
+                    MentionedPost = new List<int>()
                 }) ;
 
                 if (!_roleManager.RoleExistsAsync(SD.ROLE_MODERATOR).GetAwaiter().GetResult())
@@ -77,17 +78,16 @@ namespace easyNetAPI.Controllers
                     await _roleManager.CreateAsync(new IdentityRole(SD.ROLE_EMPLOYEE));
                     await _roleManager.CreateAsync(new IdentityRole(SD.ROLE_USER));
                 }
-                //verifico il ruolo
 
                 await _userManager.AddToRoleAsync(applicationUser, SD.ROLE_USER);
                 request.Password = "";
-                return CreatedAtAction(nameof(Register), new { email = request.Email }, request);
+                return "User created successfully";
             }
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(error.Code, error.Description);
             }
-            return BadRequest(ModelState);
+            return "Bad Request";
         }
 
         [HttpPost]
@@ -176,122 +176,105 @@ namespace easyNetAPI.Controllers
             {
                 return BadRequest("User not found");
             }
-            var result = _userManager.DeleteAsync(managedUser);
-            if (!result.IsCompletedSuccessfully)
+            var result = await _userManager.DeleteAsync(managedUser);
+            if (!result.Succeeded)
             {
                 return BadRequest("There was a problem deleting the account");
             }
             await _db.SaveChangesAsync();
 
             //elimina dati da mongodb
-            var userFromDb = await _userBehaviorSettings.GetAsync(managedUser.Id);
-            await _userBehaviorSettings.RemoveAsync(managedUser.Id);
+            var userFromDb = await _unitOfWork.UserBehavior.GetFirstOrDefault(managedUser.Id);
+            await _unitOfWork.UserBehavior.RemoveAsync(managedUser.Id);
 
             //eliminare tutta l'attività dell'utente dall'intero database
-            var users = await _userBehaviorSettings.GetAllAsync();
-            foreach (var user in users)
-            {
-                var followersList = user.FollowersList.ToList();
-                if (followersList.Count !=0)
-                {
-                    if (followersList.Contains(managedUser.Id))
-                    {
-                        followersList.Remove(managedUser.Id);
-                        user.FollowersList = followersList.ToArray();
-                    }
-                }
+            await _unitOfWork.UserBehavior.RemoveUserActivity(userFromDb);
 
-                var followedUsersList = user.FollowedUsers.ToList();
-                if (followedUsersList.Count != 0)
-                {
-                    if (followedUsersList.Contains(managedUser.Id))
-                    {
-                        followedUsersList.Remove(managedUser.Id);
-                        user.FollowedUsers = followedUsersList.ToArray();
-                    }
-                }
-
-                //questo si può mettere in un altro metodo nel postrepository
-                var postsListToDelete = userFromDb.Posts.ToList();
-                foreach (var post in postsListToDelete)
-                {
-                    var likedPost = user.LikedPost.ToList();
-                    if (likedPost.Count() != 0)
-                    {
-                        if (likedPost.Contains(post.PostId.ToString()))
-                        {
-                            likedPost.Remove(post.PostId.ToString());
-                            user.LikedPost = likedPost.ToArray();
-                        }
-                    }
+            //var users = await _userBehaviorSettings.GetAllAsync();
+            //foreach (var user in users)
+            //{
+            //    
+            //    //questo si può mettere in un altro metodo nel postrepository
+            //    var postsListToDelete = userFromDb.Posts.ToList();
+            //    foreach (var post in postsListToDelete)
+            //    {
+            //        var likedPost = user.LikedPost.ToList();
+            //        if (likedPost.Count() != 0)
+            //        {
+            //            if (likedPost.Contains(post.PostId.ToString()))
+            //            {
+            //                likedPost.Remove(post.PostId.ToString());
+            //                user.LikedPost = likedPost.ToArray();
+            //            }
+            //        }
 
 
-                    var savedPosts = user.SavedPost.ToList();
-                    if (savedPosts.Count() != 0)
-                    {
-                        if (savedPosts.Contains(post.PostId.ToString()))
-                        {
-                            savedPosts.Remove(post.PostId.ToString());
-                            user.SavedPost = savedPosts.ToArray();
-                        }
-                    }
+            //        var savedPosts = user.SavedPost.ToList();
+            //        if (savedPosts.Count() != 0)
+            //        {
+            //            if (savedPosts.Contains(post.PostId.ToString()))
+            //            {
+            //                savedPosts.Remove(post.PostId.ToString());
+            //                user.SavedPost = savedPosts.ToArray();
+            //            }
+            //        }
 
-                    var mentionedPosts = user.MentionedPost.ToList();
-                    if (mentionedPosts.Count() != 0)
-                    {
-                        if (mentionedPosts.Contains(post.PostId.ToString()))
-                        {
-                            mentionedPosts.Remove(post.PostId.ToString());
-                            user.MentionedPost = mentionedPosts.ToArray();
-                        }
-                    }
+            //        var mentionedPosts = user.MentionedPost.ToList();
+            //        if (mentionedPosts.Count() != 0)
+            //        {
+            //            if (mentionedPosts.Contains(post.PostId.ToString()))
+            //            {
+            //                mentionedPosts.Remove(post.PostId.ToString());
+            //                user.MentionedPost = mentionedPosts.ToArray();
+            //            }
+            //        }
 
-                }
+            //    }
 
-                var postsList = user.Posts.ToList();
-                foreach (var post in postsList)
-                {
-                    //cancella commenti sui post di altri utenti
-                    var commentsList = post.Comments.ToList();
-                    if (commentsList.Count() != 0)
-                    {
-                        foreach (var comment in commentsList)
-                        {
-                            if (comment.UserId == managedUser.Id)
-                            {
-                                commentsList.Remove(comment);
-                            }
-                        }
-                        post.Comments = commentsList.ToArray();
-                    }
+            //    var postsList = user.Posts.ToList();
+            //    foreach (var post in postsList)
+            //    {
+            //        //cancella commenti sui post di altri utenti
+            //        var commentsList = post.Comments.ToList();
+            //        if (commentsList.Count() != 0)
+            //        {
+            //            foreach (var comment in commentsList)
+            //            {
+            //                if (comment.UserId == managedUser.Id)
+            //                {
+            //                    commentsList.Remove(comment);
+            //                }
+            //            }
+            //            post.Comments = commentsList.ToArray();
+            //        }
 
-                    //cancella like su post di altri uenti
-                    var likesList = post.Likes.ToList();
-                    if (likesList.Count != 0)
-                    {
-                        if (likesList.Contains(managedUser.Id))
-                        {
-                            likesList.Remove(managedUser.Id);
-                        }
-                        post.Likes = likesList.ToArray();
-                    }
-                    
+            //        //cancella like su post di altri uenti
+            //        var likesList = post.Likes.ToList();
+            //        if (likesList.Count != 0)
+            //        {
+            //            if (likesList.Contains(managedUser.Id))
+            //            {
+            //                likesList.Remove(managedUser.Id);
+            //            }
+            //            post.Likes = likesList.ToArray();
+            //        }
 
-                    //cancella tags su post di altri utenti
-                    var tagsList = post.Tags.ToList();
-                    if (tagsList.Count() != 0)
-                    {
-                        if (tagsList.Contains(managedUser.Id))
-                        {
-                            tagsList.Remove(managedUser.Id);
-                        }
-                        post.Tags = tagsList.ToArray();
-                    }
-                }
-                user.Posts = postsList.ToArray();
 
-                await _userBehaviorSettings.UpdateAsync(user.UserId, user);
-            }
+            //        //cancella tags su post di altri utenti
+            //        var tagsList = post.Tags.ToList();
+            //        if (tagsList.Count() != 0)
+            //        {
+            //            if (tagsList.Contains(managedUser.Id))
+            //            {
+            //                tagsList.Remove(managedUser.Id);
+            //            }
+            //            post.Tags = tagsList.ToArray();
+            //        }
+            //    }
+            //    user.Posts = postsList.ToArray();
+
+            //await _userBehaviorSettings.UpdateAsync(user.UserId, user);
+            //}
 
             return Ok("User deleted successfully");
         }
