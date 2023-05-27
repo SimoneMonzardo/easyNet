@@ -45,9 +45,9 @@ public class PostController : ControllerBase
     public async Task<IEnumerable<Post>> GetAllFollowedAsync()
     {
         var token = Request.Headers["Authorization"].ToString();
-        token = token.Remove(0, 7);
-        var principal = await AuthControllerUtility.DecodeJWTToken(token);
-        var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+        var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+        if (userId is null)
+            return null;
         var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
         if (user is null || user.FollowedUsers is null || user.FollowedUsers.Count ==0)
             return null;
@@ -88,9 +88,7 @@ public class PostController : ControllerBase
         try
         {
             var token = Request.Headers["Authorization"].ToString();
-            token = token.Remove(0, 7);
-            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (post.PostId == 0)
             {
                 var newPost = new Post()

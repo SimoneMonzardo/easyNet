@@ -198,9 +198,7 @@ namespace easyNetAPI.Controllers
                 return BadRequest(ModelState);
             }
             var token = Request.Headers["Authorization"].ToString();
-            token = token.Remove(0, 7);
-            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (userId == null)
             {
                 return BadRequest("User not found");
@@ -229,9 +227,7 @@ namespace easyNetAPI.Controllers
         public async Task<ActionResult<string>> DeleteUser()
         {
             var token = Request.Headers["Authorization"].ToString();
-            token = token.Remove(0, 7);
-            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (userId == null)
             {
                 return BadRequest("User not found");
@@ -294,9 +290,7 @@ namespace easyNetAPI.Controllers
         public async Task<ActionResult<string>> EditUserData([FromBody] EditUserDataRequest request)
         {
             var token = Request.Headers["Authorization"].ToString();
-            token = token.Remove(0, 7);
-            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (userId == null)
             {
                 return BadRequest("User not found");
@@ -324,9 +318,7 @@ namespace easyNetAPI.Controllers
         [Route("GetUserData")]
         public async Task<ActionResult<GetUserDataResponse>> GetUserData() {
             var token = Request.Headers["Authorization"].ToString();
-            token = token.Remove(0, 7);
-            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (userId == null)
             {
                 return BadRequest("User not found");
@@ -359,6 +351,7 @@ namespace easyNetAPI.Controllers
                 return "user not found";
             return Ok(user.Id);
         }
+        
     }
 
     public static class AuthControllerUtility
@@ -380,6 +373,13 @@ namespace easyNetAPI.Controllers
             };
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out _);
             return principal;
+        }
+        public static async Task<string> GetUserIdFromTokenAsync(string token)
+        {
+            token = token.Remove(0, 7);
+            var principal = await DecodeJWTToken(token);
+            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            return userId;
         }
     }
 }

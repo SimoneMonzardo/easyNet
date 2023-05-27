@@ -32,9 +32,7 @@ namespace easyNetAPI.Controllers
         public async Task<ActionResult<string>> FollowUserAsync(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
-            token = token.Remove(0, 7);
-            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (userId is null)
             {
                 return BadRequest("User not found");
@@ -71,9 +69,7 @@ namespace easyNetAPI.Controllers
         public async Task<ActionResult<string>> UnfollowUserAsync(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
-            token = token.Remove(0, 7);
-            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (userId is null)
             {
                 return BadRequest("User not found");
@@ -130,9 +126,7 @@ namespace easyNetAPI.Controllers
         public async Task<List<string>?> GetUserFollowers(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
-            token = token.Remove(0, 7);
-            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (userId is null)
             {
                 return null;
@@ -166,9 +160,7 @@ namespace easyNetAPI.Controllers
         public async Task<List<string>?> GetUserFollowers()
         {
             var token = Request.Headers["Authorization"].ToString();
-            token = token.Remove(0, 7);
-            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (userId is null)
             {
                 return null;
@@ -197,9 +189,7 @@ namespace easyNetAPI.Controllers
         public async Task<List<string>?> GetUserFollowedList(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
-            token = token.Remove(0, 7);
-            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (userId is null)
             {
                 return null;
@@ -233,9 +223,7 @@ namespace easyNetAPI.Controllers
         public async Task<List<string>?> GetUserFollowed()
         {
             var token = Request.Headers["Authorization"].ToString();
-            token = token.Remove(0, 7);
-            var principal = await AuthControllerUtility.DecodeJWTToken(token);
-            var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (userId is null)
             {
                 return null;

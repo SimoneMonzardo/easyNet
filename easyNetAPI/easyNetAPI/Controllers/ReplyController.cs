@@ -35,9 +35,7 @@ namespace easyNetAPI.Controllers
             try
             {
                 var token = Request.Headers["Authorization"].ToString();
-                token = token.Remove(0, 7);
-                var principal = await AuthControllerUtility.DecodeJWTToken(token);
-                var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 if (reply.ReplyId == 0)
                 {
                     var newReply = new Reply()
