@@ -258,6 +258,37 @@ namespace easyNetAPI.Controllers
             return Ok("User deleted successfully");
         }
 
+        [HttpDelete]
+        [Route("DeleteUserFromModerator")]
+        [Authorize(Roles = SD.ROLE_MODERATOR)]
+        public async Task<ActionResult<string>> DeleteUserFromModerator(string userId)
+        {
+            if (userId == null)
+            {
+                return BadRequest("User not found");
+            }
+            var managedUser = await _userManager.FindByIdAsync(userId);
+            if (managedUser == null)
+            {
+                return BadRequest("User not found");
+            }
+            var result = await _userManager.DeleteAsync(managedUser);
+            if (!result.Succeeded)
+            {
+                return BadRequest("There was a problem deleting the account");
+            }
+            await _db.SaveChangesAsync();
+
+            //elimina dati da mongodb
+            var userFromDb = await _unitOfWork.UserBehavior.GetFirstOrDefault(managedUser.Id);
+            await _unitOfWork.UserBehavior.RemoveAsync(managedUser.Id);
+
+            //eliminare tutta l'attività dell'utente dall'intero database
+            await _unitOfWork.UserBehavior.RemoveUserActivityAsync(userFromDb, _unitOfWork);
+
+            return Ok("User deleted successfully");
+        }
+
         [HttpPost]
         [Route("editUserData")]
         public async Task<ActionResult<string>> EditUserData([FromBody] EditUserDataRequest request)
