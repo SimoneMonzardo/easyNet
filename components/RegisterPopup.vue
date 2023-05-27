@@ -1,7 +1,3 @@
-
-
-
-
 <template>
     <div id="register-modal" tabindex="-1" aria-hidden="true"
         class="bg-gray-900 bg-opacity-50 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -86,17 +82,17 @@
                                 </div>
 
                                 <div class="relative">
-                                    <input type="password" id="pass" name="password"
-                                    v-on:keyup = "check()"
+                                    <input type="password" id="passwordRegister" name="password"
+                                        v-on:keyup="check()"
                                         class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" " required />
-                                    <label for="password"
+                                    <label for="passwordRegister"
                                         class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Password</label>
                                 </div>
 
                                 <div class="relative">
                                     <input type="password" id="confirmPassword"
-                                    v-on:keyup = "check()"
+                                        v-on:keyup="check()"
                                         class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" " required />
                                     <label for="confirmPassword" id="confirmText"
@@ -104,10 +100,10 @@
                                 </div>
 
                                 <div class="relative">
-                                    <input type="text" id="username" name="username"
+                                    <input type="text" id="usernameRegister" name="username"
                                         class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" " required />
-                                    <label for="username" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Username</label>
+                                    <label for="usernameRegister" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Username</label>
                                 </div>
 
                                 <!-- TODO: Add profile picture upload -->
@@ -129,13 +125,11 @@
     methods: {
       check() {
         const password = document.getElementById('pass').value;
-        console.log(password);
         const confirmPassword = document.getElementById('confirmPassword').value;
         if (password === confirmPassword) {
             document.getElementById('confirmText').innerHTML = "Conferma password"
         } else {
             document.getElementById('confirmText').innerHTML = "Non coincidono";
-
         }
       }
     }
