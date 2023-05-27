@@ -274,5 +274,22 @@ namespace easyNetAPI.Controllers
 
             return BadRequest("could not make user admin see exception: " + result.Errors);
         }
+        [HttpPost("ConvertToEmployee_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+        public async Task<ActionResult<string>> ConvertToEmployee(string userId)
+        {
+            if (userId is null || userId.Equals(string.Empty))
+                return BadRequest("Insert userId");
+
+            var user = _db.Users.Find(userId);
+            if (user is null)
+                return BadRequest("User not found");
+            //await _userManager.RemoveFromRoleAsync(user, SD.ROLE_USER);
+            var result = await _userManager.AddToRoleAsync(user, SD.ROLE_EMPLOYEE);
+            if (result.Succeeded)
+                return Ok("user is now employee");
+
+            return BadRequest("could not make user employee see exception: " + result.Errors);
+        }
+       
     }
 }
