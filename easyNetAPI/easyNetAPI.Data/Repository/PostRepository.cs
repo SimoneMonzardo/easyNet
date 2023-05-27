@@ -73,7 +73,8 @@ namespace easyNetAPI.Data.Repository
             {
                 return false;
             }
-            oldPost = post;
+            userBehavior.Posts.Remove(oldPost);
+            userBehavior.Posts.Add(post);
             await _users.UpdateOneAsync(userBehavior.UserId, userBehavior);
             return true;
         }

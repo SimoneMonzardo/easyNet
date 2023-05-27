@@ -24,7 +24,7 @@ namespace easyNetAPI.Data
             foreach (var post in posts)
             {
                 post.Likes.Remove(post.Likes.FirstOrDefault(userId));
-                unitOfWork.Post.UpdateOneAsync(post.PostId, post, userId);
+                unitOfWork.Post.UpdateOneAsync(post);
             }
 
             foreach (var comment in comments)
@@ -52,7 +52,7 @@ namespace easyNetAPI.Data
             foreach (var post in posts)
             {
                 post.Tags.Remove(post.Tags.FirstOrDefault(userId));
-                unitOfWork.Post.UpdateOneAsync(post.PostId, post, userId);
+                unitOfWork.Post.UpdateOneAsync(post);
             }
         }
         public static async Task RemovePostDataAsync(int postId,UserBehavior user, IUnitOfWork unitOfWork)

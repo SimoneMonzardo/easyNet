@@ -91,7 +91,7 @@ public class PostController : ControllerBase
             post.Likes = oldPost.Likes;
             post.Content = content;
             post.Tags = oldPost.Tags;
-            await _unitOfWork.Post.UpdateOneAsync(post.PostId, post, post.UserId);
+            await _unitOfWork.Post.UpdateOneAsync(post);
             return Ok("Post modified succesfully");
         }
         catch (Exception ex)
