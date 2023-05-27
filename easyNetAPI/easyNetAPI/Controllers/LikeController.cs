@@ -38,14 +38,14 @@ namespace easyNetAPI.Controllers
                 if (post == null)
                     return BadRequest("Post doesn't exist");
                 bool alreadyLiked = false;
-                if (post.Likes is  null)
+                if (post.Likes is null)
                     post.Likes = new List<string>();
                 alreadyLiked = post.Likes.Contains(userId);
                 if (alreadyLiked)
                 {
                     post.Likes.Remove(userId);
                     _unitOfWork.Post.UpdateOneAsync(post);
-                    return Ok("User already liked this post so like was removed");
+                    return Ok("Like removed succesfully");
                 }
                 post.Likes.Add(userId);
                 _unitOfWork.Post.UpdateOneAsync(post);
@@ -57,6 +57,7 @@ namespace easyNetAPI.Controllers
             }
         }
         [HttpGet("LikedPosts")]
+        [Authorize(Roles = SD.ROLE_USER)]
         public async Task<IActionResult> LikedPostsAsync()
         {
             try
