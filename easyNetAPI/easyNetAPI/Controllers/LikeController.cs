@@ -19,6 +19,7 @@ namespace easyNetAPI.Controllers
             _unitOfWork = unitOfWork;
         }
         [HttpPost("PostLike")]
+        [Authorize(Roles = SD.ROLE_USER)]
         public async Task<IActionResult> PostLikeAsync(int postId)
         {
             /*
@@ -36,7 +37,10 @@ namespace easyNetAPI.Controllers
                 var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
                 if (post == null)
                     return BadRequest("Post doesn't exist");
-                bool alreadyLiked = post.Likes.Contains(userId);
+                bool alreadyLiked = false;
+                if (post.Likes is  null)
+                    post.Likes = new List<string>();
+                alreadyLiked = post.Likes.Contains(userId);
                 if (alreadyLiked)
                 {
                     post.Likes.Remove(userId);
