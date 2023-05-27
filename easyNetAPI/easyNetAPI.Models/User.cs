@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace easyNetAPI.Models
@@ -29,6 +30,7 @@ namespace easyNetAPI.Models
 
         [PersonalData]
         [Required]
+        [NotMapped]
         public DateOnly DateOfBirth { get; set; }
 
         [PersonalData]

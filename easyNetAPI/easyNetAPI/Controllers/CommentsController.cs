@@ -34,13 +34,13 @@ public class CommentsController : ControllerBase
     [HttpGet("GetCommentsOfAPostAuthUser"), Authorize(Roles = SD.ROLE_USER)]
     public async Task<IEnumerable<Comment>?> GetAsync(int Id)
     {
-        var post = await _unitOfWork.Post.GetPostAsync(Id);
+        var post = await _unitOfWork.Post.GetFirstOrDefault(Id);
         if (post is not null)
         {
-            var comment = await _unitOfWork.Comment.GetAllOfPostAsync(post);
-            if (comment.Count() != 0)
+            var comments = post.Comments;
+            if (comments.Count() != 0)
             {
-                return comment;
+                return comments;
             }
         }
         return null;
@@ -48,8 +48,10 @@ public class CommentsController : ControllerBase
 
     //fatto per provare l'add su commentRepository
     [HttpPost("AddComment"), Authorize(Roles = SD.ROLE_USER)]
-    public async Task<string> AddCommentAsync(UpsertComment comment)
+    public async Task<string> AddCommentAsync(UpsertComment upsertComment)
     {
+        if (!ModelState.IsValid ||upsertComment is null)
+            return "comment model is not valid or comment is null";
         var token = Request.Headers["Authorization"].ToString();
         token = token.Remove(0, 7);
         var principal = await AuthControllerUtility.DecodeJWTToken(token);
@@ -59,8 +61,9 @@ public class CommentsController : ControllerBase
             return "Not Logged in";
         }
         var userName = _db.Users.Where(u => u.Id.Equals(userId)).Select(u => u.UserName).FirstOrDefault();
-        var s = await _unitOfWork.Comment.AddComment(comment,userId,userName);
-        return s;
+        var comment = new Comment() { Content = upsertComment.Content, UserId= userId, Username = userName, Like = new List<string>(), Replies = new List<Reply>() };
+        await _unitOfWork.Comment.AddAsync(comment, upsertComment.PostId);
+        return "comment added";
     }
 
     //[HttpPost("UpsertCommentOfAPostAuthUser"), Authorize(Roles = SD.ROLE_USER)]
