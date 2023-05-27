@@ -38,6 +38,25 @@ public class PostController : ControllerBase
         var posts = await _unitOfWork.Post.GetAllAsync();
         return posts;
     }
+    [HttpGet("GetAllPostOfFollowed_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+    public async Task<IEnumerable<Post>> GetAllFollowedAsync()
+    {
+        var token = Request.Headers["Authorization"].ToString();
+        token = token.Remove(0, 7);
+        var principal = await AuthControllerUtility.DecodeJWTToken(token);
+        var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
+        var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+        if (user is null || user.FollowedUsers is null || user.FollowedUsers.Count ==0)
+            return null;
+        var posts = await _unitOfWork.Post.GetAllAsync();
+        var followedPost = new List<Post>();
+        foreach (var post in posts)
+        {
+            if (user.FollowedUsers.Contains(post.UserId))
+                followedPost.Add(post);
+        }
+        return followedPost;
+    }
 
     [HttpDelete("RemovePost_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
     public async Task<ActionResult<string>> Delete(int postId, string userId)
