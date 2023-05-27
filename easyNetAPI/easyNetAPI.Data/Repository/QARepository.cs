@@ -16,11 +16,13 @@ namespace easyNetAPI.Data.Repository
     {
         private readonly IBotRepository _bots;
         private readonly IMongoCollection<UserBehavior> _usersCollection;
+
         public QARepository(IMongoCollection<UserBehavior> usersCollection, IBotRepository bots)
         {
             _usersCollection = usersCollection;
             _bots = bots;
         }
+
         private async Task<List<QA>> Query()
         {
             var unwindStage = new BsonDocument("$unwind", new BsonDocument {
@@ -42,40 +44,50 @@ namespace easyNetAPI.Data.Repository
             return qas;
 
         }
+
         public async Task<List<QA>> GetAllAsync() => await Query();
 
         public async Task<QA?> GetFirstOrDefault(string intent) =>
             Query().Result.FirstOrDefault(x => x.Intent == intent);
-        public async Task AddAsync(QA qa, int botId)
+
+        public async Task<bool> AddAsync(QA qa, int botId)
         {
             Bot bot = _bots.GetFirstOrDefault(botId).Result;
             bot.QA.Add(qa);
-            await _bots.UpdateOneAsync(botId, bot);
+            return await _bots.UpdateOneAsync(bot);
         }
-        public async Task RemoveAsync(string intent, int botId)
+
+        public async Task<bool> RemoveAsync(string intent, int botId)
         {
             Bot bot = _bots.GetFirstOrDefault(botId).Result;
             QA qa = bot.QA.FirstOrDefault(qa => qa.Intent== intent);
             bot.QA.Remove(qa);
-            await _bots.UpdateOneAsync(bot.BotId, bot);
+            return await _bots.UpdateOneAsync(bot);
         }
-        public async Task UpdateOneAsync(string intent, QA qa, int botId)
+
+        public async Task<bool> UpdateOneAsync(QA qa, int botId)
         {
             Bot bot = _bots.GetAllAsync().Result.ToList().FirstOrDefault(bot => bot.BotId == botId);
-            QA _qa = bot.QA.Where(x=>x.Intent==intent).FirstOrDefault();
-            _qa = qa;
-            await _bots.UpdateOneAsync(bot.BotId, bot);
+            QA oldQA = bot.QA.Where(x=>x.Intent==qa.Intent).FirstOrDefault();
+            oldQA = qa;
+            return await _bots.UpdateOneAsync(bot);
 
         }
-        public async Task UpdateManyAsync(Dictionary<string, QA> qas, int botId)
+
+        public async Task<bool> UpdateManyAsync(Dictionary<string, QA> qas, int botId)
         {
             Bot bot = _bots.GetFirstOrDefault(botId).Result;
             foreach (var qa in qas)
             {
-                QA _qa = bot.QA.Where(x => x.Intent == qa.Key).FirstOrDefault();
-                _qa = qa.Value;
-                await _bots.UpdateOneAsync(bot.BotId, bot);
+                QA oldQA = bot.QA.Where(x => x.Intent == qa.Key).FirstOrDefault();
+                oldQA = qa.Value;
+                var result = await _bots.UpdateOneAsync(bot);
+                if (!result)
+                {
+                    return result;
+                }
             }
+            return true;
         }
     }
 }

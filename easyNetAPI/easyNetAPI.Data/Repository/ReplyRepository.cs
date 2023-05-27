@@ -17,11 +17,13 @@ namespace easyNetAPI.Data.Repository
     {
         private readonly ICommentRepository _comments;
         private readonly IMongoCollection<UserBehavior> _usersCollection;
+
         public ReplyRepository(IMongoCollection<UserBehavior> usersCollection, ICommentRepository comments)
         {
             _usersCollection = usersCollection;
             _comments = comments;
         }
+
         private async Task<List<Reply>> Query()
         {
 
@@ -51,43 +53,47 @@ namespace easyNetAPI.Data.Repository
         }
 
         public async Task<List<Reply>> GetAllAsync() => await Query();
-        // public async Task<List<UserBehavior>> GetAllAsync() =>
-        //await _commentsCollection.Find(_ => true).ToListAsync();
 
         public async Task<Reply?> GetFirstOrDefault(int replyId) =>
           Query().Result.FirstOrDefault(x => x.ReplyId == replyId);
-        public async Task AddAsync(Reply reply, int commentId, int postId)
-        {
 
+        public async Task<bool> AddAsync(Reply reply, int commentId, int postId)
+        {
             Comment comment = _comments.GetFirstOrDefault(commentId).Result;
             comment.Replies.Add(reply);
-            await _comments.UpdateOneAsync(comment, postId);
+            return await _comments.UpdateOneAsync(comment, postId);
         }
-        public async Task UpdateOneAsync(int replyId, Reply reply, int commentId, int postId)
+
+        public async Task<bool> UpdateOneAsync(Reply reply, int commentId, int postId)
         {
             Comment comment = _comments.GetAllAsync().Result.ToList().FirstOrDefault(comment => comment.CommentId == commentId);
-            Reply _reply = comment.Replies.Where(x => x.ReplyId == replyId).FirstOrDefault();
-            _reply = reply;
-            await _comments.UpdateOneAsync(comment,postId);
-
+            Reply oldReply = comment.Replies.Where(x => x.ReplyId == reply.ReplyId).FirstOrDefault();
+            oldReply = reply;
+            return await _comments.UpdateOneAsync(comment,postId);
         }
-        public async Task UpdateManyAsync(Dictionary<int, Reply> replies, int commentId, int postId)
-        {
 
+        public async Task<bool> UpdateManyAsync(Dictionary<int, Reply> replies, int commentId, int postId)
+        {
             Comment comment = _comments.GetAllAsync().Result.ToList().FirstOrDefault(comment => comment.CommentId == commentId);
             foreach (var reply in replies)
             {
-                Reply _reply = comment.Replies.Where(x => x.ReplyId == reply.Key).FirstOrDefault();
-                _reply = reply.Value;
-                await _comments.UpdateOneAsync(comment, postId);
+                Reply oldReply = comment.Replies.Where(x => x.ReplyId == reply.Key).FirstOrDefault();
+                oldReply = reply.Value;
+                var result = await _comments.UpdateOneAsync(comment, postId);
+                if (!result)
+                {
+                    return result;
+                }
             }
+            return true;
         }
-        public async Task RemoveAsync(int replyId,int commentId, int postId)
+
+        public async Task<bool> RemoveAsync(int replyId,int commentId, int postId)
         {
             Comment comment = _comments.GetFirstOrDefault(commentId).Result;
             Reply reply = comment.Replies.Where(x => x.ReplyId == replyId).FirstOrDefault();
             comment.Replies.Remove(reply);
-            await _comments.UpdateOneAsync(comment, postId);
+            return await _comments.UpdateOneAsync(comment, postId);
         }
     }
 }

@@ -11,9 +11,9 @@ namespace easyNetAPI.Data.Repository.IRepository
     {
         public Task<List<Bot>> GetAllAsync();
         public Task<Bot?> GetFirstOrDefault(int botId);
-        public Task AddAsync(Bot bot, int companyId);
-        public Task UpdateOneAsync(int botId, Bot bot);
-        public Task UpdateManyAsync(Dictionary<int, Bot> bots);
-        public Task RemoveAsync(int botId);
+        public Task<bool> AddAsync(Bot bot, int companyId);
+        public Task<bool> UpdateOneAsync(Bot bot);
+        public Task<bool> UpdateManyAsync(Dictionary<int, Bot> bots);
+        public Task<bool> RemoveAsync(int botId);
     }
 }

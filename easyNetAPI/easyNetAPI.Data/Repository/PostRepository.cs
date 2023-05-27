@@ -45,20 +45,20 @@ namespace easyNetAPI.Data.Repository
 
         public async Task<Post?> GetFirstOrDefault(int postId) => Query().Result.FirstOrDefault(x => x.PostId == postId);
 
-        public async Task AddAsync(Post post, string userId)
+        public async Task<bool> AddAsync(Post post)
         {
-            UserBehavior user = _users.GetFirstOrDefault(userId).Result;
+            UserBehavior user = _users.GetFirstOrDefault(post.UserId).Result;
             user.Posts.Add(post);
-            await _users.UpdateOneAsync(userId, user);
+            return await _users.UpdateOneAsync(post.UserId, user);
         }
 
-        public async Task RemoveAsync(int postId, string userId)
+        public async Task<bool> RemoveAsync(int postId, string userId)
         {
             Dictionary<string, UserBehavior> dict = new();
             UserBehavior users = _users.GetAllAsync().Result.ToList().Find(x => x.UserId == userId);
             users.Posts.RemoveAll(x => x.PostId == postId);
             dict.Add(userId, users);
-            await _users.UpdateManyAsync(dict);
+            return await _users.UpdateManyAsync(dict);
         }
 
         public async Task<bool> UpdateOneAsync(Post post)
@@ -75,31 +75,7 @@ namespace easyNetAPI.Data.Repository
             }
             userBehavior.Posts.Remove(oldPost);
             userBehavior.Posts.Add(post);
-            await _users.UpdateOneAsync(userBehavior.UserId, userBehavior);
-            return true;
-        }
-
-        public async Task<string> DeletePost(int postId, string userId)
-        {
-            //var userBehavior = await _userBehaviorSettings.GetAsync(userId);
-            //if (userBehavior is null)
-            //{
-            //    return "User not found";
-            //}
-            //var posts = userBehavior.Posts.ToList();
-            //if (posts.Count() == 0)
-            //{
-            //    return "Post not found";
-            //}
-            //var postFromDb = posts.Where(p => p.PostId == postId).FirstOrDefault();
-            //if (postFromDb is null)
-            //{
-            //    return "Post not found";
-            //}
-            //posts.Remove(postFromDb);
-            //userBehavior.Posts = posts.ToArray();
-            //await _userBehaviorSettings.UpdateAsync(userId, userBehavior);
-            return "Post deleted successfully";
+            return await _users.UpdateOneAsync(userBehavior.UserId, userBehavior);
         }
 
         public async Task<bool> UpdatePostContentAsync(UpsertPost post, string userId)
@@ -109,13 +85,12 @@ namespace easyNetAPI.Data.Repository
             if (postFromDb is not null)
             {
                 postFromDb.Content = post.Content;
-                await _users.UpdateOneAsync(userId, user);
-                return true;
+                return await _users.UpdateOneAsync(userId, user);
             }
             return false;
         }
 
-        public async Task UpdateManyAsync(Dictionary<int, Post> posts, string userId)
+        public async Task<bool> UpdateManyAsync(Dictionary<int, Post> posts, string userId)
         {
             UserBehavior user = _users.GetFirstOrDefault(userId).Result;
             foreach (var post in posts)
@@ -123,7 +98,7 @@ namespace easyNetAPI.Data.Repository
                 Post _post = user.Posts.Find(x => x.PostId == post.Key);
                 _post = post.Value;
             }
-            await _users.UpdateOneAsync(userId, user);
+            return await _users.UpdateOneAsync(userId, user);
         }
     }
 }

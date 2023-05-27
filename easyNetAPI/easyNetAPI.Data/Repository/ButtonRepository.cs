@@ -10,17 +10,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
+
 namespace easyNetAPI.Data.Repository
 {
     public class ButtonRepository : IButtonRepository
     {
         private readonly IPanelRepository _panels;
         private readonly IMongoCollection<UserBehavior> _usersCollection;
+
         public ButtonRepository(IMongoCollection<UserBehavior> usersCollection, IPanelRepository panels)
         {
             _usersCollection = usersCollection;
             _panels = panels;
         }
+
         private async Task<List<Button>> Query()
         {
             var unwindStage = new BsonDocument("$unwind", new BsonDocument {
@@ -54,37 +57,48 @@ namespace easyNetAPI.Data.Repository
             }
             return buttons;
         }
+
         public async Task<List<Button>> GetAllAsync() => await Query();
+
         public async Task<Button?> GetFirstOrDefault(string buttonName) => Query().Result.FirstOrDefault(x => x.ButtonName == buttonName);
-        public async Task AddAsync(Button button, int panelId, int botId)
+
+        public async Task<bool> AddAsync(Button button, int botId)
         {
-            Panel panel = _panels.GetFirstOrDefault(panelId).Result;
+            Panel panel = _panels.GetFirstOrDefault(button.PanelId).Result;
             panel.Buttons.Add(button);
-            await _panels.UpdateOneAsync(panel.PanelId, panel, botId);
+            return await _panels.UpdateOneAsync(panel, botId);
         }
-        public async Task UpdateOneAsync(string buttonName, Button button, int panelId, int botId)
+
+        public async Task<bool> UpdateOneAsync(string buttonName, Button button, int panelId, int botId)
         {
             Panel panel = _panels.GetAllAsync().Result.ToList().FirstOrDefault(panel => panel.PanelId == panelId);
             Button _button = panel.Buttons.Where(x => x.ButtonName == buttonName).FirstOrDefault();
             _button = button;
-            await _panels.UpdateOneAsync(panel.PanelId, panel, botId);
+            return await _panels.UpdateOneAsync(panel, botId);
         }
-        public async Task UpdateManyAsync(Dictionary<string, Button> buttons, int panelId, int botId)
+
+        public async Task<bool> UpdateManyAsync(Dictionary<string, Button> buttons, int panelId, int botId)
         {
             foreach (var button in buttons)
             {
                 Panel panel = _panels.GetAllAsync().Result.FirstOrDefault(panel => panel.PanelId == panelId);
-                Button _button = panel.Buttons.Where(x => x.ButtonName == button.Key).FirstOrDefault();
-                _button = button.Value;
-                await _panels.UpdateOneAsync(panel.PanelId, panel, botId);
+                Button oldButton = panel.Buttons.Where(x => x.ButtonName == button.Key).FirstOrDefault();
+                oldButton = button.Value;
+                var result = await _panels.UpdateOneAsync(panel, botId);
+                if (!result)
+                {
+                    return result;
+                }
             }
+            return true;
         }
-        public async Task RemoveAsync(int panelId, int botId, string buttonName)
+
+        public async Task<bool> RemoveAsync(int panelId, int botId, string buttonName)
         {
             Panel panel = _panels.GetFirstOrDefault(panelId).Result;
             Button button = panel.Buttons.Where(x => x.ButtonName == buttonName).FirstOrDefault();
             panel.Buttons.Remove(button);
-            await _panels.UpdateOneAsync(panelId, panel, botId);
+            return await _panels.UpdateOneAsync(panel, botId);
         }
     }
 }

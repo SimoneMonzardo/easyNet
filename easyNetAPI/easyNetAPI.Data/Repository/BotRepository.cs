@@ -16,6 +16,7 @@ namespace easyNetAPI.Data.Repository
     {
         private readonly ICompanyRepository _companies;
         private readonly IMongoCollection<UserBehavior> _usersCollection;
+
         public BotRepository(IMongoCollection<UserBehavior> usersCollection, ICompanyRepository companies)
         {
             _usersCollection = usersCollection;
@@ -41,33 +42,34 @@ namespace easyNetAPI.Data.Repository
             return bots;
 
         }
+
         public async Task<List<Bot>> GetAllAsync() => await Query();
-        // public async Task<List<UserBehavior>> GetAllAsync() =>
-        //await _usersCollection.Find(_ => true).ToListAsync();
 
         public async Task<Bot?> GetFirstOrDefault(int botId) =>
         Query().Result.FirstOrDefault(x => x.BotId == botId);
 
-        public async Task AddAsync(Bot bot, int companyId)
+        public async Task<bool> AddAsync(Bot bot, int companyId)
         {
             Company company = _companies.GetFirstOrDefault(companyId).Result;
             company.Bot = bot;
-            await _companies.UpdateOneAsync(companyId, company);
+            return await _companies.UpdateOneAsync(company);
         }
-        public async Task RemoveAsync(int botId)
+
+        public async Task<bool> RemoveAsync(int botId)
         {
             Company company = _companies.GetAllAsync().Result.ToList().FirstOrDefault(x => x.Bot.BotId == botId);
             company.Bot = null;
-            await _companies.UpdateOneAsync(company.CompanyId, company);
+            return await _companies.UpdateOneAsync(company);
         }
-        public async Task UpdateOneAsync(int botId, Bot bot)
-        {
-            Company company = _companies.GetAllAsync().Result.ToList().FirstOrDefault(copmany => copmany.Bot.BotId == botId);
-            company.Bot = bot;
-            await _companies.UpdateOneAsync(company.CompanyId,company);
 
+        public async Task<bool> UpdateOneAsync(Bot bot)
+        {
+            Company company = _companies.GetAllAsync().Result.ToList().FirstOrDefault(copmany => copmany.Bot.BotId == bot.BotId);
+            company.Bot = bot;
+            return await _companies.UpdateOneAsync(company);
         }
-        public async Task UpdateManyAsync(Dictionary<int, Bot> bots)
+
+        public async Task<bool> UpdateManyAsync(Dictionary<int, Bot> bots)
         {
             foreach (var bot in bots)
             {
@@ -80,8 +82,13 @@ namespace easyNetAPI.Data.Repository
                     company.Bot = bot.Value;
                     dict.Add(company.CompanyId, company);
                 }
-                await _companies.UpdateManyAsync(dict);
+                var result = await _companies.UpdateManyAsync(dict);
+                if (!result)
+                {
+                    return result;
+                }
             }
+            return true;
         }
     }
 }
