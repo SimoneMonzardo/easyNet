@@ -347,7 +347,18 @@ namespace easyNetAPI.Controllers
                 DateOfBirth = user.DateOfBirth,
                 ProfilePicture = user.ProfilePicture
             });
-        } 
+        }
+
+        [HttpGet]
+        [Route("GetUserIdFromUsername_AuthModerator")]
+        [Authorize(Roles = SD.ROLE_MODERATOR)]
+        public async Task<ActionResult<string>> GetUserIdFromUsername_AuthModerator(string userName)
+        {
+            var user = _db.Users.First(u => u.UserName.Equals(userName));
+            if (user == null)
+                return "user not found";
+            return Ok(user.Id);
+        }
     }
 
     public static class AuthControllerUtility
