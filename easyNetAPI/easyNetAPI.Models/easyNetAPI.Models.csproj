@@ -20,7 +20,6 @@
     <None Remove="UpsertModels\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Authentication\" />
     <Folder Include="Authentication\Validation\" />
     <Folder Include="UpsertModels\" />
   </ItemGroup>

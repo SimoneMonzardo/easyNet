@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Text;
 using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Data.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace easyNetAPI.Controllers
 {
@@ -32,10 +33,11 @@ namespace easyNetAPI.Controllers
             _db = db;
             _tokenService = tokenService;
             _unitOfWork = unitOfWork;
+            
         }
 
         [HttpPost]
-        [Route("register")]
+        [Route("Register")]
         public async Task<string> Register(RegistrationRequest request)
         {
             User applicationUser = new()
@@ -82,6 +84,67 @@ namespace easyNetAPI.Controllers
                 }
 
                 await _userManager.AddToRoleAsync(applicationUser, SD.ROLE_USER);
+                request.Password = "";
+                return "User created successfully";
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(error.Code, error.Description);
+            }
+            return "Bad Request";
+        }
+
+        [HttpPost]
+        [Route("RegisterFromModerator")]
+        [Authorize(Roles = SD.ROLE_MODERATOR)]
+        public async Task<string> RegisterFromModerator(RegistrationRequestFromModerator request)
+        {
+            User applicationUser = new()
+            {
+                UserName = request.Username,
+                Name = request.Name,
+                Surname = request.Name,
+                Gender = request.Gender,
+                PhoneNumber = request.PhoneNumber,
+                DateOfBirth = request.DateOfBirth,
+                ProfilePicture = request.ProfilePicture,
+                NormalizedEmail = request.Email.ToUpper(),
+                Email = request.Email,
+            };
+            if (!ModelState.IsValid)
+            {
+                return "Model state invalid";
+            }
+            var result = await _userManager.CreateAsync(
+               applicationUser, request.Password);
+            if (result.Succeeded)
+            {
+                //crea l'utente in mongoDB
+                await _unitOfWork.UserBehavior.AddAsync(new UserBehavior
+                {
+                    UserId = applicationUser.Id,
+                    Administrator = false,
+                    Description = "",
+                    Company = new Company(),
+                    Posts = new List<Post>(),
+                    FollowedUsers = new List<string>(),
+                    FollowersList = new List<string>(),
+                    LikedPost = new List<int>(),
+                    SavedPost = new List<int>(),
+                    MentionedPost = new List<int>()
+                });
+
+                if (!_roleManager.RoleExistsAsync(SD.ROLE_MODERATOR).GetAwaiter().GetResult())
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(SD.ROLE_MODERATOR));
+                    await _roleManager.CreateAsync(new IdentityRole(SD.ROLE_COMPANY_ADMIN));
+                    await _roleManager.CreateAsync(new IdentityRole(SD.ROLE_EMPLOYEE));
+                    await _roleManager.CreateAsync(new IdentityRole(SD.ROLE_USER));
+                }
+                if(request.Role.Equals(SD.ROLE_MODERATOR)|| request.Role.Equals(SD.ROLE_EMPLOYEE) || request.Role.Equals(SD.ROLE_USER) || request.Role.Equals(SD.ROLE_COMPANY_ADMIN))
+                    await _userManager.AddToRoleAsync(applicationUser, request.Role);
+                else
+                    await _userManager.AddToRoleAsync(applicationUser, SD.ROLE_USER);
                 request.Password = "";
                 return "User created successfully";
             }
@@ -162,7 +225,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("deleteUser")]
+        [Route("DeleteUser")]
         public async Task<ActionResult<string>> DeleteUser()
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -227,7 +290,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpGet]
-        [Route("getUserData")]
+        [Route("GetUserData")]
         public async Task<ActionResult<GetUserDataResponse>> GetUserData() {
             var token = Request.Headers["Authorization"].ToString();
             token = token.Remove(0, 7);
@@ -253,7 +316,7 @@ namespace easyNetAPI.Controllers
                 DateOfBirth = user.DateOfBirth,
                 ProfilePicture = user.ProfilePicture
             });
-        }
+        } 
     }
 
     public static class AuthControllerUtility
