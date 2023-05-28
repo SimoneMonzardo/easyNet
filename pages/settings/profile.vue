@@ -27,10 +27,10 @@
               <input v-on:keyup="validateConfirmDelete()" type="text" id="confirm-delete-text"
                 class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             </div>
-            <button disabled data-modal-hide="confirm-delete-modal" type="button" id="confirm-delete-modal-confirm" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-semibold rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2 disabled:cursor-not-allowed disabled:bg-red-400">
+            <button disabled data-modal-hide="confirm-delete-modal" type="button" id="confirm-delete-modal-confirm" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-semibold rounded-xl text-sm inline-flex items-center px-5 py-2.5 text-center mr-2 disabled:cursor-not-allowed disabled:bg-red-400">
               Sì, elimina
             </button>
-            <button data-modal-hide="confirm-delete-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-semibold px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+            <button data-modal-hide="confirm-delete-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-xl border border-gray-200 text-sm font-semibold px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
               No, annulla
             </button>
           </div>
@@ -54,10 +54,10 @@
             <form class="space-y-6" action="#" enctype="multipart/form-data" method="post">
               <UploadFile />
 
-              <button data-modal-hide="change-image-modal" type="submit" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-semibold rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+              <button data-modal-hide="change-image-modal" type="submit" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-semibold rounded-xl text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                 Salva le modifiche
               </button>
-              <button data-modal-hide="change-image-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-semibold px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+              <button data-modal-hide="change-image-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-xl border border-gray-200 text-sm font-semibold px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
                 Annulla
               </button>
             </form>
@@ -87,7 +87,7 @@
         <img v-else src="" class="w-32 h-32 lg:h-40 lg:w-40 rounded-full border border-gray-600 dark:border-gray-100" />
 
         <button type="button" data-modal-target="change-image-modal" data-modal-toggle="change-image-modal" :disabled="pending ? true : false"
-          class="w-[calc(100%-2rem)] text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-300 font-semibold rounded-full text-lg py-2 text-center mr-2 mb-2 dark:text-white dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-blue-800 disabled:bg-gray-100 disabled:cursor-not-allowed">Modifica</button>
+          class="w-[calc(100%-2rem)] text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-lg py-2 text-center mr-2 mb-2 dark:text-white dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-blue-800 disabled:bg-gray-100 disabled:cursor-not-allowed">Modifica</button>
       </div>
       <div class="w-full md:w-1/2 2xl:w-1/3 py-3">
         <!-- Loading -->
@@ -171,11 +171,11 @@
         </div>
         <div class="w-full flex flex-wrap gap-4 justify-between mt-5">
           <div class="inline-flex">
-            <button id="cancel-changes" :disabled="pending" class="w-24 lg:w-28 bg-gray-300 hover:bg-gray-400 text-gray-1000 font-bold py-2 rounded-l-full disabled:bg-gray-100 disabled:cursor-not-allowed">Annulla</button>
-            <button id="save-changes" :disabled="pending" class="w-24 lg:w-28 bg-green-400 hover:bg-green-500 text-gray-1000 font-bold py-2 rounded-r-full disabled:bg-green-300 disabled:cursor-not-allowed">Salva</button>
+            <button id="cancel-changes" :disabled="pending" class="w-24 lg:w-28 bg-gray-300 hover:bg-gray-400 text-gray-1000 font-bold py-2 rounded-l-xl disabled:bg-gray-100 disabled:cursor-not-allowed">Annulla</button>
+            <button id="save-changes" :disabled="pending" class="w-24 lg:w-28 bg-green-400 hover:bg-green-500 text-gray-1000 font-bold py-2 rounded-r-xl disabled:bg-green-300 disabled:cursor-not-allowed">Salva</button>
           </div>
           <button id="delete-account" :disabled="pending" @click="resetModal()" data-modal-target="confirm-delete-modal" data-modal-toggle="confirm-delete-modal"
-            class="bg-red-500 hover:bg-red-600 text-gray-1000 font-bold py-2 px-4 rounded-full disabled:bg-red-400 disabled:cursor-not-allowed">Elimina profilo</button>
+            class="bg-red-500 hover:bg-red-600 text-gray-1000 font-bold py-2 px-4 rounded-xl disabled:bg-red-400 disabled:cursor-not-allowed">Elimina profilo</button>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@
     <nav class="mx-4 py-3">
       <div class="flex flex-wrap justify-between items-center">
         <div class="flex justify-start items-center">
-          <a href="./" class="flex mr-4">
+          <a href="/" class="flex mr-4">
             <img src="https://flowbite.s3.amazonaws.com/logo.svg" class="mr-3 h-8" alt="FlowBite Logo" />
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">easyNet</span>
           </a>
