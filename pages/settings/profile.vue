@@ -65,7 +65,7 @@
         </div>
 
         <!-- Loaded Successfully -->
-        <img v-else src="" class="w-32 h-32 lg:h-40 lg:w-40 rounded-full border border-gray-600 dark:border-gray-100" />
+        <img v-else :src="user.profilePicture" class="w-32 h-32 lg:h-40 lg:w-40 rounded-full border border-gray-600 dark:border-gray-100" />
 
         <button type="button" data-modal-target="upload-image-modal" data-modal-toggle="upload-image-modal" :disabled="pending ? true : false"
           class="w-[calc(100%-2rem)] text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-lg py-2 text-center mr-2 mb-2 dark:text-white dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-blue-800 disabled:bg-gray-100 disabled:cursor-not-allowed">Modifica</button>
@@ -90,42 +90,67 @@
         <!-- Loaded Successfully -->
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="relative">
-            <input type="email" id="updateEmail" name="email"
+            <input 
+              type="email" 
+              id="updateEmail" 
+              name="email"
               class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              readonly required placeholder=" " />
+              readonly 
+              placeholder=" " 
+              :value="user.email" />
             <label for="updateEmail"
               class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Email</label>
           </div>
 
           <div class="relative">
-            <input type="tel" id="updatePhoneNumber" name="phoneNumber"
+            <input 
+              type="tel" 
+              id="updatePhoneNumber" 
+              name="phoneNumber"
               class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              readonly required placeholder=" " />
+              readonly 
+              placeholder=" " 
+              :value="user.phoneNumber" />
             <label for="updatePhoneNumber"
               class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Numero
               di telefono</label>
           </div>
 
           <div class="relative">
-            <input type="text" id="updateName" name="name"
+            <input 
+              type="text" 
+              id="updateName" 
+              name="name"
               class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" " required />
+              placeholder=" " 
+              required 
+              :value="user.name" />
             <label for="updateName"
               class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Nome</label>
           </div>
 
           <div class="relative">
-            <input type="text" id="updateSurname" name="surname"
+            <input 
+              type="text" 
+              id="updateSurname" 
+              name="surname"
               class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" " required />
+              placeholder=" " 
+              required 
+              :value="user.surname"/>
             <label for="updateSurname"
               class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Cognome</label>
           </div>
 
           <div class="relative">
-            <input type="date" id="updateBirthDate" name="dateOfBirth"
+            <input 
+              type="date" 
+              id="updateBirthDate" 
+              name="dateOfBirth"
               class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" " required />
+              placeholder=" " 
+              required 
+              :value="user.dateOfBirth"/>
             <label for="updateBirthDate"
               class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Data
               di nascita
@@ -133,21 +158,16 @@
           </div>
 
           <div>
-            <select id="updateGender" required name="gender"
+            <select 
+              id="updateGender" 
+              required 
+              name="gender"
+              :value="user.gender"
               class="px-2.5 pb-2.5 pt-4 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-900 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option selected disabled class="disabled:text-gray-500 dark:disabled:text-gray-400">Inserisci il genere
-              </option>
+              <option selected disabled class="disabled:text-gray-500 dark:disabled:text-gray-400">Inserisci il genere</option>
               <option value="male">Maschio</option>
               <option value="female">Femmina</option>
             </select>
-          </div>
-
-          <div class="sm:col-span-2 relative">
-            <label for="updateDescription"
-              class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Descrizione</label>
-            <textarea id="updateDescription" rows="5"
-              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder="Scrivi una descrizione del profilo..."></textarea>
           </div>
         </div>
         <div class="w-full flex flex-wrap gap-4 justify-between mt-5">
@@ -180,15 +200,32 @@ export default {
       this.confirmDeleteText = '';
       document.getElementById('confirm-delete-modal-confirm').setAttribute('disabled', '');
     }
+  },
+  mounted: function() {
+    const token = localStorage.getItem('token');
+    if (token === undefined || token === null || token === '') {
+      this.$router.push('/');
+    }
   }
 }
 </script>
 
 <script setup>
 // Use real API call
-const { data: user, pending, error } = await useFetch('API_CALL', {
+const { data: user, pending, error } = await useFetch('https://localhost:44359/Auth/GetUserData', {
   lazy: true,
   server: false,
+  method: 'GET',
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Authorization': ''
+  },
+  onRequest({ request, options }) {
+    options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+  },
+  onResponse({ request, response, options }) {
+    console.log(response);
+  },
   onResponseError() {
     // TODO: Handle error
   }

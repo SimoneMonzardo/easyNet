@@ -1,6 +1,6 @@
-<template onMounted="loaded()">
+<template>
   <Header
-    :logged="logged"
+    :loggedIn="logged"
     :email="email" 
     :userName="username"
     :profilePicture="profilePicture" />
@@ -28,11 +28,11 @@ onMounted(() => {
       logged: false,
       username: '',
       email: '',
-      profilePicture: ''
+      profilePicture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png'
     }),
-    methods: {
-      loaded() {
-        this.logged = localStorage.getItem('logged');
+    mounted: function() {
+      this?.$nextTick(function () {
+        this.logged = Boolean(localStorage.getItem('logged'));
         if (this.logged === null) {
           this.logged = false;
         }
@@ -48,10 +48,10 @@ onMounted(() => {
         }
 
         this.profilePicture = localStorage.getItem('profilePicture');
-        if (this.profilePicture === null) {
-          this.profilePicture = '';
+        if (this.profilePicture === null || this.profilePicture === 'undefined') {
+          this.profilePicture = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
         }
-      }
-    }
+      });
+    },
   }
 </script>
