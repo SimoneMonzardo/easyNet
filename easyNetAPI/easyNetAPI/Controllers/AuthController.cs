@@ -381,5 +381,12 @@ namespace easyNetAPI.Controllers
             var userId = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" && c.Value.Contains("-")).Value;
             return userId;
         }
+        public static async Task<string> GetUserIdFromUsername(string userName, AppDbContext _db)
+        {
+            var user = _db.Users.First(u => u.UserName.Equals(userName));
+            if (user == null)
+                return "user not found";
+            return user.Id;
+        }
     }
 }
