@@ -65,13 +65,19 @@ public class PostController : ControllerBase
     }
 
     [HttpDelete("RemovePost_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
-    public async Task<ActionResult<string>> Delete(int postId, string userId)
+    public async Task<ActionResult<string>> Delete(int postId)
     {
         try
         {
-            var post = _unitOfWork.Post.GetFirstOrDefault(postId);
+            var token = Request.Headers["Authorization"].ToString();
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+            if (userId is null)
+                return BadRequest("User not found");
+            var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
             if (post == null)
                 return BadRequest("Post not found");
+            if (!post.UserId.Equals(userId))
+                return BadRequest("User is not Authorized to remove post");
             await _unitOfWork.Post.RemoveAsync(postId, userId);
             return Ok("Post removed succesfully");
         }
