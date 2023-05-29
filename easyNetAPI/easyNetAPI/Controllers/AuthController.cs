@@ -185,6 +185,7 @@ namespace easyNetAPI.Controllers
                 Username = applicationUserInDb.UserName!,
                 Email = applicationUserInDb.Email!,
                 Token = accessToken,
+                ProfilePicture = applicationUserInDb.ProfilePicture
             });
         }
 
@@ -346,13 +347,13 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetUserIdFromUsernameModerator")]
-        [Authorize(Roles = SD.ROLE_MODERATOR)]
+        [Route("GetUserIdFromUsernameModeratorCompanyAdmin")]
+        [Authorize(Roles = $"{SD.ROLE_MODERATOR},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<ActionResult<string>> GetUserIdFromUsername_AuthModerator(string userName)
         {
             var user = _db.Users.First(u => u.UserName.Equals(userName));
             if (user == null)
-                return "user not found";
+                return "User not found";
             return Ok(user.Id);
         }
         

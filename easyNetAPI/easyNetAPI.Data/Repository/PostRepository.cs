@@ -48,6 +48,10 @@ namespace easyNetAPI.Data.Repository
         public async Task<bool> AddAsync(Post post)
         {
             UserBehavior user = _users.GetFirstOrDefault(post.UserId).Result;
+            if (user is null)
+            {
+                return false;
+            }
             user.Posts.Add(post);
             return await _users.UpdateOneAsync(post.UserId, user);
         }

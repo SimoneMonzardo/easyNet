@@ -26,7 +26,7 @@ namespace easyNetAPI.Controllers
             _db = db;
         }
 
-        [HttpPost("PostTag")]
+        [HttpPost("UpsertTag")]
         [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<IActionResult> PostTagAsync(int postId, List<string> usernames)
         {
