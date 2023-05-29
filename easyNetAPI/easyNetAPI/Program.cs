@@ -13,9 +13,18 @@ using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Data.Repository;
 using easyNetAPI.Controllers;
 
-
+var allowedOrigins = "_allowedOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(allowedOrigins,
+        builder => builder
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithOrigins("*"));
+});
 
 // Add services to the container.
 
