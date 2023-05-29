@@ -43,19 +43,32 @@ namespace easyNetAPI.Controllers
                 if (post.Likes is null)
                     post.Likes = new List<string>();
                 alreadyLiked = post.Likes.Contains(userId);
+                var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                if (user is null)
+                    return BadRequest("User not found");
                 if (alreadyLiked)
                 {
                     post.Likes.Remove(userId);
-                    _unitOfWork.Post.UpdateOneAsync(post);
+                    await _unitOfWork.Post.UpdateOneAsync(post);
+                    if (user.LikedPost is null)
+                        user.LikedPost = new List<int>();
+                    if (user.LikedPost.Contains(postId))
+                        user.LikedPost.Remove(postId);
+                    await _unitOfWork.UserBehavior.UpdateOneAsync(userId, user);
                     return Ok("Like removed succesfully");
                 }
                 post.Likes.Add(userId);
-                _unitOfWork.Post.UpdateOneAsync(post);
+                await _unitOfWork.Post.UpdateOneAsync(post);
+                if (user.LikedPost is null)
+                    user.LikedPost = new List<int>();
+                if (!user.LikedPost.Contains(postId))
+                    user.LikedPost.Add(postId);
+                await _unitOfWork.UserBehavior.UpdateOneAsync(userId, user);
                 return Ok("Like Added Succesfully");
             }
             catch (Exception ex)
             {
-                return BadRequest("Something went wrong");
+                return BadRequest("Something went wrong: " + ex.Message);
             }
         }
 
