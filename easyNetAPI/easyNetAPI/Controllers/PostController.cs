@@ -43,6 +43,14 @@ public class PostController : ControllerBase
         return posts;
     }
 
+    //get di un post in base all id
+    [HttpGet("GetPostById"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
+    public async Task<Post> GetByIddAsync(int id)
+    {
+        var post = await _unitOfWork.Post.GetFirstOrDefault(id);
+        return post;
+    }
+
     [HttpGet("GetAllPostsOfFollowed"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
     public async Task<IEnumerable<Post>> GetAllFollowedAsync()
     {
