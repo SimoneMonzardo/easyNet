@@ -35,20 +35,44 @@ namespace easyNetAPI.Controllers
                 var token = Request.Headers["Authorization"].ToString();
                 var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 if (userId == null)
+                {
                     return BadRequest("Not Logged in");
+                }
                 var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
                 if (post == null)
+                {
                     return BadRequest("Post doesn't exist");
-                List<string> tags = new List<string>();
+                }
+                if (post.UserId != userId)
+                {
+                    return Forbid("Cannot add tags");
+                }
                 foreach (var item in usernames)
                 {
-                    tags.Add(item);
+                    //check if user exists
+                    var user = _db.Users.Where(u => u.UserName == item).FirstOrDefault();
+                    if (user is not null)
+                    {
+                        post.Tags.Add(item);
+                        //aggiorna i mentioned posts dell'utente menzionato
+                        var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(user.Id);
+                        if (userBehavior is not null)
+                        {
+                            userBehavior.MentionedPost.Add(post.PostId);
+                            var result = await _unitOfWork.UserBehavior.UpdateOneAsync(user.Id, userBehavior);
+                            if (!result)
+                            {
+                                return BadRequest("Someting went wrong");
+                            }
+                        }
+                    }
                 }
-                if (tags.Contains("user not found"))
-                    return BadRequest("one user does not exists");
-                post.Tags = tags;
-                _unitOfWork.Post.UpdateOneAsync(post);
-                return Ok("Tags added succesfully");
+                var postResult = await _unitOfWork.Post.UpdateOneAsync(post);
+                if (postResult)
+                {
+                    return Ok("Tags added succesfully");
+                }
+                return BadRequest("Someting went wrong");
             }
             catch (Exception ex)
             {
@@ -65,12 +89,11 @@ namespace easyNetAPI.Controllers
                 var token = Request.Headers["Authorization"].ToString();
                 var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 if (userId == null)
+                {
                     return BadRequest("Not Logged in");
+                }
                 var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
-                var tags = post.Tags;
-                if (tags.IsNullOrEmpty())
-                    return Ok("[]");
-                return Ok(tags);
+                return Ok(post.Tags);
             }
             catch (Exception ex)
             {
@@ -78,20 +101,37 @@ namespace easyNetAPI.Controllers
             }
         }
 
-        [HttpGet("GetPostWhereTagged")]
+        [HttpGet("GetPostsWhereTagged")]
         [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
-        public async Task<IActionResult> GetPostWhereTaggedAsync()
+        public async Task<IActionResult> GetPostWhereTaggedAsync(string userName)
         {
             try
             {
                 var token = Request.Headers["Authorization"].ToString();
-                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                var userId = _db.Users.Where(u => u.UserName == userName).Select(u => u.Id).FirstOrDefault();
                 if (userId == null)
+                {
                     return BadRequest("Not Logged in");
-                var posts = (await _unitOfWork.Post.GetAllAsync()).Where(p => p.Tags.IsNullOrEmpty()?false:p.Tags.Contains(userId)).ToList();
-                if (posts.IsNullOrEmpty())
-                    return Ok("[]");
-                return Ok(posts);
+                }
+                var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                if (userBehavior is null)
+                {
+                    return BadRequest("User not found");
+                }
+                var postsList = new List<Post>();
+                if (userBehavior.MentionedPost.Count() != 0)
+                {
+                    foreach (var postId in userBehavior.MentionedPost)
+                    {
+                        var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
+                        if (post != null)
+                        {
+                            postsList.Add(post);
+                        }
+                    }
+                    return Ok(postsList);
+                }
+                return Ok("User not tagged");
             }
             catch (Exception ex)
             {
