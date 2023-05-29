@@ -171,8 +171,8 @@
         </div>
         <div class="w-full flex flex-wrap gap-4 justify-between mt-5">
           <div class="inline-flex">
-            <button id="cancel-changes" :disabled="pending" class="w-24 lg:w-28 bg-gray-300 hover:bg-gray-400 text-gray-1000 font-bold py-2 rounded-l-xl disabled:bg-gray-100 disabled:cursor-not-allowed">Annulla</button>
-            <button id="save-changes" :disabled="pending" class="w-24 lg:w-28 bg-green-400 hover:bg-green-500 text-gray-1000 font-bold py-2 rounded-r-xl disabled:bg-green-300 disabled:cursor-not-allowed">Salva</button>
+            <button id="cancel-changes" @click="cancelChanges()" :disabled="pending" class="w-24 lg:w-28 bg-gray-300 hover:bg-gray-400 text-gray-1000 font-bold py-2 rounded-l-xl disabled:bg-gray-100 disabled:cursor-not-allowed">Annulla</button>
+            <button id="save-changes" @click="saveChanges()" :disabled="pending" class="w-24 lg:w-28 bg-green-400 hover:bg-green-500 text-gray-1000 font-bold py-2 rounded-r-xl disabled:bg-green-300 disabled:cursor-not-allowed">Salva</button>
           </div>
           <button id="delete-account" :disabled="pending" @click="resetModal()" data-modal-target="confirm-delete-modal" data-modal-toggle="confirm-delete-modal"
             class="bg-red-500 hover:bg-red-600 text-gray-1000 font-bold py-2 px-4 rounded-xl disabled:bg-red-400 disabled:cursor-not-allowed">Elimina profilo</button>
@@ -189,6 +189,9 @@ import { XMarkIcon } from "@heroicons/vue/24/outline";
 export default {
   data: () => ({
     confirmDeleteText: '',
+    user: {
+
+    }
   }),
   components: {
     ExclamationCircleIcon,
@@ -200,7 +203,7 @@ export default {
       document.getElementById('confirm-delete-modal-confirm').setAttribute('disabled', '');
     },
     async deleteUserAccount() {
-      const { pending } = await useFetch('https://localhost:44359/Auth/DeleteUser', {
+      await useFetch('https://localhost:44359/Auth/DeleteUser', {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Authorization': ''
@@ -211,12 +214,41 @@ export default {
         }
       });
       this.$router.go('/');
+    },
+    cancelChanges() {
+      document.getElementById('updateName').value = localStorage.getItem('backupName');
+      document.getElementById('updateSurname').value = localStorage.getItem('backupSurname');
+      document.getElementById('updateGender').value = localStorage.getItem('backupGender');
+      document.getElementById('updateBirthDate').value = localStorage.getItem('backupBirthDate');
+      //document.getAnimations('id').value = localStorage.getItem('backupProfilePicture');
+    },
+    async saveChanges() {
+      var newUserInfo = {
+        name: document.getElementById('updateName').value,
+        surname: document.getElementById('updateSurname').value,
+        gender: document.getElementById('updateGender').value,
+        birthDate: document.getElementById('updateBirthDate').value,
+        profilePicture: '' // TODO: Use -> document.getElementById('fileInputId').value
+      };
+
+      await useFetch('https://localhost:44359/Auth/editUserData', {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Authorization': ''
+        },
+        body: JSON.stringify(newUserInfo),
+        method: 'POST',
+        onRequest({ request, options }) {
+          options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        }
+      });
+      this.$router.go();
     }
   },
   mounted: function() {
     const token = localStorage.getItem('token');
     if (token === undefined || token === null || token === '') {
-      this.$router.go('/');
+      this.$router.push ('/');
     }
   }
 }
@@ -239,6 +271,12 @@ const { data: user, pending, error } = await useFetch('https://localhost:44359/A
   },
   onResponse({request, response, options}) {
     username = response._data.userName;
+    console.log(response._data);
+    localStorage.setItem('backupName', response._data.name);
+    localStorage.setItem('backupSurname', response._data.surname);
+    localStorage.setItem('backupGender', response._data.gender);
+    localStorage.setItem('backupBirthDate', response._data.birthdate);
+    localStorage.setItem('backupProfilePicture', response._data.profilePicture);
   },
   onResponseError() {
     // TODO: Handle error
