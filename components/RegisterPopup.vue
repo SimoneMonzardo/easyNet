@@ -126,12 +126,21 @@ import useAuth from '~/composables/useAuth';
     name: "RegisterPopup",
     methods: {
       check() {
-        const password = document.getElementById('pass').value;
+        const password = document.getElementById('passwordRegister').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
-        if (password === confirmPassword) {
+        if (password === confirmPassword && password != "") {
             document.getElementById('confirmText').innerHTML = "Conferma password"
-        } else {
+            document.getElementById('confirmPassword').style.borderColor = "green";
+            document.getElementById('confirmText').style.color = "green";
+        } else if (password != confirmPassword){
             document.getElementById('confirmText').innerHTML = "Non coincidono";
+            document.getElementById('confirmPassword').style.borderColor = "red";
+            document.getElementById('confirmText').style.color = "red";
+        }
+        else if(confirmPassword == ""){
+            document.getElementById('confirmText').innerHTML = "Conferma password";
+            document.getElementById('confirmPassword').style.borderColor = "rgba(80,80,80,0.3)";
+            document.getElementById('confirmText').style.color = "gray";
         }
       },
       handleRegister(){
