@@ -106,7 +106,7 @@ public class PostController : ControllerBase
         }
     }
 
-    [HttpPost("UploadImage"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+    [HttpPost("UploadImage"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
     public async Task<object> PostImage(IFormFile? file)
     {
         try
@@ -134,7 +134,7 @@ public class PostController : ControllerBase
             return BadRequest("Error " + ex.Message);
         }
     }
-    [HttpDelete("DeleteImage"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+    [HttpDelete("DeleteImage"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
     public async Task<object> DeleteImage(string link)
     {
         try
