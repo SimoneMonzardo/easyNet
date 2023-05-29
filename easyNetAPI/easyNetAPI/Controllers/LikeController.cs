@@ -82,14 +82,11 @@ namespace easyNetAPI.Controllers
                 var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 if (userId == null)
                     return BadRequest("Not Logged in");
-                var posts = await _unitOfWork.Post.GetAllAsync();
-                var likedPosts = new List<Post>();
-                foreach (var item in posts)
-                {
-                    if (item.Likes.Contains(userId))
-                        likedPosts.Add(item);
-                }
-                return Json(likedPosts);
+                var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                if (user is null)
+                    return BadRequest("User not found");
+                var posts = user.LikedPost;
+                return Json(posts);
             }
             catch (Exception)
             {
