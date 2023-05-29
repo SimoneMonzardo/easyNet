@@ -257,9 +257,14 @@ namespace easyNetAPI.Controllers
         [HttpDelete]
         [Route("DeleteUserFromModerator")]
         [Authorize(Roles = SD.ROLE_MODERATOR)]
-        public async Task<ActionResult<string>> DeleteUserFromModerator(string userId)
+        public async Task<ActionResult<string>> DeleteUserFromModerator(string username)
         {
-            if (userId == null)
+            if (username == null)
+            {
+                return BadRequest("User not found");
+            }
+            var userId = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
+            if (userId is null)
             {
                 return BadRequest("User not found");
             }
