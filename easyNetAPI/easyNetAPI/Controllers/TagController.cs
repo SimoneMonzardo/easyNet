@@ -53,7 +53,7 @@ namespace easyNetAPI.Controllers
                     var user = _db.Users.Where(u => u.UserName == item).FirstOrDefault();
                     if (user is not null)
                     {
-                        post.Tags.Add(item);
+                        post.Tags.Add(user.Id);
                         //aggiorna i mentioned posts dell'utente menzionato
                         var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(user.Id);
                         if (userBehavior is not null)
@@ -93,7 +93,9 @@ namespace easyNetAPI.Controllers
                     return BadRequest("Not Logged in");
                 }
                 var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
-                return Ok(post.Tags);
+                var userNames = new List<string>();
+                post.Tags.ForEach(i => userNames.Add(_db.Users.Where(u => u.Id == i).Select(u => u.UserName).FirstOrDefault()));
+                return Ok(userNames);
             }
             catch (Exception ex)
             {
@@ -161,21 +163,19 @@ namespace easyNetAPI.Controllers
                 }
                 foreach (var tag in usersList)
                 {
-                    if (post.Tags.Contains(tag))
+                    string taggedUserId = _db.Users.Where(u => u.UserName == tag).Select(u => u.Id).FirstOrDefault();
+                    if (post.Tags.Contains(taggedUserId))
                     {
-                        post.Tags.Remove(tag);
-                        var managedUserId = _db.Users.Where(u => u.UserName == tag).FirstOrDefault().Id;
-                        if (managedUserId is not null)
+                        post.Tags.Remove(taggedUserId);
+
+                        var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(taggedUserId);
+                        if (userBehavior != null)
                         {
-                            var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(managedUserId);
-                            if (userBehavior != null)
+                            userBehavior.MentionedPost.Remove(post.PostId);
+                            var userResult = await _unitOfWork.UserBehavior.UpdateOneAsync(taggedUserId, userBehavior);
+                            if (!userResult)
                             {
-                                userBehavior.MentionedPost.Remove(post.PostId);
-                                var userResult = await _unitOfWork.UserBehavior.UpdateOneAsync(managedUserId, userBehavior);
-                                if (!userResult)
-                                {
-                                    return BadRequest("There was an error deleting the tag");
-                                }
+                                return BadRequest("There was an error deleting the tag");
                             }
                         }
                     }
