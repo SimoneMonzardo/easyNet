@@ -85,7 +85,7 @@ export default {
       localStorage.removeItem('username');
       localStorage.removeItem('email');
       localStorage.removeItem('profilePicture');
-      this.$router.push('/');
+      this.$router.go('/');
     }
   }
 }

@@ -20,18 +20,17 @@
             <ExclamationCircleIcon class="mx-auto h-16 w-16 text-gray-500 dark:text-gray-400" />
             <h3 class="text-lg font-normal text-gray-500 dark:text-gray-400">Sei certo di voler cancellare l'account?</h3>
             <div class="my-5">
-              <!-- TODO: Use username -->
               <label for="confirm-delete-text" class="text-left block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                Scrivi <span class="text-red-600 font-semibold">elimina.utente</span> per confermare
+                Scrivi <span class="text-red-600 font-semibold">elimina.{{ username }}</span> per confermare
               </label>
               <input @input="confirmDeleteText = $event.target.value" :value="confirmDeleteText" type="text"
                 class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             </div>
-            <!-- TODO: Use username -->
             <button
               id="confirm-delete-modal-confirm"
-              :disabled="confirmDeleteText !== `elimina.${'utente'}`" 
+              :disabled="confirmDeleteText !== `elimina.${username}`" 
               data-modal-hide="confirm-delete-modal" 
+              @click="deleteUserAccount()"
               type="button" 
               class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-semibold rounded-xl text-sm inline-flex items-center px-5 py-2.5 text-center mr-2 disabled:cursor-not-allowed disabled:bg-red-400">
               Sì, elimina
@@ -189,7 +188,7 @@ import { XMarkIcon } from "@heroicons/vue/24/outline";
 
 export default {
   data: () => ({
-    confirmDeleteText: ''
+    confirmDeleteText: '',
   }),
   components: {
     ExclamationCircleIcon,
@@ -199,18 +198,33 @@ export default {
     resetModal() {
       this.confirmDeleteText = '';
       document.getElementById('confirm-delete-modal-confirm').setAttribute('disabled', '');
+    },
+    async deleteUserAccount() {
+      const { pending } = await useFetch('https://localhost:44359/Auth/DeleteUser', {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Authorization': ''
+        },
+        method: 'DELETE',
+        onRequest({ request, options }) {
+          options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        }
+      });
+      this.$router.go('/');
     }
   },
   mounted: function() {
     const token = localStorage.getItem('token');
     if (token === undefined || token === null || token === '') {
-      this.$router.push('/');
+      this.$router.go('/');
     }
   }
 }
 </script>
 
 <script setup>
+var username = '';
+
 // Use real API call
 const { data: user, pending, error } = await useFetch('https://localhost:44359/Auth/GetUserData', {
   lazy: true,
@@ -223,8 +237,8 @@ const { data: user, pending, error } = await useFetch('https://localhost:44359/A
   onRequest({ request, options }) {
     options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
   },
-  onResponse({ request, response, options }) {
-    console.log(response);
+  onResponse({request, response, options}) {
+    username = response._data.userName;
   },
   onResponseError() {
     // TODO: Handle error

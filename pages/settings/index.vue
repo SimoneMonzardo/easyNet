@@ -2,6 +2,10 @@
   <head>
     <title>Impostazioni #Profilo • easyNet</title>
   </head>
+  <section Modals>
+    <RegisterPopup />
+    <LoginPopup />
+  </section>
 
   <NuxtPage />
 

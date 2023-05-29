@@ -32,7 +32,13 @@ onMounted(() => {
     }),
     mounted: function() {
       this?.$nextTick(function () {
-        this.logged = Boolean(localStorage.getItem('logged'));
+        this.getLocalStorage();
+      });
+      window.addEventListener('load', this.getLocalStorage());
+    },
+    methods: {
+      getLocalStorage() {
+        this.logged = localStorage.getItem('logged') === 'true';
         if (this.logged === null) {
           this.logged = false;
         }
@@ -41,17 +47,17 @@ onMounted(() => {
         if (this.username === null) {
           this.username = '';
         }
-
+        
         this.email = localStorage.getItem('email');
         if (this.email === null) {
           this.email = '';
         }
-
+        
         this.profilePicture = localStorage.getItem('profilePicture');
         if (this.profilePicture === null || this.profilePicture === 'undefined') {
           this.profilePicture = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
         }
-      });
-    },
+      }
+    }
   }
 </script>
