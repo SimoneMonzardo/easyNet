@@ -33,7 +33,7 @@ public class CommentsController : ControllerBase
         _db = db;
     }
 
-    [HttpGet("GetCommentsOfAPostAuthUser"), Authorize(Roles = SD.ROLE_USER)]
+    [HttpGet("GetCommentsOfAPost"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_MODERATOR}")]
     public async Task<IEnumerable<Comment>?> GetAsync(int postId)
     {
         var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
@@ -48,7 +48,7 @@ public class CommentsController : ControllerBase
         return null;
     }
 
-    [HttpPost("UpsertComment"), Authorize(Roles = SD.ROLE_USER)]
+    [HttpPost("UpsertComment"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
     public async Task<ActionResult<string>> UpsertAsync(UpsertComment comment)
     {
         if (!ModelState.IsValid)
@@ -93,7 +93,7 @@ public class CommentsController : ControllerBase
         }
     }
 
-    [HttpGet("GetComment"), Authorize(Roles = SD.ROLE_USER)]
+    [HttpGet("GetComment"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_MODERATOR}")]
     public async Task<Comment?> GetComment (int commentId)
     {
         var comment = await _unitOfWork.Comment.GetFirstOrDefault(commentId);

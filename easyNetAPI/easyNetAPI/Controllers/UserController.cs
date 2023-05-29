@@ -28,7 +28,7 @@ namespace easyNetAPI.Controllers
             _userManager = userManager;
         }
 
-        [HttpPost("Follow_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpPost("Follow"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
         public async Task<ActionResult<string>> FollowUserAsync(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -65,7 +65,8 @@ namespace easyNetAPI.Controllers
             return Ok("User followed successfully");    
         }
 
-        [HttpPost("Unfollow_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpPost("Unfollow")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
         public async Task<ActionResult<string>> UnfollowUserAsync(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -122,7 +123,8 @@ namespace easyNetAPI.Controllers
         }
 
         //prende i follower di un utente specificato
-        [HttpGet("GetUserFollowers_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetUserFollowers")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
         public async Task<List<string>?> GetUserFollowers(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -156,7 +158,8 @@ namespace easyNetAPI.Controllers
         }
 
         //prende i follower dell'utente che ha fatto la richiesta
-        [HttpGet("GetFollowers_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetFollowers")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
         public async Task<List<string>?> GetUserFollowers()
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -185,7 +188,8 @@ namespace easyNetAPI.Controllers
 
 
         //prende i follower di un utente specificato
-        [HttpGet("GetUserFollowedList_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetUserFollowedList")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
         public async Task<List<string>?> GetUserFollowedList(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -219,7 +223,8 @@ namespace easyNetAPI.Controllers
         }
 
         //prende i followed dell'utente che ha fatto la richiesta
-        [HttpGet("GetFollowed_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetFollowed"), Authorize(Roles = SD.ROLE_USER)]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
         public async Task<List<string>?> GetUserFollowed()
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -246,7 +251,7 @@ namespace easyNetAPI.Controllers
             return returnList;
         }
 
-        [HttpPost("ConvertToAdmin_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+        [HttpPost("ConvertToAdminModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
         public async Task<ActionResult<string>> ConvertToAdmin(string userId)
         {
             if (userId is null || userId.Equals(string.Empty))
@@ -255,14 +260,15 @@ namespace easyNetAPI.Controllers
             var user = _db.Users.Find(userId);
             if (user is null)
                 return BadRequest("User not found");
-            //await _userManager.RemoveFromRoleAsync(user, SD.ROLE_USER);
+
             var result = await _userManager.AddToRoleAsync(user, SD.ROLE_COMPANY_ADMIN);
             if (result.Succeeded)
                 return Ok("User is now admin");
 
             return BadRequest("Could not make user admin see exception: " + result.Errors);
         }
-        [HttpPost("ConvertToEmployee_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+
+        [HttpPost("ConvertToEmployeeCompanyAdmin"), Authorize(Roles = SD.ROLE_COMPANY_ADMIN)]
         public async Task<ActionResult<string>> ConvertToEmployee(string userId)
         {
             if (userId is null || userId.Equals(string.Empty))
@@ -271,14 +277,15 @@ namespace easyNetAPI.Controllers
             var user = _db.Users.Find(userId);
             if (user is null)
                 return BadRequest("User not found");
-            //await _userManager.RemoveFromRoleAsync(user, SD.ROLE_USER);
+
             var result = await _userManager.AddToRoleAsync(user, SD.ROLE_EMPLOYEE);
             if (result.Succeeded)
                 return Ok("User is now employee");
 
             return BadRequest("Could not make user employee see exception: " + result.Errors);
         }
-        [HttpPost("RemoveFromAdmin_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+
+        [HttpPost("RemoveFromAdminModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
         public async Task<ActionResult<string>> RemoveFromAdmin(string userId)
         {
             if (userId is null || userId.Equals(string.Empty))
@@ -296,7 +303,8 @@ namespace easyNetAPI.Controllers
 
             return BadRequest("Could not remove user from role admin see exception: " + result.Errors);
         }
-        [HttpPost("RemoveFromEmployee_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+
+        [HttpPost("RemoveFromEmployeeCompanyAdmin"), Authorize(Roles = SD.ROLE_COMPANY_ADMIN)]
         public async Task<ActionResult<string>> RemoveFromEmployee(string userId)
         {
             if (userId is null || userId.Equals(string.Empty))

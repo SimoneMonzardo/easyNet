@@ -10,18 +10,22 @@ using System.Security.Claims;
 
 namespace easyNetAPI.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class HashtagController : Controller
     {
         private readonly ILogger<HashtagController> _logger;
         private readonly IUnitOfWork _unitOfWork;
+
         public HashtagController(ILogger<HashtagController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
         }
+
         [HttpPost("AddHashtagToPost")]
-        [Authorize(Roles = SD.ROLE_USER)]
-        public async Task<IActionResult> PostHashtagAsync(List<string> hashtags,int postId)
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+        public async Task<IActionResult> PostHashtagAsync(List<string> hashtags, int postId)
         {
             try
             {
@@ -42,8 +46,8 @@ namespace easyNetAPI.Controllers
                 return BadRequest("Something went wrong");
             }
         }
-        [HttpGet("GetHashTagsOfPost_AuthUser")]
-        [Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetHashtagsOfPost")]
+        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_MODERATOR}")]
         public async Task<IActionResult> GetTagsOfPostAsync(int postId)
         {
             try
@@ -64,8 +68,8 @@ namespace easyNetAPI.Controllers
             }
         }
 
-        [HttpGet("GetPostFromHashTags_AuthUser")]
-        [Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetPostFromHashtags")]
+        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_MODERATOR}")]
         public async Task<IActionResult> GetPostWhereTaggedAsync(string hashtag)
         {
             try

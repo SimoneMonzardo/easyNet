@@ -23,7 +23,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost("PostLike")]
-        [Authorize(Roles = SD.ROLE_USER)]
+        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<IActionResult> PostLikeAsync(int postId)
         {
             /*
@@ -60,7 +60,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpGet("GetLikedPosts")]
-        [Authorize(Roles = SD.ROLE_USER)]
+        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<IActionResult> LikedPostsAsync()
         {
             try
@@ -85,7 +85,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost("CommentLike")]
-        [Authorize(Roles = SD.ROLE_USER)]
+        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<IActionResult> CommentLikeAsync(int commentId, int postId)
         {
             try
@@ -125,7 +125,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpGet("GetLikedComments")]
-        [Authorize(Roles = SD.ROLE_USER)]
+        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<IActionResult> LikedCommentsAsync()
         {
             try
@@ -150,7 +150,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost("ReplyLike")]
-        [Authorize(Roles = SD.ROLE_USER)]
+        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<IActionResult> ReplyLikeAsync(int replyId,int commentId, int postId)
         {
             try
@@ -190,7 +190,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpGet("GetLikedReplies")]
-        [Authorize(Roles = SD.ROLE_USER)]
+        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<IActionResult> LikedRepliesAsync()
         {
             try

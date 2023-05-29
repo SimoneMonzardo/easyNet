@@ -28,8 +28,7 @@ public class PostController : ControllerBase
         _hostEnvironment = hostEnvironment;
     }
 
-    //get di un post tramite il suo id
-    [HttpGet("GetPostOfUser_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+    [HttpGet("GetPostsOfUser"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
     public async Task<IEnumerable<Post>> GetAsync(string username)
     {
         var posts = (await _unitOfWork.Post.GetAllAsync()).Where(post => post.Username == username);
@@ -37,14 +36,14 @@ public class PostController : ControllerBase
     }
 
     //get di tutti i post
-    [HttpGet("GetAllPost_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+    [HttpGet("GetAllPosts"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
     public async Task<IEnumerable<Post>> GetAllAsync()
     {
         var posts = await _unitOfWork.Post.GetAllAsync();
         return posts;
     }
 
-    [HttpGet("GetAllPostOfFollowed_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+    [HttpGet("GetAllPostsOfFollowed"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
     public async Task<IEnumerable<Post>> GetAllFollowedAsync()
     {
         var token = Request.Headers["Authorization"].ToString();
@@ -64,7 +63,7 @@ public class PostController : ControllerBase
         return followedPost;
     }
 
-    [HttpDelete("RemovePost_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
+    [HttpDelete("RemovePost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
     public async Task<ActionResult<string>> Delete(int postId)
     {
         try
@@ -86,7 +85,8 @@ public class PostController : ControllerBase
             return BadRequest("Unandled exeption: " + ex.Message);
         }
     }
-    [HttpPost("PostImage"), Authorize(Roles = SD.ROLE_USER)]
+
+    [HttpPost("UploadImage"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
     public async Task<object> PostImage(IFormFile? file)
     {
         try
@@ -114,7 +114,7 @@ public class PostController : ControllerBase
             return BadRequest("Error " + ex.Message);
         }
     }
-    [HttpDelete("DeleteImage"), Authorize(Roles = SD.ROLE_USER)]
+    [HttpDelete("DeleteImage"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
     public async Task<object> DeleteImage(string link)
     {
         try
@@ -131,8 +131,9 @@ public class PostController : ControllerBase
             return BadRequest("Error " + ex.Message);
         }
     }
-    [HttpPost("UpsertPost_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
-    public async Task<ActionResult<string>> UpsertAsync(UpsertPost post)
+
+    [HttpPost("UpsertPost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+    public async Task<ActionResult<string>> UpsertAsync(UpsertPost post, IFormFile? file)
     {
         if (!ModelState.IsValid)
         {

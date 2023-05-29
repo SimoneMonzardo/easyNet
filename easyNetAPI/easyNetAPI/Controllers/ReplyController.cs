@@ -12,7 +12,9 @@ using easyNetAPI.Models.UpsertModels;
 
 namespace easyNetAPI.Controllers
 {
-	public class ReplyController: ControllerBase
+    [ApiController]
+    [Route("[controller]")]
+    public class ReplyController: ControllerBase
     {
         private readonly ILogger<PostController> _logger;
         public IUnitOfWork _unitOfWork;
@@ -25,7 +27,7 @@ namespace easyNetAPI.Controllers
             _db = db;
         }
 
-        [HttpPost("UpsertReply"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpPost("UpsertReply"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
         public async Task<ActionResult<string>> UpsertAsync([FromBody]UpsertReply reply)
         {
             if (!ModelState.IsValid)
@@ -68,7 +70,7 @@ namespace easyNetAPI.Controllers
             }
         }
 
-        [HttpGet("GetRepliesOfAComment"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetRepliesOfAComment"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
         public async Task<List<Reply>?> GetRepliesAsync (int commentId)
         {
             var comment = await _unitOfWork.Comment.GetFirstOrDefault(commentId);
@@ -79,7 +81,7 @@ namespace easyNetAPI.Controllers
             return comment.Replies;
         }
 
-        [HttpGet("GetReply"), Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetReply"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
         public async Task<Reply?> GetReplyAsync(int replyId)
         {
             var reply = await _unitOfWork.Reply.GetFirstOrDefault(replyId);

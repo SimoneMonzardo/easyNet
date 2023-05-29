@@ -11,6 +11,8 @@ using System.Security.Claims;
 
 namespace easyNetAPI.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class TagController : Controller
     {
         private readonly ILogger<TagController> _logger;
@@ -24,8 +26,8 @@ namespace easyNetAPI.Controllers
             _db = db;
         }
 
-        [HttpPost("PostTags_AuthUser")]
-        [Authorize(Roles = SD.ROLE_USER)]
+        [HttpPost("PostTag")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<IActionResult> PostTagAsync(int postId, List<string> usernames)
         {
             try
@@ -54,8 +56,8 @@ namespace easyNetAPI.Controllers
             }
         }
 
-        [HttpGet("GetTagsOfPost_AuthUser")]
-        [Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetTagsOfPost")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
         public async Task<IActionResult> GetTagsOfPostAsync(int postId)
         {
             try
@@ -78,8 +80,8 @@ namespace easyNetAPI.Controllers
             }
         }
 
-        [HttpGet("GetPostWhereTagged_AuthUser")]
-        [Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("GetPostWhereTagged")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
         public async Task<IActionResult> GetPostWhereTaggedAsync()
         {
             try

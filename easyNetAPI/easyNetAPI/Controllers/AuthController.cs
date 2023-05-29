@@ -36,7 +36,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost]
-        [Route("Register")]
+        [Route("Register"), AllowAnonymous]
         public async Task<string> Register(RegistrationRequest request)
         {
             User applicationUser = new()
@@ -155,7 +155,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost]
-        [Route("login")]
+        [Route("login"), AllowAnonymous]
         public async Task<ActionResult<AuthResponse>> Authenticate([FromBody] AuthRequest request)
         {
             if (!ModelState.IsValid)
@@ -189,7 +189,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost]
-        [Route("changePassword")]
+        [Route("changePassword"), Authorize (Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE}, {SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_MODERATOR}")]
         public async Task<ActionResult<string>> ChangePassword([FromBody] ChangePasswordRequest request)
         {
             if (!ModelState.IsValid)
@@ -222,7 +222,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteUser")]
+        [Route("DeleteUser"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE}, {SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_MODERATOR}")]
         public async Task<ActionResult<string>> DeleteUser()
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -290,7 +290,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost]
-        [Route("editUserData")]
+        [Route("editUserData"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE}, {SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_MODERATOR}")]
         public async Task<ActionResult<string>> EditUserData([FromBody] EditUserDataRequest request)
         {
             var token = Request.Headers["Authorization"].ToString();
@@ -319,7 +319,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetUserData")]
+        [Route("GetUserData"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE}, {SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_MODERATOR}")]
         public async Task<ActionResult<GetUserDataResponse>> GetUserData() {
             var token = Request.Headers["Authorization"].ToString();
             var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
@@ -346,7 +346,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetUserIdFromUsername_AuthModerator")]
+        [Route("GetUserIdFromUsernameModerator")]
         [Authorize(Roles = SD.ROLE_MODERATOR)]
         public async Task<ActionResult<string>> GetUserIdFromUsername_AuthModerator(string userName)
         {
