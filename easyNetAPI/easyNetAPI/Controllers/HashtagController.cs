@@ -3,6 +3,7 @@ using easyNetAPI.Models;
 using easyNetAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using System.Data;
 using System.Security.Claims;
@@ -20,12 +21,8 @@ namespace easyNetAPI.Controllers
         }
         [HttpPost("PostHashtag")]
         [Authorize(Roles = SD.ROLE_USER)]
-        public async Task<IActionResult> PostHashtagAsync(int postId)
+        public async Task<IActionResult> PostHashtagAsync(List<string> hashtags,int postId)
         {
-            /*
-             Questo metodo fa sia la post che la delete 
-             in base a se hai o no lasciato like al post
-             */
             try
             {
                 var token = Request.Headers["Authorization"].ToString();
@@ -36,7 +33,7 @@ namespace easyNetAPI.Controllers
                 if (post == null)
                     return BadRequest("Post doesn't exist");
                 post.Hashtags = new List<string>();
-                post.Hashtags.Add(userId);
+                post.Hashtags = hashtags;
                 _unitOfWork.Post.UpdateOneAsync(post);
                 return Ok("Hashtag Added Succesfully");
             }
@@ -45,9 +42,9 @@ namespace easyNetAPI.Controllers
                 return BadRequest("Something went wrong");
             }
         }
-        [HttpGet("HashtaggedPosts")]
+        [HttpGet("GetHashTagsOfPost_AuthUser")]
         [Authorize(Roles = SD.ROLE_USER)]
-        public async Task<IActionResult> HashtaggedPostsAsync()
+        public async Task<IActionResult> GetTagsOfPostAsync(int postId)
         {
             try
             {
@@ -55,18 +52,36 @@ namespace easyNetAPI.Controllers
                 var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 if (userId == null)
                     return BadRequest("Not Logged in");
-                var posts = await _unitOfWork.Post.GetAllAsync();
-                var hashtaggedPosts = new List<Post>();
-                foreach (var item in posts)
-                {
-                    if (item.Hashtags.Contains(userId))
-                        hashtaggedPosts.Add(item);
-                }
-                return Json(hashtaggedPosts);
+                var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
+                var hashtags = post.Hashtags;
+                if (hashtags.IsNullOrEmpty())
+                    return Ok("[]");
+                return Ok(hashtags);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("Something went wrong");
+                return BadRequest("Something went wrong: " + ex.Message);
+            }
+        }
+
+        [HttpGet("GetPostFromHashTags_AuthUser")]
+        [Authorize(Roles = SD.ROLE_USER)]
+        public async Task<IActionResult> GetPostWhereTaggedAsync(string hashtag)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString();
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                if (userId == null)
+                    return BadRequest("Not Logged in");
+                var posts = (await _unitOfWork.Post.GetAllAsync()).Where(p => p.Hashtags.IsNullOrEmpty() ? false : p.Hashtags.ConvertAll(d => d.ToLower()).Contains(hashtag.ToLower())).ToList();
+                if (posts.IsNullOrEmpty())
+                    return Ok("[]");
+                return Ok(posts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong: " + ex.Message);
             }
         }
     }
