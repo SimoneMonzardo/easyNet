@@ -69,7 +69,8 @@ namespace easyNetAPI.Data.Repository
         {
             Comment comment = _comments.GetAllAsync().Result.ToList().FirstOrDefault(comment => comment.CommentId == commentId);
             Reply oldReply = comment.Replies.Where(x => x.ReplyId == reply.ReplyId).FirstOrDefault();
-            oldReply = reply;
+            comment.Replies.Remove(oldReply);
+            comment.Replies.Add(reply);
             return await _comments.UpdateOneAsync(comment,postId);
         }
 
