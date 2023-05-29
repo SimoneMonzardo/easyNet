@@ -47,6 +47,7 @@
 		<None Remove="Controllers\" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Folder Include="wwwroot\images\profilepictures\" />
 	  <Folder Include="wwwroot\images\post\" />
 	</ItemGroup>
 </Project>

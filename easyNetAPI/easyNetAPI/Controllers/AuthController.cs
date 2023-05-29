@@ -13,6 +13,7 @@ using System.Text;
 using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Data.Repository;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Hosting;
 
 namespace easyNetAPI.Controllers
 {
@@ -25,14 +26,17 @@ namespace easyNetAPI.Controllers
         private readonly AppDbContext _db;
         private readonly TokenService _tokenService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext db, TokenService tokenService, IUnitOfWork unitOfWork)
+        public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext db, TokenService tokenService, 
+            IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _db = db;
             _tokenService = tokenService;
             _unitOfWork = unitOfWork;
+            _hostEnvironment = hostEnvironment;
         }
 
         [HttpPost]
@@ -345,6 +349,72 @@ namespace easyNetAPI.Controllers
                 ProfilePicture = user.ProfilePicture,
                 PhoneNumber = user.PhoneNumber
             });
+        }
+
+        [HttpPost("UploadProfilePicture"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+        public async Task<object> PostProfilePicture(IFormFile? file)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString();
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                if (file != null)
+                {
+                    var user =  _db.Users.FirstOrDefault(u=> u.Id == userId);
+                    if (user is null)
+                        return BadRequest("User not found");
+                    if(user.ProfilePicture!= null)
+                    {
+                        await DeleteProfilePicture();
+                    }
+                    string fileName = Guid.NewGuid().ToString();
+                    var uploads = Path.Combine(wwwRootPath, @"images/profilepictures");
+                    var extension = Path.GetExtension(file.FileName);
+                    var link = Path.Combine(uploads, fileName + extension);
+                    string url = "https://localhost/" + link; // da modificare con il link futuro del sito
+                    using (var fileStreams = new FileStream(link, FileMode.Create))
+                    {
+                        file.CopyTo(fileStreams);
+                    }
+                    user.ProfilePicture = link;
+                    _db.Users.Update(user);
+                    _db.SaveChanges();
+                    return Ok(url);
+                }
+                return BadRequest("File is null");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error " + ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteProfilePicture"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+        public async Task<object> DeleteProfilePicture()
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString();
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                var user = _db.Users.FirstOrDefault(u => u.Id == userId);
+                if (user is null)
+                    return BadRequest("User not found");
+                var link = user.ProfilePicture;
+                if (link is null)
+                    return BadRequest("There is no profile picture");
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                string location = (new Uri(link)).PathAndQuery;
+                System.IO.File.Delete(Path.Combine(wwwRootPath, location));
+                user.ProfilePicture = "";
+                _db.Users.Update(user);
+                _db.SaveChanges();
+                return Ok("Deleted " + link);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error " + ex.Message);
+            }
         }
 
         [HttpGet]
