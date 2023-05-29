@@ -28,7 +28,6 @@ export default() => {
             },
             onResponse({ request, response, options }) {
               // Process the response data
-              localStorage.setItem('token', response._data.token)
               return response
             },
             onResponseError({ request, response, options }) {
