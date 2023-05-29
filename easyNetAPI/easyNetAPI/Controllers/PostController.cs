@@ -86,9 +86,53 @@ public class PostController : ControllerBase
             return BadRequest("Unandled exeption: " + ex.Message);
         }
     }
-
+    [HttpPost("PostImage"), Authorize(Roles = SD.ROLE_USER)]
+    public async Task<object> PostImage(IFormFile? file)
+    {
+        try
+        {
+            var token = Request.Headers["Authorization"].ToString();
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+            string wwwRootPath = _hostEnvironment.WebRootPath;
+            if (file != null)
+            {
+                string fileName = Guid.NewGuid().ToString();
+                var uploads = Path.Combine(wwwRootPath, @"images\post");
+                var extension = Path.GetExtension(file.FileName);
+                var link = Path.Combine(uploads, fileName + extension);
+                string url = "https://localhost/" + link; // da modificare con il link futuro del sito
+                using (var fileStreams = new FileStream(link, FileMode.Create))
+                {
+                    file.CopyTo(fileStreams);
+                }
+                return Ok(url);
+            }
+            return BadRequest("File is null");
+        }
+        catch(Exception ex)
+        {
+            return BadRequest("Error " + ex.Message);
+        }
+    }
+    [HttpDelete("DeleteImage"), Authorize(Roles = SD.ROLE_USER)]
+    public async Task<object> DeleteImage(string link)
+    {
+        try
+        {
+            var token = Request.Headers["Authorization"].ToString();
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+            string wwwRootPath = _hostEnvironment.WebRootPath;
+            string location = (new Uri(link)).PathAndQuery;
+            System.IO.File.Delete(Path.Combine(wwwRootPath, location));
+            return Ok("Deleted " + link);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest("Error " + ex.Message);
+        }
+    }
     [HttpPost("UpsertPost_AuthUser"), Authorize(Roles = SD.ROLE_USER)]
-    public async Task<ActionResult<string>> UpsertAsync(UpsertPost post, IFormFile? file)
+    public async Task<ActionResult<string>> UpsertAsync(UpsertPost post)
     {
         if (!ModelState.IsValid)
         {
@@ -99,49 +143,6 @@ public class PostController : ControllerBase
         {
             var token = Request.Headers["Authorization"].ToString();
             var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
-            string wwwRootPath = _hostEnvironment.WebRootPath;
-            if (file != null) // se è un post con immagine aggiunge l'immagine e modifica il content di conseguenza
-            {
-                string fileName = Guid.NewGuid().ToString();
-                var uploads = Path.Combine(wwwRootPath, @"images\post");
-                var extension = Path.GetExtension(file.FileName);
-                var link = Path.Combine(uploads, fileName + extension);
-                using (var fileStreams = new FileStream(link, FileMode.Create))
-                {
-                    file.CopyTo(fileStreams);
-                }
-                if (post.PostId == 0)
-                {
-
-                    string placeholder = "{0}";
-                    string url = "https://localhost/" + link; // da modificare quando verrà hostata la api con il nuovo link
-                    var newPost = new Post()
-                    {
-                        PostId = await IdAutoincrementService.GetPostAutoincrementId(_unitOfWork),
-                        Comments = new List<Comment>(),
-                        UserId = userId,
-                        Username = _db.Users.Where(u => u.Id == userId).Select(u => u.UserName).FirstOrDefault(),
-                        Content = post.Content.Replace(placeholder, url),
-                        Likes = new List<string>(),
-                        Hashtags = new List<string>(),
-                        Tags = new List<string>()
-                    };
-                    await _unitOfWork.Post.AddAsync(newPost);
-                    return Ok("Post created succesfully");
-                }
-                else
-                {
-                    var result = await _unitOfWork.Post.UpdatePostContentAsync(post, userId);
-                    if (result)
-                    {
-                        return Ok("Post modified succesfully");
-                    }
-                    else
-                    {
-                        return BadRequest("Post not found");
-                    }
-                }
-            }
             if (post.PostId == 0)
             {
                 var newPost = new Post()
