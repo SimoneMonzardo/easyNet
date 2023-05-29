@@ -46,12 +46,12 @@ namespace easyNetAPI.Controllers
                 var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
                 if (user is null)
                     return BadRequest("User not found");
+                if (user.LikedPost is null)
+                    user.LikedPost = new List<int>();
                 if (alreadyLiked)
                 {
                     post.Likes.Remove(userId);
                     await _unitOfWork.Post.UpdateOneAsync(post);
-                    if (user.LikedPost is null)
-                        user.LikedPost = new List<int>();
                     if (user.LikedPost.Contains(postId))
                         user.LikedPost.Remove(postId);
                     await _unitOfWork.UserBehavior.UpdateOneAsync(userId, user);
@@ -59,8 +59,6 @@ namespace easyNetAPI.Controllers
                 }
                 post.Likes.Add(userId);
                 await _unitOfWork.Post.UpdateOneAsync(post);
-                if (user.LikedPost is null)
-                    user.LikedPost = new List<int>();
                 if (!user.LikedPost.Contains(postId))
                     user.LikedPost.Add(postId);
                 await _unitOfWork.UserBehavior.UpdateOneAsync(userId, user);
