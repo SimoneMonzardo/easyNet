@@ -7,6 +7,7 @@ using easyNetAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 
 namespace easyNetAPI.Controllers
@@ -251,28 +252,53 @@ namespace easyNetAPI.Controllers
             return returnList;
         }
 
-        [HttpPost("ConvertToCompanyAdminModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
-        public async Task<ActionResult<string>> ConvertToAdmin(string userId)
+        [HttpPost("ConvertToModerator_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+        public async Task<ActionResult<string>> ConvertToAdmin(string username)
         {
+            if (username.IsNullOrEmpty())
+                return BadRequest("Insert username");
+            var userId = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
             if (userId is null || userId.Equals(string.Empty))
-                return BadRequest("Insert userId");
+                return BadRequest("UserId not found");
 
             var user = _db.Users.Find(userId);
             if (user is null)
                 return BadRequest("User not found");
 
-            var result = await _userManager.AddToRoleAsync(user, SD.ROLE_COMPANY_ADMIN);
+            var result = await _userManager.AddToRoleAsync(user, SD.ROLE_MODERATOR);
             if (result.Succeeded)
                 return Ok("User is now admin");
 
             return BadRequest("Could not make user admin see exception: " + result.Errors);
         }
-
-        [HttpPost("ConvertToEmployeeCompanyAdmin"), Authorize(Roles = SD.ROLE_COMPANY_ADMIN)]
-        public async Task<ActionResult<string>> ConvertToEmployee(string userId)
+        [HttpPost("ConvertToCompany_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+        public async Task<ActionResult<string>> ConvertToModerator(string username)
         {
+            if (username.IsNullOrEmpty())
+                return BadRequest("Insert username");
+            var userId = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
             if (userId is null || userId.Equals(string.Empty))
-                return BadRequest("Insert userId");
+                return BadRequest("UserId not found");
+
+            var user = _db.Users.Find(userId);
+            if (user is null)
+                return BadRequest("User not found");
+
+            var result = await _userManager.AddToRoleAsync(user, SD.ROLE_MODERATOR);
+            if (result.Succeeded)
+                return Ok("User is now admin");
+
+            return BadRequest("Could not make user moderator see exception: " + result.Errors);
+        }
+
+        [HttpPost("ConvertToEmployee_AuthCompanyAdmin"), Authorize(Roles = SD.ROLE_COMPANY_ADMIN)]
+        public async Task<ActionResult<string>> ConvertToEmployee(string username)
+        {
+            if (username.IsNullOrEmpty())
+                return BadRequest("Insert username");
+            var userId = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
+            if (userId is null || userId.Equals(string.Empty))
+                return BadRequest("UserId not found");
 
             var user = _db.Users.Find(userId);
             if (user is null)
@@ -285,11 +311,14 @@ namespace easyNetAPI.Controllers
             return BadRequest("Could not make user employee see exception: " + result.Errors);
         }
 
-        [HttpPost("RemoveFromCompanyAdminModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
-        public async Task<ActionResult<string>> RemoveFromAdmin(string userId)
+        [HttpPost("RemoveFromCompany_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+        public async Task<ActionResult<string>> RemoveFromAdmin(string username)
         {
+            if (username.IsNullOrEmpty())
+                return BadRequest("Insert username");
+            var userId = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
             if (userId is null || userId.Equals(string.Empty))
-                return BadRequest("Insert userId");
+                return BadRequest("UserId not found");
 
             var user = _db.Users.Find(userId);
             if (user is null)
@@ -304,11 +333,36 @@ namespace easyNetAPI.Controllers
             return BadRequest("Could not remove user from role admin see exception: " + result.Errors);
         }
 
-        [HttpPost("RemoveFromEmployeeCompanyAdmin"), Authorize(Roles = SD.ROLE_COMPANY_ADMIN)]
-        public async Task<ActionResult<string>> RemoveFromEmployee(string userId)
+        [HttpPost("RemoveFromModerator_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+        public async Task<ActionResult<string>> RemoveFromModerator(string username)
         {
+            if (username.IsNullOrEmpty())
+                return BadRequest("Insert username");
+            var userId = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
             if (userId is null || userId.Equals(string.Empty))
-                return BadRequest("Insert userId");
+                return BadRequest("UserId not found");
+
+            var user = _db.Users.Find(userId);
+            if (user is null)
+                return BadRequest("User not found");
+            if (!_userManager.GetUsersInRoleAsync(SD.ROLE_MODERATOR).Result.Contains(user))
+                return BadRequest("User is not moderator");
+            var result = await _userManager.RemoveFromRoleAsync(user, SD.ROLE_MODERATOR);
+
+            if (result.Succeeded)
+                return Ok("User has been removed from role moderator");
+
+            return BadRequest("Could not remove user from role moderator see exception: " + result.Errors);
+        }
+
+        [HttpPost("RemoveFromEmployee_AuthCompanyAdmin"), Authorize(Roles = SD.ROLE_COMPANY_ADMIN)]
+        public async Task<ActionResult<string>> RemoveFromEmployee(string username)
+        {
+            if (username.IsNullOrEmpty())
+                return BadRequest("Insert username");
+            var userId = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
+            if (userId is null || userId.Equals(string.Empty))
+                return BadRequest("UserId not found");
 
             var user = _db.Users.Find(userId);
             if (user is null)
