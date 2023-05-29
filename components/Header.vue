@@ -3,7 +3,7 @@
     <nav class="mx-4 py-3">
       <div class="flex flex-wrap justify-between items-center">
         <div class="flex justify-start items-center">
-          <a href="./" class="flex mr-4">
+          <a href="/" class="flex mr-4">
             <img src="https://flowbite.s3.amazonaws.com/logo.svg" class="mr-3 h-8" alt="FlowBite Logo" />
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">easyNet</span>
           </a>
@@ -37,7 +37,7 @@
                     class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Profilo</a>
                 </li>
                 <li>
-                  <a href="#"
+                  <a href="./settings"
                     class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Impostazioni
                     Account</a>
                 </li>
