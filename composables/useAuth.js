@@ -2,8 +2,11 @@ export default() => {
 
     //to do: mettere gli auth token negli header
 
-    const register = async ({email, username, name, surname, dateOfBirth, gender, profilePicture, phoneNumber, password, role})=>{
-        const { data, pending, error, refresh } = await useFetch('/api/auth/register', {
+    //
+    //Bearer xxxxxxx
+
+    const register = async ({email, username, name, surname, dateOfBirth, gender, profilePicture, phoneNumber, password})=>{
+        const { data, pending, error, refresh } = await useFetch('/registerazioneeee', {
             method : 'POST',
             body: {
                          email,
@@ -15,7 +18,6 @@ export default() => {
                          profilePicture,
                          phoneNumber,
                          password,
-                         role
             },
             onRequest({ request, options }) {
               // Set the request headers
@@ -26,7 +28,6 @@ export default() => {
             },
             onResponse({ request, response, options }) {
               // Process the response data
-              localStorage.setItem('token', response._data.token)
               return response
             },
             onResponseError({ request, response, options }) {

@@ -108,7 +108,7 @@
 
                                 <!-- TODO: Add profile picture upload -->
 
-                                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crea Account</button>
+                                <button type="submit" @click="handleRegister" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crea Account</button>
                             </div>
                         </form>
                     </div>
@@ -120,17 +120,57 @@
 
 
 <script>
+import useAuth from '~/composables/useAuth';
+
   export default {
     name: "RegisterPopup",
     methods: {
       check() {
-        const password = document.getElementById('pass').value;
+        const password = document.getElementById('passwordRegister').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
-        if (password === confirmPassword) {
+        if (password === confirmPassword && password != "") {
             document.getElementById('confirmText').innerHTML = "Conferma password"
-        } else {
+            document.getElementById('confirmPassword').style.borderColor = "green";
+            document.getElementById('confirmText').style.color = "green";
+        } else if (password != confirmPassword){
             document.getElementById('confirmText').innerHTML = "Non coincidono";
+            document.getElementById('confirmPassword').style.borderColor = "red";
+            document.getElementById('confirmText').style.color = "red";
         }
+        else if(confirmPassword == ""){
+            document.getElementById('confirmText').innerHTML = "Conferma password";
+            document.getElementById('confirmPassword').style.borderColor = "rgba(80,80,80,0.3)";
+            document.getElementById('confirmText').style.color = "gray";
+        }
+      },
+      handleRegister(){
+        const {register} = useAuth()
+
+        var datiform = {
+            email : document.getElementById('email').value,
+            Username : document.getElementById('usernameRegister').value,
+            name : document.getElementById('name').value,
+            surname : document.getElementById('surname').value,
+            dateOfBirth : document.getElementById('birthDate').value,
+            gender : document.getElementById('gender').value,
+            // profilePicture : document.getElementById('email').value,
+            phoneNumber : document.getElementById('email').value,
+            password : document.getElementById('passwordRegister').value,
+        }
+
+        console.log(datiform)
+
+        register(
+            dati.email,
+            dati.Username, 
+            dati.name,
+            dati.surname,
+            dati.dateOfBirth,
+            dati.gender,
+            // dati.profilePicture,
+            dati.phoneNumber,
+            dati.password)
+
       }
     }
   }
