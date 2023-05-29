@@ -83,7 +83,15 @@ namespace easyNetAPI.Controllers
                 var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
                 if (user is null)
                     return BadRequest("User not found");
-                var posts = user.LikedPost;
+                var posts = new List<Post>();
+                if (user.LikedPost is null)
+                    user.LikedPost = new List<int>();
+                foreach(var p in user.LikedPost)
+                {
+                    var post = await _unitOfWork.Post.GetFirstOrDefault(p);
+                    if(post is not null)
+                        posts.Add(post);
+                }
                 return Json(posts);
             }
             catch (Exception)

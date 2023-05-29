@@ -27,7 +27,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost("UpsertTag")]
-        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<IActionResult> PostTagAsync(int postId, List<string> usernames)
         {
             try
@@ -53,16 +53,24 @@ namespace easyNetAPI.Controllers
                     var user = _db.Users.Where(u => u.UserName == item).FirstOrDefault();
                     if (user is not null)
                     {
-                        post.Tags.Add(user.Id);
+                        if (post.Tags is null)
+                            post.Tags = new List<string>();
+                        if(!post.Tags.Contains(userId))
+                            post.Tags.Add(user.Id);
                         //aggiorna i mentioned posts dell'utente menzionato
                         var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(user.Id);
                         if (userBehavior is not null)
                         {
-                            userBehavior.MentionedPost.Add(post.PostId);
-                            var result = await _unitOfWork.UserBehavior.UpdateOneAsync(user.Id, userBehavior);
-                            if (!result)
+                            if (userBehavior.MentionedPost is null)
+                                userBehavior.MentionedPost = new List<int>();
+                            if (!userBehavior.MentionedPost.Contains(postId))
                             {
-                                return BadRequest("Someting went wrong");
+                                userBehavior.MentionedPost.Add(post.PostId);
+                                var result = await _unitOfWork.UserBehavior.UpdateOneAsync(user.Id, userBehavior);
+                                if (!result)
+                                {
+                                    return BadRequest("Someting went wrong");
+                                }
                             }
                         }
                     }

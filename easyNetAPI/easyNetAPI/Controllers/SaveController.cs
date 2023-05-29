@@ -3,6 +3,7 @@ using easyNetAPI.Models;
 using easyNetAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using System.Data;
 using System.Security.Claims;
@@ -51,11 +52,11 @@ namespace easyNetAPI.Controllers
                 {
                     user.SavedPost.Remove(postId);
                     await _unitOfWork.UserBehavior.UpdateOneAsync(userId, user);
-                    return Ok("Like removed succesfully");
+                    return Ok("Save removed succesfully");
                 }
                 user.SavedPost.Add(postId);
                 await _unitOfWork.UserBehavior.UpdateOneAsync(userId, user);
-                return Ok("Like Added Succesfully");
+                return Ok("Post saved Succesfully");
             }
             catch (Exception ex)
             {
@@ -76,7 +77,15 @@ namespace easyNetAPI.Controllers
                 var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
                 if (user is null)
                     return BadRequest("User not found");
-                var posts = user.SavedPost;
+                List<Post> posts = new List<Post>();
+                if (user.SavedPost is null)
+                    user.SavedPost = new List<int>();
+                foreach (var p in user.SavedPost)
+                {
+                    var post = await _unitOfWork.Post.GetFirstOrDefault(p);
+                    if (post is not null)
+                        posts.Add(post);
+                }
                 return Json(posts);
             }
             catch (Exception)
