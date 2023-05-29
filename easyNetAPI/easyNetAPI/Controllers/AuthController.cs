@@ -219,7 +219,7 @@ namespace easyNetAPI.Controllers
                 return BadRequest("Could not change password");
             }
             await _db.SaveChangesAsync();
-            return Ok("Passoword Changed Successfully");
+            return Ok("Password Changed Successfully");
         }
 
         [HttpDelete]
