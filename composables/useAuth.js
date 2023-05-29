@@ -1,32 +1,22 @@
 export default () => {
 
   //to do: mettere gli auth token negli header
-
-  const register = async ({ email, username, name, surname, dateOfBirth, gender, profilePicture, phoneNumber, password, role }) => {
-    const { data, pending, error, refresh } = await useFetch('/api/auth/register', {
-      method: 'POST',
-      body: {
-        email,
-        username,
-        name,
-        surname,
-        dateOfBirth,
-        gender,
-        profilePicture,
-        phoneNumber,
-        password,
-        role
+  // Bearer `authtoken`
+  const register = async (reigsterData) => {
+    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Auth/register', {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
       },
+      method: 'POST',
+      body: JSON.stringify(reigsterData),
       onRequest({ request, options }) {
         // Set the request headers
-
       },
       onRequestError({ request, options, error }) {
         // Handle the request errors
       },
       onResponse({ request, response, options }) {
         // Process the response data
-        localStorage.setItem('token', response._data.token)
         return response
       },
       onResponseError({ request, response, options }) {

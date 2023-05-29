@@ -108,7 +108,7 @@
 
                                 <!-- TODO: Add profile picture upload -->
 
-                                <button type="submit" @click="handleRegister" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crea Account</button>
+                                <button type="submit" @click="handleRegister()" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crea Account</button>
                             </div>
                         </form>
                     </div>
@@ -143,35 +143,28 @@ import useAuth from '~/composables/useAuth';
             document.getElementById('confirmText').style.color = "gray";
         }
       },
-      handleRegister(){
-        const {register} = useAuth()
+      handleRegister() {
+            const { register } = useAuth();
 
-        var datiform = {
-            email : document.getElementById('email').value,
-            Username : document.getElementById('usernameRegister').value,
-            name : document.getElementById('name').value,
-            surname : document.getElementById('surname').value,
-            dateOfBirth : document.getElementById('birthDate').value,
-            gender : document.getElementById('gender').value,
-            // profilePicture : document.getElementById('email').value,
-            phoneNumber : document.getElementById('email').value,
-            password : document.getElementById('passwordRegister').value,
+            const passwordInput = document.getElementById('passwordRegister'); 
+
+            var data = {
+                username: document.getElementById('usernameRegister').value,
+                name: document.getElementById('name').value,
+                surname: document.getElementById('surname').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                email: document.getElementById('email').value,
+                gender: document.getElementById('gender').value,
+                birthDate: document.getElementById('birthDate').value,
+                password: passwordInput.value,
+
+            };
+
+            passwordInput.value = '';
+
+            const response = register(data);
+            console.log(response);
         }
-
-        console.log(datiform)
-
-        register(
-            dati.email,
-            dati.Username, 
-            dati.name,
-            dati.surname,
-            dati.dateOfBirth,
-            dati.gender,
-            // dati.profilePicture,
-            dati.phoneNumber,
-            dati.password)
-
-      }
     }
   }
 </script>
