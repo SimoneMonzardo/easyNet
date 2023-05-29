@@ -85,8 +85,20 @@ public class PostController : ControllerBase
                 return BadRequest("Post not found");
             if (!post.UserId.Equals(userId))
                 return BadRequest("User is not Authorized to remove post");
-            await _unitOfWork.Post.RemoveAsync(postId, userId);
-            return Ok("Post removed succesfully");
+            var result = await _unitOfWork.Post.RemoveAsync(postId, userId);
+            if (result)
+            {
+                var usersFromDb = await _unitOfWork.UserBehavior.GetAllAsync();
+                if (usersFromDb.Count() != 0)
+                {
+                    foreach (var user in usersFromDb)
+                    {
+                        MongoDbAlignment.RemovePostDataAsync(postId, user, _unitOfWork);
+                    }
+                }
+                return Ok("Post removed succesfully");
+            }
+            return BadRequest("Something went wrong");
         }
         catch (Exception ex)
         {

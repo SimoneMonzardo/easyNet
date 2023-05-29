@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace easyNetAPI.Data
 {
-    static class MongoDbAlignment
+    public static class MongoDbAlignment
     {
         public static async Task RemoveAllLikesAsync(string userId, IUnitOfWork unitOfWork)
         {

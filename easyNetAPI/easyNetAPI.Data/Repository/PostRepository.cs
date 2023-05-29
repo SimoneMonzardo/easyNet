@@ -58,11 +58,9 @@ namespace easyNetAPI.Data.Repository
 
         public async Task<bool> RemoveAsync(int postId, string userId)
         {
-            Dictionary<string, UserBehavior> dict = new();
-            UserBehavior users = _users.GetAllAsync().Result.ToList().Find(x => x.UserId == userId);
-            users.Posts.RemoveAll(x => x.PostId == postId);
-            dict.Add(userId, users);
-            return await _users.UpdateManyAsync(dict);
+            UserBehavior user = await _users.GetFirstOrDefault(userId);
+            user.Posts.RemoveAll(x => x.PostId == postId);
+            return await _users.UpdateOneAsync(user.UserId, user);
         }
 
         public async Task<bool> UpdateOneAsync(Post post)
