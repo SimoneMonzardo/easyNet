@@ -104,23 +104,48 @@ public class CommentsController : ControllerBase
         return comment;
     }
 
-    //[HttpDelete("RemoveAComment"), Authorize(Roles = SD.ROLE_USER)]
-    //public async Task<ActionResult<string>> Delete(int Id)
-    //{
-    //    try
-    //    {
-    //        var comment = _unitOfWork.Comment.GetFirstOrDefault(p => p.CommentId == Id);
-    //        if (comment == null)
-    //            return BadRequest("Comment not found");
-    //        _unitOfWork.Comment.Remove(comment);
-    //        return Ok("Comment removed succesfully");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return BadRequest("Unandled exeption: " + ex.Message);
-    //    }
+    [HttpDelete("DeleteComment"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+    public async Task<ActionResult<string>> Delete(int commentId)
+    {
+        try
+        {
+            var token = Request.Headers["Authorization"].ToString();
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+            bool result = true;
+            var comment = await _unitOfWork.Comment.GetFirstOrDefault(commentId);
+            if (comment == null)
+            {
+                return BadRequest("Comment not found");
+            }
+            if (comment.UserId != userId)
+            {
+                return Forbid("Can't delete comment");
+            }
+            var postsList = await _unitOfWork.Post.GetAllAsync();
+            if (postsList.Count() == 0)
+            {
+                return BadRequest("Comment not found");
+            }
+            foreach (var post in postsList)
+            {
+                if (post.Comments.Select(c => c.CommentId).ToList().Contains(commentId))
+                {
+                   result = await _unitOfWork.Comment.RemoveAsync(post.PostId, comment.CommentId);
+                    if (result)
+                    {
+                        return Ok("Comment removed succesfully");
+                    }
+                    return BadRequest("Comment not found");
+                }
+            }
+            return BadRequest("Comment not found");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest("Unandled exeption: " + ex.Message);
+        }
 
-    //}
+    }
 };
 
 

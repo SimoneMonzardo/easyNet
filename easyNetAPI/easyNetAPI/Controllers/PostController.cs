@@ -37,7 +37,7 @@ public class PostController : ControllerBase
 
     //get di tutti i post
     [HttpGet("GetAllPosts"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
-    public async Task<IEnumerable<Post>> GetAllAsync()
+    public async Task<IEnumerable<Post>?> GetAllAsync()
     {
         var posts = await _unitOfWork.Post.GetAllAsync();
         return posts;
@@ -45,14 +45,14 @@ public class PostController : ControllerBase
 
     //get di un post in base all id
     [HttpGet("GetPostById"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
-    public async Task<Post> GetByIddAsync(int id)
+    public async Task<Post?> GetByIdAsync(int postId)
     {
-        var post = await _unitOfWork.Post.GetFirstOrDefault(id);
+        var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
         return post;
     }
 
     [HttpGet("GetAllPostsOfFollowed"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
-    public async Task<IEnumerable<Post>> GetAllFollowedAsync()
+    public async Task<IEnumerable<Post>?> GetAllFollowedAsync()
     {
         var token = Request.Headers["Authorization"].ToString();
         var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);

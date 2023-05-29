@@ -46,6 +46,7 @@ namespace easyNetAPI.Data
                 await unitOfWork.Reply.UpdateOneAsync(reply, postId, comment.CommentId);
             }
         }
+
         public static async Task RemoveAllTagsAsync(string userId, IUnitOfWork unitOfWork)
         {
             var posts = unitOfWork.Post.GetAllAsync().Result.ToList().Where(user => user.Tags.Contains(userId));
@@ -55,6 +56,7 @@ namespace easyNetAPI.Data
                 unitOfWork.Post.UpdateOneAsync(post);
             }
         }
+
         public static async Task RemovePostDataAsync(int postId,UserBehavior user, IUnitOfWork unitOfWork)
         {
             if (user.LikedPost.Count() != 0)
