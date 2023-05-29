@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using easyNetAPI.Models.UpsertModels;
+using System.ComponentModel.Design;
 
 namespace easyNetAPI.Controllers
 {
@@ -90,6 +91,55 @@ namespace easyNetAPI.Controllers
                 return null;
             }
             return reply;
+        }
+
+        [HttpDelete("DeleteReply"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
+        public async Task<ActionResult<string>> DeleteReplyAsync(int replyId)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString();
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                var reply = await _unitOfWork.Reply.GetFirstOrDefault(replyId);
+                if (reply is null)
+                {
+                    return BadRequest("Reply not found");
+                }
+                if (reply.UserId != userId)
+                {
+                    return Forbid("Can't delete comment");
+                }
+                var commentsList = await _unitOfWork.Comment.GetAllAsync();
+                if (commentsList.Count() == 0)
+                {
+                    return BadRequest("Reply not found");
+                }
+                var comment = commentsList.Where(c => c.Replies.Select(r => r.ReplyId).ToList().Contains(replyId)).FirstOrDefault();
+                if (comment is null)
+                {
+                    return BadRequest("Reply not found");
+                }
+                var postsList = await _unitOfWork.Post.GetAllAsync();
+                if (postsList.Count() == 0)
+                {
+                    return BadRequest("Comment not found");
+                }
+                var post = postsList.Where(p => p.Comments.Select(c => c.CommentId).ToList().Contains(comment.CommentId)).FirstOrDefault();
+                if (post is null)
+                {
+                    return BadRequest("Comment not found");
+                }
+                var result = await _unitOfWork.Reply.RemoveAsync(replyId, comment.CommentId, post.PostId);
+                if (result)
+                {
+                    return Ok("Reply deleted succesfully");
+                }
+                return BadRequest("Comment not found");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Unandled exeption: " + ex.Message);
+            }
         }
     }
 }
