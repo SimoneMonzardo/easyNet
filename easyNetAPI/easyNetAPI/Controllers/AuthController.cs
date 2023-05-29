@@ -176,7 +176,7 @@ namespace easyNetAPI.Controllers
             var applicationUserInDb = _db.Users.FirstOrDefault(u => u.UserName == request.UserName);
             if (applicationUserInDb is null)
             {
-                return Unauthorized();
+                return Unauthorized("User not found");
             }
             var roles = await _userManager.GetRolesAsync(applicationUserInDb);
             var accessToken = _tokenService.CreateToken(applicationUserInDb, roles);
