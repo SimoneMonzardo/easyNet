@@ -308,7 +308,7 @@ namespace easyNetAPI.Controllers
             var applicationUserInDb = _db.Users.FirstOrDefault(u => u.UserName == managedUser.UserName);
             if (applicationUserInDb is null)
             {
-                return Unauthorized();
+                return Unauthorized("User is not Authorized");
             }
             applicationUserInDb.Name = request.Name;
             applicationUserInDb.Surname = request.Surname;
