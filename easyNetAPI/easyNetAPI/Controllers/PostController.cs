@@ -71,7 +71,7 @@ public class PostController : ControllerBase
         return followedPost;
     }
 
-    [HttpDelete("RemovePost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+    [HttpDelete("DeletePost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
     public async Task<ActionResult<string>> Delete(int postId)
     {
         try
@@ -105,7 +105,7 @@ public class PostController : ControllerBase
             if (file != null)
             {
                 string fileName = Guid.NewGuid().ToString();
-                var uploads = Path.Combine(wwwRootPath, @"images\post");
+                var uploads = Path.Combine(wwwRootPath, @"images/post");
                 var extension = Path.GetExtension(file.FileName);
                 var link = Path.Combine(uploads, fileName + extension);
                 string url = "https://localhost/" + link; // da modificare con il link futuro del sito
@@ -141,7 +141,7 @@ public class PostController : ControllerBase
     }
 
     [HttpPost("UpsertPost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
-    public async Task<ActionResult<string>> UpsertAsync(UpsertPost post, IFormFile? file)
+    public async Task<ActionResult<string>> UpsertAsync([FromBody]UpsertPost post)
     {
         if (!ModelState.IsValid)
         {

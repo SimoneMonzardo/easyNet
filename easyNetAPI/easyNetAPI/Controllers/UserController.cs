@@ -251,7 +251,7 @@ namespace easyNetAPI.Controllers
             return returnList;
         }
 
-        [HttpPost("ConvertToAdminModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+        [HttpPost("ConvertToCompanyAdminModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
         public async Task<ActionResult<string>> ConvertToAdmin(string userId)
         {
             if (userId is null || userId.Equals(string.Empty))
@@ -285,7 +285,7 @@ namespace easyNetAPI.Controllers
             return BadRequest("Could not make user employee see exception: " + result.Errors);
         }
 
-        [HttpPost("RemoveFromAdminModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
+        [HttpPost("RemoveFromCompanyAdminModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
         public async Task<ActionResult<string>> RemoveFromAdmin(string userId)
         {
             if (userId is null || userId.Equals(string.Empty))
