@@ -120,6 +120,8 @@
 
 
 <script>
+import useAuth from '~/composables/useAuth';
+
   export default {
     name: "RegisterPopup",
     methods: {
@@ -131,6 +133,33 @@
         } else {
             document.getElementById('confirmText').innerHTML = "Non coincidono";
         }
+      },
+      handleRegister(){
+        const {register} = useAuth()
+
+        dati = {
+            email : document.getElementById('email').value,
+            Username : document.getElementById('usernameRegister').value,
+            name : document.getElementById('name').value,
+            surname : document.getElementById('surname').value,
+            dateOfBirth : document.getElementById('birthDate').value,
+            gender : document.getElementById('gender').value,
+            // profilePicture : document.getElementById('email').value,
+            phoneNumber : document.getElementById('email').value,
+            password : document.getElementById('passwordRegister').value,
+        }
+        console.log(dati)
+        register(
+            dati.email,
+            dati.Username, 
+            dati.name,
+            dati.surname,
+            dati.dateOfBirth,
+            dati.gender,
+            // dati.profilePicture,
+            dati.phoneNumber,
+            dati.password)
+
       }
     }
   }
