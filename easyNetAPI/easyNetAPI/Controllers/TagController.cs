@@ -42,7 +42,7 @@ namespace easyNetAPI.Controllers
                 List<string> tags = new List<string>();
                 foreach (var item in usernames)
                 {
-                    tags.Add( await AuthControllerUtility.GetUserIdFromUsername(item, _db) );
+                    tags.Add(item);
                 }
                 if (tags.Contains("user not found"))
                     return BadRequest("one user does not exists");
@@ -67,11 +67,9 @@ namespace easyNetAPI.Controllers
                 if (userId == null)
                     return BadRequest("Not Logged in");
                 var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
-                var tagsId = post.Tags;
-                if (tagsId.IsNullOrEmpty())
+                var tags = post.Tags;
+                if (tags.IsNullOrEmpty())
                     return Ok("[]");
-                var tags = new List<string>();
-                tagsId.ForEach(tag=>tags.Add(_db.Users.FirstOrDefault(u=>u.Id.Equals(tag)).UserName));
                 return Ok(tags);
             }
             catch (Exception ex)
@@ -98,6 +96,60 @@ namespace easyNetAPI.Controllers
             catch (Exception ex)
             {
                 return BadRequest("Something went wrong: " + ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteTag"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
+        public async Task<ActionResult<string>> DeleteTagAsync(List<string> usersList, int postId)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString();
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
+                if (post is null)
+                {
+                    return BadRequest("Post not found");
+                }
+                if (post.UserId != userId)
+                {
+                    return Forbid("Can't delete tags");
+                }
+                if (post.Tags.Count() == 0)
+                {
+                    return BadRequest("Tags don't exist");
+                }
+                foreach (var tag in usersList)
+                {
+                    if (post.Tags.Contains(tag))
+                    {
+                        post.Tags.Remove(tag);
+                        var managedUserId = _db.Users.Where(u => u.UserName == tag).FirstOrDefault().Id;
+                        if (managedUserId is not null)
+                        {
+                            var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(managedUserId);
+                            if (userBehavior != null)
+                            {
+                                userBehavior.MentionedPost.Remove(post.PostId);
+                                var userResult = await _unitOfWork.UserBehavior.UpdateOneAsync(managedUserId, userBehavior);
+                                if (!userResult)
+                                {
+                                    return BadRequest("There was an error deleting the tag");
+                                }
+                            }
+                        }
+                    }
+                }
+                var postResult = await _unitOfWork.Post.UpdateOneAsync(post);
+                if (postResult)
+                {
+                    return Ok("Tag deleted succesfully");
+                }
+                return BadRequest("Tag not found");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Unandled exeption: " + ex.Message);
             }
         }
     }
