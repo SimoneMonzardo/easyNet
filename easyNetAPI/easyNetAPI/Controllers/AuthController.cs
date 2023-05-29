@@ -43,7 +43,7 @@ namespace easyNetAPI.Controllers
             {
                 UserName = request.Username,
                 Name = request.Name,
-                Surname = request.Name,
+                Surname = request.Surname,
                 Gender = request.Gender,
                 PhoneNumber = request.PhoneNumber,
                 DateOfBirth = request.DateOfBirth,
