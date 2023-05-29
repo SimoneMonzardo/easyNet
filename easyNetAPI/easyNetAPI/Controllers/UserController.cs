@@ -314,7 +314,5 @@ namespace easyNetAPI.Controllers
 
             return BadRequest("Could not remove user from role employee see exception: " + result.Errors);
         }
-
-
     }
 }

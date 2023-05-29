@@ -8,4 +8,3 @@ namespace easyNetAPI.Controllers
 		}
 	}
 }
-

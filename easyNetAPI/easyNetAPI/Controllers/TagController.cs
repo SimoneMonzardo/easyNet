@@ -16,12 +16,14 @@ namespace easyNetAPI.Controllers
         private readonly ILogger<TagController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         public readonly AppDbContext _db;
+
         public TagController(ILogger<TagController> logger, IUnitOfWork unitOfWork, AppDbContext db)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _db = db;
         }
+
         [HttpPost("PostTags_AuthUser")]
         [Authorize(Roles = SD.ROLE_USER)]
         public async Task<IActionResult> PostTagAsync(int postId, List<string> usernames)
@@ -51,6 +53,7 @@ namespace easyNetAPI.Controllers
                 return BadRequest("Something went wrong: " + ex.Message);
             }
         }
+
         [HttpGet("GetTagsOfPost_AuthUser")]
         [Authorize(Roles = SD.ROLE_USER)]
         public async Task<IActionResult> GetTagsOfPostAsync(int postId)

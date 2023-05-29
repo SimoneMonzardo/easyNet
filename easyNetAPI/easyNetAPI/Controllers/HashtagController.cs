@@ -19,7 +19,7 @@ namespace easyNetAPI.Controllers
             _logger = logger;
             _unitOfWork = unitOfWork;
         }
-        [HttpPost("PostHashtag")]
+        [HttpPost("AddHashtagToPost")]
         [Authorize(Roles = SD.ROLE_USER)]
         public async Task<IActionResult> PostHashtagAsync(List<string> hashtags,int postId)
         {

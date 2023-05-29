@@ -33,7 +33,6 @@ namespace easyNetAPI.Controllers
             _db = db;
             _tokenService = tokenService;
             _unitOfWork = unitOfWork;
-            
         }
 
         [HttpPost]
