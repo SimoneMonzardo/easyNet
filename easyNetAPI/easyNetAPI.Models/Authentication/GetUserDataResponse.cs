@@ -10,6 +10,7 @@ namespace easyNetAPI.Models.Authentication
         public DateOnly DateOfBirth { get; set; }
         public string ProfilePicture { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
     }
 }
 

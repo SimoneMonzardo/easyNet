@@ -342,7 +342,8 @@ namespace easyNetAPI.Controllers
                 Surname = user.Surname,
                 Gender = user.Gender,
                 DateOfBirth = user.DateOfBirth,
-                ProfilePicture = user.ProfilePicture
+                ProfilePicture = user.ProfilePicture,
+                PhoneNumber = user.PhoneNumber
             });
         }
 
