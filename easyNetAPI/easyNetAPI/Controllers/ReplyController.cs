@@ -26,7 +26,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost("UpsertReply"), Authorize(Roles = SD.ROLE_USER)]
-        public async Task<ActionResult<string>> UpsertAsync(UpsertReply reply)
+        public async Task<ActionResult<string>> UpsertAsync([FromBody]UpsertReply reply)
         {
             if (!ModelState.IsValid)
             {

@@ -258,9 +258,9 @@ namespace easyNetAPI.Controllers
             //await _userManager.RemoveFromRoleAsync(user, SD.ROLE_USER);
             var result = await _userManager.AddToRoleAsync(user, SD.ROLE_COMPANY_ADMIN);
             if (result.Succeeded)
-                return Ok("user is now admin");
+                return Ok("User is now admin");
 
-            return BadRequest("could not make user admin see exception: " + result.Errors);
+            return BadRequest("Could not make user admin see exception: " + result.Errors);
         }
         [HttpPost("ConvertToEmployee_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
         public async Task<ActionResult<string>> ConvertToEmployee(string userId)
@@ -274,9 +274,9 @@ namespace easyNetAPI.Controllers
             //await _userManager.RemoveFromRoleAsync(user, SD.ROLE_USER);
             var result = await _userManager.AddToRoleAsync(user, SD.ROLE_EMPLOYEE);
             if (result.Succeeded)
-                return Ok("user is now employee");
+                return Ok("User is now employee");
 
-            return BadRequest("could not make user employee see exception: " + result.Errors);
+            return BadRequest("Could not make user employee see exception: " + result.Errors);
         }
         [HttpPost("RemoveFromAdmin_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
         public async Task<ActionResult<string>> RemoveFromAdmin(string userId)
@@ -288,13 +288,13 @@ namespace easyNetAPI.Controllers
             if (user is null)
                 return BadRequest("User not found");
             if (!_userManager.GetUsersInRoleAsync(SD.ROLE_COMPANY_ADMIN).Result.Contains(user))
-                return BadRequest("user is not admin");
+                return BadRequest("User is not admin");
             var result = await _userManager.RemoveFromRoleAsync(user, SD.ROLE_COMPANY_ADMIN);
 
             if (result.Succeeded)
-                return Ok("user has been removed from role admin");
+                return Ok("User has been removed from role admin");
 
-            return BadRequest("could not remove user from role admin see exception: " + result.Errors);
+            return BadRequest("Could not remove user from role admin see exception: " + result.Errors);
         }
         [HttpPost("RemoveFromEmployee_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
         public async Task<ActionResult<string>> RemoveFromEmployee(string userId)
@@ -306,13 +306,13 @@ namespace easyNetAPI.Controllers
             if (user is null)
                 return BadRequest("User not found");
             if (!_userManager.GetUsersInRoleAsync(SD.ROLE_EMPLOYEE).Result.Contains(user))
-                return BadRequest("user is not employee");
+                return BadRequest("User is not employee");
             var result = await _userManager.RemoveFromRoleAsync(user, SD.ROLE_EMPLOYEE);
 
             if (result.Succeeded)
-                return Ok("user has been removed from role employee");
+                return Ok("User has been removed from role employee");
 
-            return BadRequest("could not remove user from role employee see exception: " + result.Errors);
+            return BadRequest("Could not remove user from role employee see exception: " + result.Errors);
         }
 
 
