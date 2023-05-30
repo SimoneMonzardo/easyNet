@@ -4,7 +4,7 @@ export default () => {
   // Bearer `authtoken`
 
   const register = async (reigsterData) => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Auth/register', {
+    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Auth/Register', {
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
@@ -55,7 +55,7 @@ export default () => {
   }
 
   const changePassword = async (changePasswordData) => {
-    const { data, pending, error, refresh } = await useFetch('/api/auth/changepassword', {
+    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Auth/changePassword', {
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
@@ -79,7 +79,7 @@ export default () => {
   }
 
   const deleteUser = async () => {
-    const { data, pending, error, refresh } = await useFetch('/api/auth/deleteUser', {
+    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Auth/DeleteUser', {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Authorization': ''
@@ -104,7 +104,7 @@ export default () => {
   }
 
   const editUserData = async (editUserDataData) => {
-    const { data, pending, error, refresh } = await useFetch('/api/auth/editUserData', {
+    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Auth/editUserData', {
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
@@ -128,7 +128,7 @@ export default () => {
   }
 
   const getUserData = async () => {
-    const { data, pending, error, refresh } = await useFetch('/api/auth/getUserData', {
+    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Auth/GetUserData', {
       lazy: true,
       server: false,
       method: 'GET',
