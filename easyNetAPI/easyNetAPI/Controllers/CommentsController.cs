@@ -118,7 +118,7 @@ public class CommentsController : ControllerBase
             }
             if (comment.UserId != userId)
             {
-                return Forbid("Can't delete comment");
+                return BadRequest("Comment is of another user, it cannot be deleted by this user");
             }
             var postsList = await _unitOfWork.Post.GetAllAsync();
             if (postsList.Count() == 0)

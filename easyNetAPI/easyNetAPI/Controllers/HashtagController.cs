@@ -57,6 +57,10 @@ namespace easyNetAPI.Controllers
                 if (userId == null)
                     return BadRequest("Not Logged in");
                 var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
+                if (post is null)
+                    return BadRequest("Post doesn't exist");
+                if (post.Hashtags is null)
+                    post.Hashtags = new List<string>();
                 var hashtags = post.Hashtags;
                 if (hashtags.IsNullOrEmpty())
                     return Ok("[]");

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using easyNetAPI.Models.UpsertModels;
+using MimeKit;
 
 namespace easyNetAPI.Data.Repository
 {
@@ -60,6 +61,8 @@ namespace easyNetAPI.Data.Repository
             {
                 return false;
             }
+            if (post.Comments is null)
+                post.Comments = new List<Comment>();
             post.Comments.Add(comment);
             return await _posts.UpdateOneAsync(post);
         }
