@@ -53,7 +53,6 @@ namespace easyNetAPI.Data.Repository
                     var update = Builders<UserBehavior>.Update
                         .Set(x => x.UserId, user.Value.UserId)
                         .Set(x => x.Administrator, user.Value.Administrator)
-                        .Set(x => x.Description, user.Value.Description)
                         .Set(x => x.Company, user.Value.Company)
                         .Set(x => x.Posts, user.Value.Posts)
                         .Set(x => x.FollowedUsers, user.Value.FollowedUsers)
@@ -78,7 +77,6 @@ namespace easyNetAPI.Data.Repository
                 var update = Builders<UserBehavior>.Update
                     .Set(x => x.UserId, user.UserId)
                     .Set(x => x.Administrator, user.Administrator)
-                    .Set(x => x.Description, user.Description)
                     .Set(x => x.Company, user.Company)
                     .Set(x => x.Posts, user.Posts)
                     .Set(x => x.FollowedUsers, user.FollowedUsers)

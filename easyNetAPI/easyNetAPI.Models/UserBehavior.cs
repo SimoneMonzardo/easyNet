@@ -19,8 +19,6 @@ namespace easyNetAPI.Models
         public string? UserId { get; set; }
         [BsonElement("administrator")]
         public bool? Administrator { get; set; }
-        [BsonElement("description")]
-        public string? Description { get; set; }
         [BsonElement("company")]
         public Company? Company { get; set; }
         [BsonElement("posts")]

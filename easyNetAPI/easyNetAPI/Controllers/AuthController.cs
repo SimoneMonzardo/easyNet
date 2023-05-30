@@ -68,7 +68,6 @@ namespace easyNetAPI.Controllers
                 {
                     UserId = applicationUser.Id,
                     Administrator = false,
-                    Description = "",
                     Company = new Company(),
                     Posts = new List<Post>(),
                     FollowedUsers = new List<string>(),
@@ -127,7 +126,6 @@ namespace easyNetAPI.Controllers
                 {
                     UserId = applicationUser.Id,
                     Administrator = false,
-                    Description = "",
                     Company = new Company(),
                     Posts = new List<Post>(),
                     FollowedUsers = new List<string>(),
