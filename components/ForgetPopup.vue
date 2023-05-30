@@ -1,6 +1,6 @@
 <!-- Main modal -->
 <template>
-    <div id="authentication-modal" tabindex="-1" aria-hidden="true"
+    <div id="forget-modal" tabindex="-1" aria-hidden="true"
         class="bg-gray-900 bg-opacity-50 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full">
         <div class="relative w-full max-w-2xl max-h-full">
             <!-- Modal content -->
@@ -15,7 +15,7 @@
                 <div class="w-full">
                     <button type="button"
                         class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
-                        data-modal-hide="authentication-modal">
+                        data-modal-hide="forget-modal">
                         <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -56,7 +56,7 @@
                             <button type="submit" @click="executeLogin()"
                                 class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Accedi</button>
                             <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                                Non sei registrato? <button type="button" @click="openRegisterModal()"
+                                Non sei registrato? <button type="button" @click="closeModal()"
                                     class="text-blue-700 hover:underline dark:text-blue-500">Crea un account</button>
                             </div>
                         </form>
@@ -74,48 +74,13 @@ import useAuth from '~/composables/useAuth';
 export default {
     name: "LoginPopup",
     methods: {
-        openRegisterModal() {
+        closeModal() {
             const options = {};
 
-            const loginElement = document.getElementById('authentication-modal');
+            const loginElement = document.getElementById('forget-modal');
             const loginModal = new Modal(loginElement, options);
             loginModal.hide();
-
-            const registerElement = document.getElementById('register-modal');
-            const registerModal = new Modal(registerElement, options);
-            registerModal.show();
         },
-        openRegisterModal() {
-            const options = {};
-
-            const loginElement = document.getElementById('authentication-modal');
-            const loginModal = new Modal(loginElement, options);
-            loginModal.hide();
-
-            const forgetElement = document.getElementById('forget-modal');
-            const forgetModal = new Modal(forgetElement, options);
-            forgetModal.show();
-        },
-        async executeLogin() {
-            const { login } = useAuth();
-            const options = {};
-
-            const loginElement = document.getElementById('authentication-modal');
-            const loginModal = new Modal(loginElement, options);
-            loginModal.hide();
-
-            const passwordInput = document.getElementById('password'); 
-
-            var data = {
-                username: document.getElementById('username').value,
-                password: passwordInput.value
-            };
-
-            passwordInput.value = '';
-
-            await login(data);
-            this.$router.go();
-        }
     }
 }
 </script>

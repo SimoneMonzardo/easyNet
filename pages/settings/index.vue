@@ -246,10 +246,10 @@ export default {
     }
   },
   mounted: function() {
-    // const token = localStorage.getItem('token');
-    // if (token === undefined || token === null || token === '') {
-    //   this.$router.push ('/');
-    // }
+    const token = localStorage.getItem('token');
+    if (token === undefined || token === null || token === '') {
+      this.$router.push ('/');
+    }
   }
 }
 </script>
