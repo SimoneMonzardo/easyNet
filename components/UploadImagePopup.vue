@@ -11,15 +11,22 @@
         </button>
         <div class="px-6 py-6 lg:px-8">
           <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Scegli un'immagine:</h3>
-          <form class="space-y-6" action="#" enctype="multipart/form-data" method="post">
+          <div class="space-y-6">
             <UploadFile />
-             <button data-modal-hide="upload-image-modal" type="submit" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-semibold rounded-xl text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+            <button
+              @click="$emit('setImage')"
+              data-modal-hide="upload-image-modal" 
+              type="button" 
+              class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-semibold rounded-xl text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
               Conferma
             </button>
-            <button data-modal-hide="upload-image-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-xl border border-gray-200 text-sm font-semibold px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+            <button
+              data-modal-hide="upload-image-modal" 
+              type="button" 
+              class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-xl border border-gray-200 text-sm font-semibold px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
               Annulla
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -31,6 +38,8 @@
 
   export default {
     name: 'UploadImagePopup',
+    props: ['file'],
+    emits: ['setImage'],
     components: {
         XMarkIcon
     }
