@@ -40,33 +40,31 @@ namespace easyNetAPI.Controllers
                 if (post == null)
                     return BadRequest("Post doesn't exist");
                 bool alreadyLiked = false;
-                if (post.Likes is null)
-                    post.Likes = new List<string>();
-                alreadyLiked = post.Likes.Contains(userId);
                 var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
-                if (user is null)
-                    return BadRequest("User not found");
                 if (user.LikedPost is null)
                     user.LikedPost = new List<int>();
+                    if (post.Likes is null)
+                    post.Likes = new List<string>();
+                alreadyLiked = post.Likes.Contains(userId);
                 if (alreadyLiked)
                 {
                     post.Likes.Remove(userId);
-                    await _unitOfWork.Post.UpdateOneAsync(post);
+                    _unitOfWork.Post.UpdateOneAsync(post);
                     if (user.LikedPost.Contains(postId))
                         user.LikedPost.Remove(postId);
-                    await _unitOfWork.UserBehavior.UpdateOneAsync(userId, user);
-                    return Ok("Like removed succesfully");
+                        return Ok("Like removed succesfully");
                 }
                 post.Likes.Add(userId);
-                await _unitOfWork.Post.UpdateOneAsync(post);
+                var result = await _unitOfWork.Post.UpdateOneAsync(post);
+                if (!result)
+                    return BadRequest("couldn't update post");
                 if (!user.LikedPost.Contains(postId))
                     user.LikedPost.Add(postId);
-                await _unitOfWork.UserBehavior.UpdateOneAsync(userId, user);
                 return Ok("Like Added Succesfully");
             }
             catch (Exception ex)
             {
-                return BadRequest("Something went wrong: " + ex.Message);
+                return BadRequest("Something went wrong");
             }
         }
 

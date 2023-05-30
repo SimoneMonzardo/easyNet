@@ -86,8 +86,8 @@ namespace easyNetAPI.Data.Repository
                     .Set(x => x.LikedPost, user.LikedPost)
                     .Set(x => x.SavedPost, user.SavedPost)
                     .Set(x => x.MentionedPost, user.MentionedPost);
-                 _usersCollection.UpdateOne(filter, update);
-                return true;
+                 var result = _usersCollection.UpdateOne(filter, update);
+                return result.IsAcknowledged;
             }
             catch (Exception ex)
             {
