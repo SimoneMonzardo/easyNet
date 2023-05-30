@@ -497,9 +497,11 @@ namespace easyNetAPI.Controllers
         }
         public static async Task<string> GetUserIdFromUsername(string userName, AppDbContext _db)
         {
+            if (_db.Users.Where(u => u.UserName.Equals(userName)).Count() == 0)
+                return null;
             var user = _db.Users.First(u => u.UserName.Equals(userName));
             if (user == null)
-                return "user not found";
+                return null;
             return user.Id;
         }
     }
