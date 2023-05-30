@@ -156,9 +156,9 @@ import useAuth from '~/composables/useAuth';
                 phoneNumber: document.getElementById('phoneNumber').value,
                 email: document.getElementById('email').value,
                 gender: document.getElementById('gender').value,
-                birthDate: document.getElementById('birthDate').value,
+                profilePicture: '',
+                dateOfBirth: document.getElementById('birthDate').value,
                 password: passwordInput.value,
-
             };
 
             passwordInput.value = '';
