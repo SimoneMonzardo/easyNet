@@ -7,7 +7,7 @@
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
                 <div
                     class="bg-gray-300 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex">
-                    <h4 class="text-2xl font-semibold mx-auto">Bentornato</h4>
+                    <h4 class="text-2xl font-semibold mx-auto"></h4>
                     <h6 class="mx-auto text-4xl font-semibold">easyNet</h6>
                     <img src="https://flowbite.s3.amazonaws.com/logo.svg" class="mt-3 h-15 rounded-full"
                         alt="FlowBite Logo" />
@@ -22,17 +22,24 @@
                                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                                 clip-rule="evenodd"></path>
                         </svg>
+
                         <span class="sr-only">Chiudi</span>
                     </button>
+
                     <div class="px-6 py-6 lg:px-8">
-                        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Log in</h3>
+                        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Recupero password</h3>
+
+                            <div class="relative my-10">
+                                <input type="email" id="email" name="email"
+                                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                placeholder=" " required />
+                                <label for="email"
+                                class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Email</label>
+                            </div>
+
                         <form class="space-y-6" @submit.prevent="submit" method="post">
                             <button type="submit" @click="executeLogin()"
-                                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Accedi</button>
-                            <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                                Non sei registrato? <button type="button" @click="closeModal()"
-                                    class="text-blue-700 hover:underline dark:text-blue-500">Richiedi Password</button>
-                            </div>
+                                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Richiedi password</button>
                         </form>
                     </div>
                 </div>
@@ -55,6 +62,22 @@ export default {
             const loginModal = new Modal(loginElement, options);
             loginModal.hide();
         },
+        //metodo richesta passsword da definire (copiato da login con dati opportuni per ora) 
+        async executeRequest() {
+            const { login } = useAuth();
+            const options = {};
+
+            const loginElement = document.getElementById('authentication-modal');
+            const loginModal = new Modal(loginElement, options);
+            loginModal.hide();
+
+            var data = {
+                username: document.getElementById('email').value,
+            };
+
+            await login(data);
+            this.$router.go();
+        }
     }
 }
 </script>
