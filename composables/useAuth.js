@@ -2,6 +2,7 @@ export default () => {
 
   //to do: mettere gli auth token negli header
   // Bearer `authtoken`
+
   const register = async (reigsterData) => {
     const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Auth/register', {
       headers: {
@@ -53,17 +54,15 @@ export default () => {
     })
   }
 
-
-  const changePassword = async ({ oldPassword, newPassword }) => {
+  const changePassword = async (changePasswordData) => {
     const { data, pending, error, refresh } = await useFetch('/api/auth/changepassword', {
-      method: 'POST',
-      body: {
-        oldPassword,
-        newPassword
+      headers: {
+        'Access-Control-Allow-Origin': '*'
       },
+      method: 'POST',
+      body: JSON.stringify(changePasswordData),
       onRequest({ request, options }) {
-        // Set the request headers
-
+        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
       },
       onRequestError({ request, options, error }) {
         // Handle the request errors
