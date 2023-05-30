@@ -135,6 +135,8 @@ namespace easyNetAPI.Data.Repository
                     }
                     return await UpdateOneAsync(user.UserId, user);
                 }
+                await MongoDbAlignment.RemoveAllLikesAsync(userToDelete.UserId, _unitOfWork);
+                await MongoDbAlignment.RemoveAllTagsAsync(userToDelete.UserId, _unitOfWork);
             }
             return true;
         }

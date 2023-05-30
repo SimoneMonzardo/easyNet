@@ -27,7 +27,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost("UpsertTag")]
-        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<IActionResult> PostTagAsync(int postId, List<string> usernames)
         {
             try
@@ -149,7 +149,7 @@ namespace easyNetAPI.Controllers
             }
         }
 
-        [HttpDelete("DeleteTag"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
+        [HttpDelete("DeleteTag"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<ActionResult<string>> DeleteTagAsync(List<string> usersList, int postId)
         {
             try
