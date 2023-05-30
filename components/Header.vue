@@ -16,41 +16,42 @@
             <Bars3CenterLeftIcon class="h-6 w-6 text-gray-500 dark:text-gray-400 rotate-180" />
             <span class="sr-only">Attiva sidebar</span>
           </button>
-          <div v-if="loggedIn">
-            <button type="button"
+          <div :class="loggedIn ? 'block' : 'hidden'">
+            <button 
+              type="button"
               class="flex text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-              id="user-menu-button" aria-expanded="false" data-dropdown-toggle="dropdown">
+              id="user-menu-button" 
+              data-dropdown-toggle="userDropdown">
               <span class="sr-only">Apri menù utente</span>
               <img class="w-8 h-8 rounded-full" :src="imageUrl" alt="Immagine Utente" />
             </button>
             <!-- Dropdown menu -->
             <div
               class="hidden z-50 my-4 w-56 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
-              id="dropdown">
+              id="userDropdown">
               <div class="py-3 px-4">
                 <span class="block text-sm font-semibold text-gray-900 dark:text-white">{{ userName }}</span>
                 <span class="block text-sm font-light text-gray-500 truncate dark:text-gray-400">{{ email }}</span>
               </div>
-              <ul class="py-1 font-light text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+              <ul class="py-1 font-light text-gray-500 dark:text-gray-400" aria-labelledby="user-menu-button">
                 <li>
-                  <a href="#"
+                  <a href="/settings"
                     class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Profilo</a>
                 </li>
                 <li>
-                  <a href="./settings"
+                  <a href="/settings/account"
                     class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Impostazioni
                     Account</a>
                 </li>
               </ul>
-              <ul class="py-1 font-light text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+              <ul class="py-1 font-light text-gray-500 dark:text-gray-400 w-full" aria-labelledby="user-menu-button">
                 <li>
-                  <a href="#"
-                    class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Esci</a>
+                  <button class="block w-full text-start py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" @click="logOut">Esci</button>
                 </li>
               </ul>
             </div>
           </div>
-          <div v-else="loggedIn">
+          <div :class="loggedIn ? 'hidden' : 'block'">
             <LoginRegisterButtons />
           </div>
         </div>
@@ -76,6 +77,16 @@ export default {
   },
   components: {
     Bars3CenterLeftIcon
+  },
+  methods: {
+    logOut() {
+      localStorage.setItem('logged', false);
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      localStorage.removeItem('email');
+      localStorage.removeItem('profilePicture');
+      this.$router.go('/');
+    }
   }
 }
 </script>

@@ -75,7 +75,7 @@ export default {
     name: "LoginPopup",
     methods: {
         openRegisterModal() {
-            const options = {}
+            const options = {};
 
             const loginElement = document.getElementById('authentication-modal');
             const loginModal = new Modal(loginElement, options);
@@ -85,8 +85,13 @@ export default {
             const registerModal = new Modal(registerElement, options);
             registerModal.show();
         },
-        executeLogin() {
+        async executeLogin() {
             const { login } = useAuth();
+            const options = {};
+
+            const loginElement = document.getElementById('authentication-modal');
+            const loginModal = new Modal(loginElement, options);
+            loginModal.hide();
 
             const passwordInput = document.getElementById('password'); 
 
@@ -97,8 +102,8 @@ export default {
 
             passwordInput.value = '';
 
-            const response = login(data);
-            console.log(response);
+            await login(data);
+            this.$router.go();
         }
     }
 }
