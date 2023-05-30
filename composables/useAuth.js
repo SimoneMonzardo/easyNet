@@ -45,7 +45,7 @@ export default () => {
         localStorage.setItem('email', response._data.email);
         localStorage.setItem('profilePicture', response._data.profilePicture);
         localStorage.setItem('token', response._data.token);
-        return response
+        return response;
       },
       onResponseError({ request, response, options }) {
         // Handle the response errors
