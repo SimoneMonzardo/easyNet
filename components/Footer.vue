@@ -15,6 +15,9 @@
               <li>
                 <a href="#" class="hover:underline">Termini &amp; Condizioni</a>
               </li>
+              <li>
+                <a href="https://github.com/SimoneMonzardo/easyNet/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml" class="hover:underline">Report Bug</a>
+              </li>
             </ul>
         </div>
       </div>
