@@ -3,6 +3,7 @@
     <title>Home • easyNet</title>
   </head>
   <!-- Import Popup components -->
+  <!-- <FollowedPopup /> -->
   <LoginPopup />
   <RegisterPopup />
   <ForgetPopup />
