@@ -51,8 +51,8 @@ public class PostController : ControllerBase
         return post;
     }
 
-    [HttpGet("GetAllPostsOfFollowed"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
-    public async Task<IEnumerable<Post>?> GetAllFollowedAsync()
+    [HttpGet("GetPostsOfFollowed"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
+    public async Task<IEnumerable<Post>?> GetFollowedAsync(int numeroDiPost)
     {
         var token = Request.Headers["Authorization"].ToString();
         var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
@@ -68,7 +68,66 @@ public class PostController : ControllerBase
             if (user.FollowedUsers.Contains(post.UserId))
                 followedPost.Add(post);
         }
-        return followedPost;
+        if(numeroDiPost == null)
+            return followedPost.OrderBy(p => p.DataDiCreazione).Take(numeroDiPost);
+        return followedPost.OrderBy(p => p.DataDiCreazione);
+    }
+    [HttpGet("GetNextFollowed"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
+    public async Task<Post?> GetNextFollowedAsync(int index)
+    {
+        if(index == null)
+            return null;
+        var token = Request.Headers["Authorization"].ToString();
+        var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+        if (userId is null)
+            return null;
+        var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+        if (user is null || user.FollowedUsers is null || user.FollowedUsers.Count == 0)
+            return null;
+        var posts = await _unitOfWork.Post.GetAllAsync();
+        var followedPost = new List<Post>();
+        foreach (var post in posts)
+        {
+            if (user.FollowedUsers.Contains(post.UserId))
+                followedPost.Add(post);
+        }
+        return followedPost.OrderBy(p => p.DataDiCreazione).Take(index).Last();
+    }
+    [HttpGet("GetPostsOfRandom"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
+    public async Task<IEnumerable<Post>?> GetRandomAsync(int numeroDiPost)
+    {
+        var token = Request.Headers["Authorization"].ToString();
+        var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+        if (userId is null)
+            return null;
+        var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+        if (user is null)
+            return null;
+        var posts = await _unitOfWork.Post.GetAllAsync();
+        if (numeroDiPost == null)
+            return posts.OrderBy(p => p.DataDiCreazione).Take(numeroDiPost);
+        return posts.OrderBy(p => p.DataDiCreazione);
+    }
+    [HttpGet("GetNextRandom"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
+    public async Task<Post?> GetNextRandomAsync(int index)
+    {
+        if (index == null)
+            return null;
+        var token = Request.Headers["Authorization"].ToString();
+        var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+        if (userId is null)
+            return null;
+        var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+        if (user is null)
+            return null;
+        var posts = await _unitOfWork.Post.GetAllAsync();
+        return posts.OrderBy(p => p.DataDiCreazione).Take(index).Last();
+    }
+    [HttpGet("GetThreeRandomPostForNotauth")]
+    public async Task<IEnumerable<Post>?> GetThreeRandomAsync()
+    {
+        var posts = await _unitOfWork.Post.GetAllAsync();
+        return posts.OrderBy(p => p.DataDiCreazione).Take(3);
     }
 
     [HttpDelete("DeletePost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
