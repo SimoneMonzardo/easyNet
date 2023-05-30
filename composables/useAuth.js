@@ -78,12 +78,13 @@ export default () => {
     })
   }
 
-
   const deleteUser = async () => {
     const { data, pending, error, refresh } = await useFetch('/api/auth/deleteUser', {
-      method: 'POST',
-      body: {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': ''
       },
+      method: 'DELETE',
       onRequest({ request, options }) {
         // Set the request headers
         options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
@@ -108,7 +109,7 @@ export default () => {
         'Access-Control-Allow-Origin': '*'
       },
       method: 'POST',
-      body: JSON.stringify(changePasswordData),
+      body: JSON.stringify(editUserDataData),
       onRequest({ request, options }) {
         // Set the request headers
         options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
@@ -128,22 +129,29 @@ export default () => {
 
   const getUserData = async () => {
     const { data, pending, error, refresh } = await useFetch('/api/auth/getUserData', {
+      lazy: true,
+      server: false,
       method: 'GET',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': ''
+      },
       onRequest({ request, options }) {
-
-
+        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
       },
-      onRequestError({ request, options, error }) {
-
+      onResponse({request, response, options}) {
+        username = response._data.userName;
+        console.log(response._data);
+        localStorage.setItem('backupName', response._data.name);
+        localStorage.setItem('backupSurname', response._data.surname);
+        localStorage.setItem('backupGender', response._data.gender);
+        localStorage.setItem('backupBirthDate', response._data.birthdate);
+        localStorage.setItem('backupProfilePicture', response._data.profilePicture);
       },
-      onResponse({ request, response, options }) {
-
-        return response
-      },
-      onResponseError({ request, response, options }) {
-
+      onResponseError() {
+        // TODO: Handle error
       }
-    })
+    });
   }
 
   return {
@@ -151,6 +159,7 @@ export default () => {
     login,
     changePassword,
     deleteUser,
+    editUserData,
     getUserData
   }
 }
