@@ -39,11 +39,10 @@ public class CommentsController : ControllerBase
         var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
         if (post is not null)
         {
+            if (post.Comments is null)
+                post.Comments = new List<Comment>();
             var comments = post.Comments;
-            if (comments.Count() != 0)
-            {
-                return comments;
-            }
+            return comments;
         }
         return null;
     }
