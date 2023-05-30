@@ -15,6 +15,8 @@ public class Post
     public string? Username { get; set; }
     [BsonElement("content")]
     public string? Content { get; set; }
+    [BsonElement("dataDiCreazione")]
+    public DateTime? DataDiCreazione { get; set; }
 
     //UserId
     [BsonElement("likes")]
