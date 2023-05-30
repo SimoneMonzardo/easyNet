@@ -216,7 +216,7 @@ const  user = reactive({
   profilePicture: '',
 });
 
-const { pending } = useFetch('https://localhost:44359/Auth/GetUserData', {
+const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Auth/GetUserData', {
   lazy: true,
   server: false,
   method: 'GET',
@@ -264,7 +264,7 @@ async function saveChanges() {
     profilePicture: user.profilePicture
   };
 
-  await useFetch('https://localhost:44359/Auth/editUserData', {
+  await useFetch('https://progettoeasynet.azurewebsites.net/Auth/editUserData', {
     method: 'POST',
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -284,7 +284,7 @@ function resetModal() {
 }
 
 async function deleteUserAccount() {
-  await useFetch('https://localhost:44359/Auth/DeleteUser', {
+  await useFetch('https://progettoeasynet.azurewebsites.net/Auth/DeleteUser', {
     method: 'DELETE',
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -295,7 +295,12 @@ async function deleteUserAccount() {
     }
   });
 
-  router.go('/');
+  localStorage.setItem('logged', false);
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+  localStorage.removeItem('email');
+  localStorage.removeItem('profilePicture');
+  router.push('/');
 }
 
 function cancelChanges() {
@@ -315,7 +320,7 @@ async function updateImage(images) {
   const formData = new FormData();
   formData.append('file', images[0]);
 
-  const { data } = await useFetch('https://localhost:44359/Post/UploadImage', {
+  const { data } = await useFetch('https://progettoeasynet.azurewebsites.net/Post/UploadImage', {
     method: 'POST',
     headers: {
       'Access-Control-Allow-Origin': '*',
