@@ -133,10 +133,16 @@ namespace easyNetAPI.Data.Repository
                     {
                         await MongoDbAlignment.RemovePostDataAsync(post.PostId, user ,_unitOfWork);
                     }
-                    return await UpdateOneAsync(user.UserId, user);
+                    var result = await UpdateOneAsync(user.UserId, user);
+                    if (!result)
+                    {
+                        return result;
+                    }
                 }
                 await MongoDbAlignment.RemoveAllLikesAsync(userToDelete.UserId, _unitOfWork);
                 await MongoDbAlignment.RemoveAllTagsAsync(userToDelete.UserId, _unitOfWork);
+                await MongoDbAlignment.RemoveAllCommentsAsync(userToDelete.UserId, _unitOfWork);
+                await MongoDbAlignment.RemoveAllRepliesAsync(userToDelete.UserId, _unitOfWork);
             }
             return true;
         }
