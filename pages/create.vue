@@ -14,7 +14,7 @@
     <RegisterPopup />
   </section>
 
-  <div class="my-auto w-screen">
+  <div class="my-20 w-screen">
     <div class="grid gap-4 px-8 lg:px-0 lg:mx-auto w-full" :class="imageUrl === '' ? 'grid-cols-1 lg:w-1/2' : 'grid-cols-1 md:grid-cols-2 lg:w-3/4'">
       <div class="order-0 md:col-span-2 items-center flex flex-col sm:flex-row sm:justify-between">
         <!-- Title -->
@@ -120,6 +120,10 @@ export default {
       this.onResize();
     });
     window.addEventListener('resize', this.onResize);
+    const token = localStorage.getItem('token');
+    if (token === undefined || token === null || token === '') {
+      this.$router.push ('/');
+    }
   },
   methods: {
     onResize() {
