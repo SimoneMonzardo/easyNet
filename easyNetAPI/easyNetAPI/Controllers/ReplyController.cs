@@ -107,7 +107,7 @@ namespace easyNetAPI.Controllers
                 }
                 if (reply.UserId != userId)
                 {
-                    return Forbid("Can't delete comment");
+                    return Forbid("Can't delete reply");
                 }
                 var commentsList = await _unitOfWork.Comment.GetAllAsync();
                 if (commentsList.Count() == 0)
@@ -122,7 +122,7 @@ namespace easyNetAPI.Controllers
                 var postsList = await _unitOfWork.Post.GetAllAsync();
                 if (postsList.Count() == 0)
                 {
-                    return BadRequest("Comment not found");
+                    return BadRequest("Post not found");
                 }
                 var post = postsList.Where(p => p.Comments.Select(c => c.CommentId).ToList().Contains(comment.CommentId)).FirstOrDefault();
                 if (post is null)
@@ -138,7 +138,7 @@ namespace easyNetAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Unandled exeption: " + ex.Message);
+                return BadRequest("Unandled exception: " + ex.Message);
             }
         }
     }

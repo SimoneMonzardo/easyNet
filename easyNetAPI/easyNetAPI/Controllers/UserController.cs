@@ -436,5 +436,46 @@ namespace easyNetAPI.Controllers
 
             return BadRequest("Could not remove user from role employee see exception: " + result.Errors);
         }
+        [HttpGet("GetAllUsernameList")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
+        public async Task<List<string>> GetAllUsernameAsync()
+        {
+            try
+            {
+                var allUsers = await _unitOfWork.UserBehavior.GetAllAsync();
+                var usernames = new List<string>();
+                foreach (var item in allUsers)
+                {
+                    var username_of_id = await _db.Users.FindAsync(item.UserId);
+                    if (username_of_id == null)
+                        continue;
+                    usernames.Add(username_of_id.UserName);
+                }
+                return usernames;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        [HttpGet("GetUserData")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
+        public async Task<UserBehavior> GetUserDataAsync(string username)
+        {
+            try
+            {
+                var id = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
+                if (id == null)
+                {
+                    return null;
+                }
+                var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(id);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }
