@@ -1,8 +1,12 @@
-﻿using easyNetAPI.Data.Repository.IRepository;
+﻿using easyNetAPI.Data;
+using easyNetAPI.Data.Repository.IRepository;
+using easyNetAPI.Models;
 using easyNetAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Drawing;
 
 namespace easyNetAPI.Controllers
 {
@@ -12,14 +16,18 @@ namespace easyNetAPI.Controllers
     {
         private readonly ILogger<AziendaController> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly AppDbContext _db;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public AziendaController(ILogger<AziendaController> logger, IUnitOfWork unitOfWork)
+        public AziendaController(ILogger<AziendaController> logger, IUnitOfWork unitOfWork, AppDbContext db, UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _db = db;
+            _userManager = userManager;
         }
         [HttpGet("GetCompanies")]
-        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_MODERATOR}")]
         public async Task<IActionResult> GetCompanies()
         {
             try
@@ -29,7 +37,13 @@ namespace easyNetAPI.Controllers
                 if (userId is null)
                     return BadRequest("UserId is null");
                 var aziende = await _unitOfWork.Company.GetAllAsync();
-                return Json(aziende);
+                var companies = new List<Company>();
+                foreach ( var company in aziende)
+                {
+                    if(company.CompanyId!=0)
+                        companies.Add(company);
+                }
+                return Json(companies);
             }
             catch (Exception ex)
             {
@@ -37,7 +51,7 @@ namespace easyNetAPI.Controllers
             }
         }
         [HttpGet("GetCompany")]
-        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+        [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_MODERATOR}")]
         public async Task<IActionResult> GetCompany(int id)
         {
             try
@@ -58,18 +72,31 @@ namespace easyNetAPI.Controllers
         }
         [HttpPost("PostCompany")]
         [Authorize(Roles = $"{SD.ROLE_MODERATOR}")]
-        public async Task<IActionResult> PostCompany(Company company)
+        public async Task<IActionResult> PostCompany(Company company, string username)
         {
             try
             {
+                var userIdOfCompanyAdmin = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
                 if (!ModelState.IsValid)
                     return BadRequest("Model is not valid");
                 var token = Request.Headers["Authorization"].ToString();
                 var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 if (userId is null)
                     return BadRequest("UserId is null");
-                var azienda = await _unitOfWork.Company.AddAsync(company, userId);
-                return Ok(azienda);
+                var user = _db.Users.Find(userIdOfCompanyAdmin);
+                if (user is null)
+                    return BadRequest("User not found");
+                var result = true;
+                var isUserInRole = await _userManager.IsInRoleAsync(user, SD.ROLE_COMPANY_ADMIN);
+                if (!isUserInRole)
+                    result = (await _userManager.AddToRoleAsync(user, SD.ROLE_COMPANY_ADMIN)).Succeeded;
+                if (!result)
+                    return BadRequest("Could not add user to role company admin");
+                company.CompanyId = await IdAutoincrementService.GetCompanyAutoincrementId(_unitOfWork);
+                var risultato = await _unitOfWork.Company.AddAsync(company, userIdOfCompanyAdmin);
+                if(risultato)
+                    return Ok("Company created succesfully");
+                return BadRequest("Company cannot be created");
             }
             catch (Exception ex)
             {
@@ -88,8 +115,11 @@ namespace easyNetAPI.Controllers
                 var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 if (userId is null)
                     return BadRequest("UserId is null");
-                var azienda = await _unitOfWork.Company.UpdateOneAsync(company);
-                return Ok(azienda);
+                var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                var risultato = false;
+                if(user.Company.CompanyId == company.CompanyId)
+                    risultato = await _unitOfWork.Company.UpdateOneAsync(company);
+                return Ok(risultato);
             }
             catch (Exception ex)
             {
@@ -108,8 +138,34 @@ namespace easyNetAPI.Controllers
                     return BadRequest("UserId is null");
                 if (id == null)
                     return BadRequest("id of company is null");
-                var azienda = await _unitOfWork.Company.RemoveAsync(id);
-                return Ok(azienda);
+                var user = _db.Users.Find(userId);
+                if (user is null)
+                    return BadRequest("User not found");
+                var users = await _unitOfWork.UserBehavior.GetAllAsync();
+                var result = await _unitOfWork.Company.RemoveAsync(id);
+                if (!result)
+                    return BadRequest("Could not remove company");
+                foreach (var u in users)
+                {
+                    if (u.Company is not null)
+                    {
+                        if (u.Company.CompanyId == id)
+                        {
+                            var _user = _db.Users.Find(u.UserId);
+                            if (_user is not null)
+                            {
+                                if (await _userManager.IsInRoleAsync(_user, SD.ROLE_EMPLOYEE))
+                                    await _userManager.RemoveFromRoleAsync(_user, SD.ROLE_EMPLOYEE);
+                                if (await _userManager.IsInRoleAsync(_user, SD.ROLE_COMPANY_ADMIN))
+                                    await _userManager.RemoveFromRoleAsync(_user, SD.ROLE_COMPANY_ADMIN);
+                                result = await _unitOfWork.Company.AddAsync(new Company() { CompanyId = 0, CompanyName = "" }, _user.Id);
+                                if (!result)
+                                    return BadRequest("Could not add an empty company");
+                            }
+                        }
+                    }
+                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
