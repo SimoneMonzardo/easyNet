@@ -1,17 +1,26 @@
 <template>
+  <div>
+    <ProfileHeader />
+    <UserPosts />
+  </div>
   <NuxtErrorBoundary @error="someErrorLogger">
     <template #error="{ error, clearError }">
       You can display the error locally here: {{ error }}
       <button @click="clearError">This will clear the error.</button>
     </template>
-    <div>
-      <ProfileHeader />
-      <p class="text-black dark:text-white">@{{ $route.params.username }}</p>
-    </div>
   </NuxtErrorBoundary>
 </template>
 <script setup>
-const route = useRoute();
-// const { data } = await useFetch(`/api/users/${route.params.username}`);
-throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+// const route = useroute();
+// const { data } = await usefetch(
+//   `/GetUserFromUserName/${route.params.username}`
+// );
+// if (!data.value) {
+//   throw createerror({
+//     statuscode: 404,
+//     statusmessage:
+//       "The link you followed may be broken, or the page may have been removed. Go back to EasyNet.",
+//     fatal: true,
+//   });
+// }
 </script>
