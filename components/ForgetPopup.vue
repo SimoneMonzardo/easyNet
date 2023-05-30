@@ -27,37 +27,11 @@
                     <div class="px-6 py-6 lg:px-8">
                         <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Log in</h3>
                         <form class="space-y-6" @submit.prevent="submit" method="post">
-                            <div class="relative">
-                                <input type="text" id="username" name="userName"
-                                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=" " required />
-                                <label for="username"
-                                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Username</label>
-                            </div>
-                            <div class="relative">
-                                <input type="password" id="password" name="password"
-                                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=" " required />
-                                <label for="password"
-                                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Password</label>
-                            </div>
-                            <div class="flex justify-between">
-                                <div class="flex items-start">
-                                    <div class="flex items-center h-5">
-                                        <input id="remember" type="checkbox" value=""
-                                            class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800">
-                                    </div>
-                                    <label for="remember"
-                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Ricordami</label>
-                                </div>
-                                <a href="#" class="text-sm text-blue-700 hover:underline dark:text-blue-500">Password
-                                    dimenticata?</a>
-                            </div>
                             <button type="submit" @click="executeLogin()"
                                 class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Accedi</button>
                             <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
                                 Non sei registrato? <button type="button" @click="closeModal()"
-                                    class="text-blue-700 hover:underline dark:text-blue-500">Crea un account</button>
+                                    class="text-blue-700 hover:underline dark:text-blue-500">Richiedi Password</button>
                             </div>
                         </form>
                     </div>
@@ -72,7 +46,7 @@ import { Modal } from 'flowbite';
 import useAuth from '~/composables/useAuth';
 
 export default {
-    name: "LoginPopup",
+    name: "ForgetPopup",
     methods: {
         closeModal() {
             const options = {};
