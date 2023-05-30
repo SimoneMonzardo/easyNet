@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using NuGet.Common;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace easyNetAPI.Controllers
 {
@@ -254,7 +255,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost("ConvertToCompanyAdmin_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
-        public async Task<ActionResult<string>> ConvertToAdmin(string username)
+        public async Task<ActionResult<string>> ConvertToAdmin(string username, int companyId)
         {
             if (username.IsNullOrEmpty())
                 return BadRequest("Insert username");
@@ -269,8 +270,24 @@ namespace easyNetAPI.Controllers
             if (await _userManager.IsInRoleAsync(user, SD.ROLE_MODERATOR))
                 return BadRequest("User is moderator");
 
+            if (await _userManager.IsInRoleAsync(user, SD.ROLE_EMPLOYEE))
+                return BadRequest("User is employee");
+
             if (await _userManager.IsInRoleAsync(user, SD.ROLE_COMPANY_ADMIN))
                 return BadRequest("User is already Company Admin");
+
+            var company = await _unitOfWork.Company.GetFirstOrDefault(companyId);
+            if (company is null)
+                return BadRequest("Company does not exist");
+
+            var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+            if (userBehavior is null)
+                return BadRequest("user not found");
+
+            userBehavior.Company = company;
+            var resultCompany = await _unitOfWork.UserBehavior.UpdateOneAsync(userId, userBehavior);
+            if (!resultCompany)
+                return BadRequest("Could not add company to user");
 
             var result = await _userManager.AddToRoleAsync(user, SD.ROLE_COMPANY_ADMIN);
             if (result.Succeeded)
@@ -333,6 +350,9 @@ namespace easyNetAPI.Controllers
             if (await _userManager.IsInRoleAsync(user, SD.ROLE_MODERATOR))
                 return BadRequest("User is moderator");
 
+            if (await _userManager.IsInRoleAsync(user, SD.ROLE_COMPANY_ADMIN))
+                return BadRequest("User is company admin");
+
             if (await _userManager.IsInRoleAsync(user, SD.ROLE_EMPLOYEE))
                 return BadRequest("User is already Employee");
 
@@ -361,8 +381,19 @@ namespace easyNetAPI.Controllers
                 return BadRequest("User not found");
             if (!_userManager.GetUsersInRoleAsync(SD.ROLE_COMPANY_ADMIN).Result.Contains(user))
                 return BadRequest("User is not admin");
-            var result = await _userManager.RemoveFromRoleAsync(user, SD.ROLE_COMPANY_ADMIN);
 
+            var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+            if (userBehavior is null)
+                return BadRequest("user not found");
+
+
+            userBehavior.Company = new Company() { CompanyId = 0, CompanyName = "" };
+            var resultCompany = await _unitOfWork.UserBehavior.UpdateOneAsync(userId, userBehavior);
+            if (!resultCompany)
+                return BadRequest("Could not remove company from user");
+
+
+            var result = await _userManager.RemoveFromRoleAsync(user, SD.ROLE_COMPANY_ADMIN);
             if (result.Succeeded)
                 return Ok("User has been removed from role admin");
 
@@ -409,6 +440,7 @@ namespace easyNetAPI.Controllers
             var user = _db.Users.Find(userId);
             if (user is null)
                 return BadRequest("User not found");
+
             if (!_userManager.GetUsersInRoleAsync(SD.ROLE_EMPLOYEE).Result.Contains(user))
                 return BadRequest("User is not employee");
 
@@ -426,8 +458,12 @@ namespace easyNetAPI.Controllers
             if (adminBehavior.Company.CompanyId != userBehavior.Company.CompanyId)
                 return BadRequest("admin cannot remove user from role employee");
 
+
             userBehavior.Company = new Company() { CompanyId = 0, CompanyName = "" };
-            await _unitOfWork.UserBehavior.UpdateOneAsync(userId, userBehavior);
+            var resultCompany = await _unitOfWork.UserBehavior.UpdateOneAsync(userId, userBehavior);
+            if (!resultCompany)
+                return BadRequest("Could not remove company from user");
+
 
             var result = await _userManager.RemoveFromRoleAsync(user, SD.ROLE_EMPLOYEE);
 
