@@ -52,7 +52,7 @@ namespace easyNetAPI.Data
 
         public static async Task<int> GetCompanyAutoincrementId(IUnitOfWork _unitOfWork)
         {
-            var companiesList = await _unitOfWork.Company.GetAllAsync();
+            var companiesList = _unitOfWork.Company.GetAllAsync().Result.Where(c=> c.CompanyId!=0).ToList();
             var idList = companiesList.Select(c => c.CompanyId).Order();
             if (idList.Count() != 0)
             {
