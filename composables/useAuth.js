@@ -62,6 +62,7 @@ export default () => {
       method: 'POST',
       body: JSON.stringify(changePasswordData),
       onRequest({ request, options }) {
+        // Set the request headers
         options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
       },
       onRequestError({ request, options, error }) {
@@ -73,7 +74,6 @@ export default () => {
       },
       onResponseError({ request, response, options }) {
         // Handle the response errors
-        return response.error;
       }
     })
   }
@@ -86,6 +86,7 @@ export default () => {
       },
       onRequest({ request, options }) {
         // Set the request headers
+        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
       },
       onRequestError({ request, options, error }) {
@@ -101,6 +102,29 @@ export default () => {
     })
   }
 
+  const editUserData = async (editUserDataData) => {
+    const { data, pending, error, refresh } = await useFetch('/api/auth/editUserData', {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      },
+      method: 'POST',
+      body: JSON.stringify(changePasswordData),
+      onRequest({ request, options }) {
+        // Set the request headers
+        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+      },
+      onRequestError({ request, options, error }) {
+        // Handle the request errors
+      },
+      onResponse({ request, response, options }) {
+        // Process the response data
+        return response;
+      },
+      onResponseError({ request, response, options }) {
+        // Handle the response errors
+      }
+    })
+  }
 
   const getUserData = async () => {
     const { data, pending, error, refresh } = await useFetch('/api/auth/getUserData', {
