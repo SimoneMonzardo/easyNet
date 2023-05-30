@@ -191,7 +191,7 @@ namespace easyNetAPI.Controllers
                 var postResult = await _unitOfWork.Post.UpdateOneAsync(post);
                 if (postResult)
                 {
-                    return Ok("Tag deleted succesfully");
+                    return Ok("Tag deleted successfully");
                 }
                 return BadRequest("Tag not found");
             }
