@@ -108,7 +108,8 @@
 
                                 <!-- TODO: Add profile picture upload -->
 
-                                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crea Account</button>
+
+                                <button type="submit" @click="handleRegister()" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crea Account</button>
                             </div>
                         </form>
                     </div>
@@ -120,6 +121,8 @@
 
 
 <script>
+import useAuth from '~/composables/useAuth';
+
   export default {
     name: "RegisterPopup",
     methods: {
@@ -140,7 +143,29 @@
             document.getElementById('confirmPassword').style.borderColor = "rgba(80,80,80,0.3)";
             document.getElementById('confirmText').style.color = "gray";
         }
-      }
+      },
+      handleRegister() {
+            const { register } = useAuth();
+
+            const passwordInput = document.getElementById('passwordRegister'); 
+
+            var data = {
+                username: document.getElementById('usernameRegister').value,
+                name: document.getElementById('name').value,
+                surname: document.getElementById('surname').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                email: document.getElementById('email').value,
+                gender: document.getElementById('gender').value,
+                birthDate: document.getElementById('birthDate').value,
+                password: passwordInput.value,
+
+            };
+
+            passwordInput.value = '';
+
+            const response = register(data);
+            console.log(response);
+        }
     }
   }
 </script>
