@@ -1,7 +1,7 @@
 export default () => {
     
     const getPostOfUser = async (getPostOfUserData) => {
-        const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Post/GetPostOfUser', {
+        const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Post/GetPostOfUser', {
         lazy: true,  
         server: false,
         headers: {
@@ -27,7 +27,7 @@ export default () => {
 }
 
 const getAllPosts = async () => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Post/GetAllPosts', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Post/GetAllPosts', {
     lazy: true,  
     server: false,
     headers: {
@@ -52,7 +52,7 @@ const getAllPosts = async () => {
 }
 
 const getpostById = async (getpostByIdData) => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Post/GetPostById', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Post/GetPostById', {
     lazy: true,  
     server: false,
     headers: {
@@ -78,7 +78,7 @@ const getpostById = async (getpostByIdData) => {
 }
 
 const getAllPostsOfFollowed = async (getAllPostsOfFollowedData) => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Post/GetAllPostsOfFollowed', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Post/GetAllPostsOfFollowed', {
     lazy: true,  
     server: false,
     headers: {
@@ -104,7 +104,7 @@ const getAllPostsOfFollowed = async (getAllPostsOfFollowedData) => {
 }
 
 const deletePost = async (deletePostData) => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Post/DeletePost', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Post/DeletePost', {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Authorization': ''

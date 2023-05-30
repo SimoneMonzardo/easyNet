@@ -144,28 +144,36 @@ import useAuth from '~/composables/useAuth';
             document.getElementById('confirmText').style.color = "gray";
         }
       },
-      handleRegister() {
-            const { register } = useAuth();
+      async handleRegister() {
+        const { register } = useAuth();
+        const passwordInput = document.getElementById('passwordRegister'); 
 
-            const passwordInput = document.getElementById('passwordRegister'); 
+        var data = {
+          username: document.getElementById('usernameRegister').value,
+          name: document.getElementById('name').value,
+          surname: document.getElementById('surname').value,
+          phoneNumber: document.getElementById('phoneNumber').value,
+          email: document.getElementById('email').value,
+          gender: document.getElementById('gender').value,
+          dateOfBirth: document.getElementById('birthDate').value,
+          password: passwordInput.value,
+          profilePicture: 'no'
+        };
 
-            var data = {
-                username: document.getElementById('usernameRegister').value,
-                name: document.getElementById('name').value,
-                surname: document.getElementById('surname').value,
-                phoneNumber: document.getElementById('phoneNumber').value,
-                email: document.getElementById('email').value,
-                gender: document.getElementById('gender').value,
-                birthDate: document.getElementById('birthDate').value,
-                password: passwordInput.value,
+        passwordInput.value = '';
 
-            };
+        const response = await register(data);
+        if (response._value !== null) {
+            const options = {};
 
-            passwordInput.value = '';
+            const registerElement = document.getElementById('register-modal');
+            const registerModal = new Modal(registerElement, options);
+            registerModal.hide();
 
-            const response = register(data);
-            console.log(response);
+            // TODO
+            alert('Iscrizione avvenuta con successo! Loggati per iniziare a navigate')
         }
+      }
     }
   }
 </script>
