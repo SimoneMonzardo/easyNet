@@ -12,6 +12,7 @@ using easyNetAPI.Models;
 using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Data.Repository;
 using easyNetAPI.Controllers;
+using Microsoft.Extensions.FileProviders;
 
 var allowedOrigins = "_allowedOrigins";
 
@@ -147,6 +148,15 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCors(allowedOrigins);
+
+app.UseStaticFiles();
+
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/images")),
+    RequestPath = new PathString("/wwwroot/images")
+});
+
 
 app.Run();
 

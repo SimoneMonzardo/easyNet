@@ -176,10 +176,10 @@ public class PostController : ControllerBase
             if (file != null)
             {
                 string fileName = Guid.NewGuid().ToString();
-                var uploads = Path.Combine(wwwRootPath, @"images/post");
+                var uploads = Path.Combine(wwwRootPath, @"images");
                 var extension = Path.GetExtension(file.FileName);
                 var link = Path.Combine(uploads, fileName + extension);
-                string url = "https://localhost/" + link; // da modificare con il link futuro del sito
+                string url = "https://localhost:44359/images/" + fileName + extension; // da modificare con il link futuro del sito
                 using (var fileStreams = new FileStream(link, FileMode.Create))
                 {
                     file.CopyTo(fileStreams);
