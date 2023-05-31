@@ -40,7 +40,7 @@ namespace easyNetAPI.Controllers
         }
         [HttpPost]
         [Route("Register"), AllowAnonymous]
-        public async Task<string> Register(RegistrationRequest request)
+        public async Task<ActionResult<string>> Register(RegistrationRequest request)
         {
             User applicationUser = new()
             {
@@ -55,7 +55,7 @@ namespace easyNetAPI.Controllers
             };
             if (!ModelState.IsValid)
             {
-                return "Model state invalid";
+                return BadRequest("Model state invalid");
             }
             var result = await _userManager.CreateAsync(
                applicationUser, request.Password);
@@ -85,13 +85,13 @@ namespace easyNetAPI.Controllers
 
                 await _userManager.AddToRoleAsync(applicationUser, SD.ROLE_USER);
                 request.Password = "";
-                return "User created successfully";
+                return Ok("User created successfully");
             }
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(error.Code, error.Description);
             }
-            return "Bad Request";
+            return BadRequest();
         }
 
         [HttpPost]
