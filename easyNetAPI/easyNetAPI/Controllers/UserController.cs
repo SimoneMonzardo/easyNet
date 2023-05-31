@@ -60,6 +60,17 @@ namespace easyNetAPI.Controllers
             {
                 return BadRequest("User not found");
             }
+            if (managedUser.Id == followedUserBehavior.UserId)
+                return BadRequest("You can't follow yourself");
+
+            if (followedUserBehavior.FollowersList is null)
+                followedUserBehavior.FollowersList = new List<string>();
+
+            if (managedUserBehavior.FollowedUsers is null)
+                managedUserBehavior.FollowedUsers = new List<string>();
+
+            if (followedUserBehavior.FollowersList.Contains(userId))
+                return BadRequest("User is already followed");
 
             managedUserBehavior.FollowedUsers.Add(userToFollow.Id);
             await _unitOfWork.UserBehavior.UpdateOneAsync(managedUserBehavior.UserId, managedUserBehavior);
@@ -98,6 +109,12 @@ namespace easyNetAPI.Controllers
             {
                 return BadRequest("User not found");
             }
+
+            if (followedUserBehavior.FollowersList is null)
+                followedUserBehavior.FollowersList = new List<string>();
+
+            if (managedUserBehavior.FollowedUsers is null)
+                managedUserBehavior.FollowedUsers = new List<string>();
 
             if (managedUserBehavior.FollowedUsers.Count() == 0)
             {
