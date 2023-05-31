@@ -1,7 +1,7 @@
 export default () => {
 
     const getCommentsOfAPost = async (getCommentsOfAPostData) => {
-        const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Comments/GetCommentsOfAPost', {
+        const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Comments/GetCommentsOfAPost', {
         lazy: true,  
         server: false,
         headers: {
@@ -27,7 +27,7 @@ export default () => {
 }
 
 const getComment = async (getCommentData) => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Comments/GetComments', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Comments/GetComments', {
     lazy: true,  
     server: false,
     headers: {
