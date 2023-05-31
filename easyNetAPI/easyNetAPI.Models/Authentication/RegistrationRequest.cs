@@ -21,8 +21,6 @@ namespace easyNetAPI.Models.Authentication
         [Required]
         public string Gender { get; set; } = null!;
         [Required]
-        public string ProfilePicture { get; set; } = null!;
-        [Required]
         public string PhoneNumber { get; set; } = null!;
         [Required]
         public string Password { get; set; } = null!;

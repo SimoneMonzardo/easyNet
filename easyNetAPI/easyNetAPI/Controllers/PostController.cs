@@ -179,7 +179,7 @@ public class PostController : ControllerBase
                 var uploads = Path.Combine(wwwRootPath, @"images");
                 var extension = Path.GetExtension(file.FileName);
                 var link = Path.Combine(uploads, fileName + extension);
-                string url = "https://localhost:44359/images/" + fileName + extension; // da modificare con il link futuro del sito
+                string url = "https://progettoeasynet.azurewebsites.net/images/" + fileName + extension; // da modificare con il link futuro del sito
                 using (var fileStreams = new FileStream(link, FileMode.Create))
                 {
                     file.CopyTo(fileStreams);
@@ -234,7 +234,8 @@ public class PostController : ControllerBase
                     Content = post.Content,
                     Likes = new List<string>(),
                     Hashtags = new List<string>(),
-                    Tags = new List<string>()
+                    Tags = new List<string>(),
+                    DataDiCreazione = DateTime.Now
                 };
                 await _unitOfWork.Post.AddAsync(newPost);
                 return Ok("Post created succesfully");
