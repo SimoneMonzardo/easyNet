@@ -22,6 +22,7 @@
   <ItemGroup>
     <Folder Include="Authentication\Validation\" />
     <Folder Include="UpsertModels\" />
+    <Folder Include="ModelVM\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\easyNetAPI.Utility\easyNetAPI.Utility.csproj" />
