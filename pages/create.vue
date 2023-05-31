@@ -140,9 +140,9 @@ export default {
     async setImage(images) {
       const options = {};
 
-      const uplaodFileElement = document.getElementById('upload-image-modal');
-      const uplaodFileModal = new Modal(uplaodFileElement, options);
-      uplaodFileModal.hide();
+      const uploadFileElement = document.getElementById('upload-image-modal');
+      const uploadFileModal = new Modal(uploadFileElement, options);
+      uploadFileModal.hide();
 
       const formData = new FormData();
       formData.append('file', images[0]);
