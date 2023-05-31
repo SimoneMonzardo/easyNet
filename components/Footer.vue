@@ -10,7 +10,11 @@
         <div class="mt-4 sm:mt-1">
            <ul class="flex flex-col sm:flex-row sm:gap-6 text-gray-600 dark:text-gray-400 font-medium items-center">
               <li class="mb-4 sm:mb-0">
-                <a href="#" class="hover:underline">Privacy</a>
+                <!-- Modal toggle -->
+                <button data-modal-target="privacy-modal" data-modal-toggle="privacy-modal" class="block text-dark focus:ring-0 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center" type="button">
+                  Privacy
+                </button>
+                <PrivacyPopup />
               </li>
               <li>             
                 <!-- Modal toggle -->
