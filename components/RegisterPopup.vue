@@ -157,7 +157,6 @@ import useAuth from '~/composables/useAuth';
           gender: document.getElementById('gender').value,
           dateOfBirth: document.getElementById('birthDate').value,
           password: passwordInput.value,
-          profilePicture: 'no'
         };
 
         passwordInput.value = '';
