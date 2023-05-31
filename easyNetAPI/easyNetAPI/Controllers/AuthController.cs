@@ -57,6 +57,10 @@ namespace easyNetAPI.Controllers
             {
                 return BadRequest("Model state invalid");
             }
+            if (_db.Users.Where(u => u.NormalizedEmail == applicationUser.NormalizedEmail).Count() > 0)
+                return BadRequest("Mail already used");
+            if (_db.Users.Where(u => u.UserName == request.Username).Count() > 0)
+                return BadRequest("Username already used");
             var result = await _userManager.CreateAsync(
                applicationUser, request.Password);
             if (result.Succeeded)
