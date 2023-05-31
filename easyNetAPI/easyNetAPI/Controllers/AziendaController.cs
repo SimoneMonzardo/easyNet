@@ -40,7 +40,7 @@ namespace easyNetAPI.Controllers
                 var companies = new List<Company>();
                 foreach ( var company in aziende)
                 {
-                    if(company.CompanyId!=0)
+                    if(company.CompanyId!=0 && !companies.Contains(company))
                         companies.Add(company);
                 }
                 return Json(companies);
