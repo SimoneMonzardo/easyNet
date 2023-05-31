@@ -3,6 +3,7 @@ using System.Data;
 using easyNetAPI.Data;
 using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
+using easyNetAPI.Models.ModelVM;
 using easyNetAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -128,7 +129,7 @@ namespace easyNetAPI.Controllers
         //prende i follower di un utente specificato
         [HttpGet("GetUserFollowers")]
         [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
-        public async Task<List<string>?> GetUserFollowers(string userName)
+        public async Task<List<FollowerVM>?> GetUserFollowers(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
             var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
@@ -143,27 +144,42 @@ namespace easyNetAPI.Controllers
                 return null;
             }
 
+            var myBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
             var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userToSearch.Id);
 
-            var returnList = new List<string>(); 
+            List<FollowerVM> followerList = new List<FollowerVM>();
 
             if (userBehavior.FollowersList.Count() != 0)
             {
-                foreach (var user in userBehavior.FollowersList)
+                foreach (var followedId in userBehavior.FollowersList)
                 {
-                    returnList.Add(
-                        _db.Users.Where(u=> u.Id == user).Select(u => u.UserName).FirstOrDefault()
-                        );
+                    var user = _db.Users.Where(u => u.Id == followedId).First();
+                    string username = user.UserName;
+                    string profilePicture = user.ProfilePicture;
+                    var followedBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(followedId);
+                    var companyName = followedBehavior.Company.CompanyName;
+                    if (companyName is null)
+                        companyName = "";
+                    bool followed = true;
+                    if (myBehavior.FollowedUsers is null)
+                        myBehavior.FollowedUsers = new List<string>();
+                    followerList.Add(new FollowerVM()
+                    {
+                        username = username,
+                        profilePicture = profilePicture,
+                        followed = myBehavior.FollowedUsers.Contains(user.Id),
+                        companyName = companyName
+                    });
                 }
             }
 
-            return returnList;
+            return followerList;
         }
 
         //prende i follower dell'utente che ha fatto la richiesta
         [HttpGet("GetFollowers")]
         [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
-        public async Task<List<string>?> GetUserFollowers()
+        public async Task<List<FollowerVM>?> GetUserFollowers()
         {
             var token = Request.Headers["Authorization"].ToString();
             var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
@@ -174,26 +190,40 @@ namespace easyNetAPI.Controllers
 
             var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
 
-            var returnList = new List<string>();
+            List<FollowerVM> followerList = new List<FollowerVM>();
 
             if (userBehavior.FollowersList.Count() != 0)
             {
-                foreach (var user in userBehavior.FollowersList)
+                foreach (var followedId in userBehavior.FollowersList)
                 {
-                    returnList.Add(
-                        _db.Users.Where(u => u.Id == user).Select(u => u.UserName).FirstOrDefault()
-                        );
+                    var user = _db.Users.Where(u => u.Id == followedId).First();
+                    string username = user.UserName;
+                    string profilePicture = user.ProfilePicture;
+                    var followedBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(followedId);
+                    var companyName = followedBehavior.Company.CompanyName;
+                    if (companyName is null)
+                        companyName = "";
+                    bool followed = true;
+                    if (userBehavior.FollowersList is null)
+                        userBehavior.FollowersList = new List<string>();
+                    followerList.Add(new FollowerVM()
+                    {
+                        username = username,
+                        profilePicture = profilePicture,
+                        followed = userBehavior.FollowedUsers.Contains(user.Id),
+                        companyName = companyName
+                    });
                 }
             }
 
-            return returnList;
+            return followerList;
         }
 
 
-        //prende i follower di un utente specificato
+        //prende i followed di un utente specificato
         [HttpGet("GetUserFollowedList")]
         [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
-        public async Task<List<string>?> GetUserFollowedList(string userName)
+        public async Task<List<FollowerVM>?> GetUserFollowedList(string userName)
         {
             var token = Request.Headers["Authorization"].ToString();
             var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
@@ -208,27 +238,42 @@ namespace easyNetAPI.Controllers
                 return null;
             }
 
+            var myBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
             var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userToSearch.Id);
 
-            var returnList = new List<string>();
+            List<FollowerVM> followerList = new List<FollowerVM>();
 
             if (userBehavior.FollowedUsers.Count() != 0)
             {
-                foreach (var user in userBehavior.FollowedUsers)
+                foreach (var followedId in userBehavior.FollowedUsers)
                 {
-                    returnList.Add(
-                        _db.Users.Where(u => u.Id == user).Select(u => u.UserName).FirstOrDefault()
-                        );
+                    var user = _db.Users.Where(u => u.Id == followedId).First();
+                    string username = user.UserName;
+                    string profilePicture = user.ProfilePicture;
+                    var followedBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(followedId);
+                    var companyName = followedBehavior.Company.CompanyName;
+                    if (companyName is null)
+                        companyName = "";
+                    bool followed = true;
+                    if (myBehavior.FollowedUsers is null)
+                        myBehavior.FollowedUsers = new List<string>();
+                    followerList.Add(new FollowerVM()
+                    {
+                        username = username,
+                        profilePicture = profilePicture,
+                        followed = myBehavior.FollowedUsers.Contains(user.Id),
+                        companyName = companyName
+                    });
                 }
             }
-
-            return returnList;
+            
+            return followerList;
         }
 
         //prende i followed dell'utente che ha fatto la richiesta
         [HttpGet("GetFollowed"), Authorize(Roles = SD.ROLE_USER)]
         [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
-        public async Task<List<string>?> GetUserFollowed()
+        public async Task<List<FollowerVM>?> GetUserFollowed()
         {
             var token = Request.Headers["Authorization"].ToString();
             var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
@@ -239,19 +284,31 @@ namespace easyNetAPI.Controllers
 
             var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
 
-            var returnList = new List<string>();
+            List<FollowerVM> followerList = new List<FollowerVM>();
 
             if (userBehavior.FollowedUsers.Count() != 0)
             {
-                foreach (var user in userBehavior.FollowedUsers)
+                foreach (var followedId in userBehavior.FollowedUsers)
                 {
-                    returnList.Add(
-                        _db.Users.Where(u => u.Id == user).Select(u => u.UserName).FirstOrDefault()
-                        );
+                    var user = _db.Users.Where(u => u.Id == followedId).First();
+                    string username = user.UserName;
+                    string profilePicture = user.ProfilePicture;
+                    var followedBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                    var companyName = followedBehavior.Company.CompanyName;
+                    if (companyName is null)
+                        companyName = "";
+                    bool followed = true;
+                    followerList.Add(new FollowerVM()
+                    {
+                        username = username,
+                        profilePicture = profilePicture,
+                        followed = followed,
+                        companyName = companyName
+                    });
                 }
             }
 
-            return returnList;
+            return followerList;
         }
 
         [HttpPost("ConvertToCompanyAdmin_AuthModerator"), Authorize(Roles = SD.ROLE_MODERATOR)]
