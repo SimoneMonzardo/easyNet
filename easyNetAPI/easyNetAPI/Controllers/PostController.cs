@@ -234,7 +234,8 @@ public class PostController : ControllerBase
                     Content = post.Content,
                     Likes = new List<string>(),
                     Hashtags = new List<string>(),
-                    Tags = new List<string>()
+                    Tags = new List<string>(),
+                    DataDiCreazione = DateTime.Now
                 };
                 await _unitOfWork.Post.AddAsync(newPost);
                 return Ok("Post created succesfully");
