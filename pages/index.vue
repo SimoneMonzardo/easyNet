@@ -2,9 +2,11 @@
   <head>
     <title>Home • easyNet</title>
   </head>
-
+  <!-- Import Popup components -->
+  <!-- <FollowedPopup /> -->
   <LoginPopup />
   <RegisterPopup />
+  <ForgetPopup />
 
   <div class="bg-gray-300 h-[calc(100vh-4rem)] w-screen sm:w-[calc(100vw-12rem)] lg:w-[calc(100vw-16rem)] block">
     <div class="flex flex-row">
