@@ -26,13 +26,13 @@ html {
 }
 
 .triangle {
-  border-style: solid; 
-  border-width: 0px 0px 6rem 6rem; 
+  border-style: solid;
+  border-width: 0px 0px 6rem 6rem;
   border-color: transparent transparent transparent #6b7280;
 }
 
 @layer base {
   body {
-    @apply bg-white dark:bg-gray-900;
+    @apply bg-white dark:bg-gray-900 text-black dark:text-white;
   }
 }

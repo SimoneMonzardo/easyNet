@@ -147,7 +147,7 @@ export default {
       const formData = new FormData();
       formData.append('file', images[0]);
 
-      const { data } = await useFetch('https://localhost:44359/Post/UploadImage', {
+      const { data } = await useFetch('https://progettoeasynet.azurewebsites.net/Post/UploadImage', {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Authorization': ''

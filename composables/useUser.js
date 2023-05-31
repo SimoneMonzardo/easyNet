@@ -1,7 +1,7 @@
 export default () => {
     
     const getUserFollowers = async (getUserFollowersData) => {
-        const { data, pending, error, refresh } = await useFetch('https://localhost:44359/User/GetUserFollowers', {
+        const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/User/GetUserFollowers', {
         lazy: true,  
         server: false,
         headers: {
@@ -27,7 +27,7 @@ export default () => {
 }
 
 const getFollowers = async () => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/User/GetFollowers', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/User/GetFollowers', {
     lazy: true,  
     server: false,
     headers: {
@@ -52,7 +52,7 @@ const getFollowers = async () => {
 }
 
 const getUserFollowedList = async (getUserFollowedListData) => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/User/GetUserFollowedList', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/User/GetUserFollowedList', {
     lazy: true,  
     server: false,
     headers: {
@@ -78,7 +78,7 @@ const getUserFollowedList = async (getUserFollowedListData) => {
 }
 
 const getFollowed = async () => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/User/GetFollowed', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/User/GetFollowed', {
     lazy: true,  
     server: false,
     headers: {
@@ -103,7 +103,7 @@ const getFollowed = async () => {
 }
 
 const follow = async (followData) => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/User/Follow', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/User/Follow', {
     headers: {
         'Access-Control-Allow-Origin': '*'
     },
@@ -127,7 +127,7 @@ const follow = async (followData) => {
 }
 
 const unfollow = async (unfollowData) => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/User/Unfollow', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/User/Unfollow', {
     headers: {
         'Access-Control-Allow-Origin': '*'
     },

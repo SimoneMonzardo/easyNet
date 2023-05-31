@@ -1,16 +1,9 @@
 <template>
-  <Header
-    :loggedIn="logged"
-    :email="email" 
-    :userName="username"
-    :profilePicture="profilePicture" />
-  <div class="min-h-[calc(100vh-4rem)] flex flex-row">
+  <div>
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-    <Sidebar />
   </div>
-  <Footer />
 </template>
 
 <script setup>
