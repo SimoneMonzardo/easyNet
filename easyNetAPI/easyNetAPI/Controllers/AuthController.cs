@@ -38,47 +38,6 @@ namespace easyNetAPI.Controllers
             _unitOfWork = unitOfWork;
             _hostEnvironment = hostEnvironment;
         }
-        [HttpPost("UploadImage"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_MODERATOR}")]
-        public async Task<IActionResult> PostImage(IFormFile? file)
-        {
-            try
-            {
-                string wwwRootPath = _hostEnvironment.WebRootPath;
-                if (file != null)
-                {
-                    string fileName = Guid.NewGuid().ToString();
-                    var uploads = Path.Combine(wwwRootPath, @"images");
-                    var extension = Path.GetExtension(file.FileName);
-                    var link = Path.Combine(uploads, fileName + extension);
-                    string url = "https://localhost:44359/images/" + fileName + extension; // da modificare con il link futuro del sito
-                    using (var fileStreams = new FileStream(link, FileMode.Create))
-                    {
-                        file.CopyTo(fileStreams);
-                    }
-                    return Ok(url);
-                }
-                return BadRequest("File is null");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Error " + ex.Message);
-            }
-        }
-        [HttpDelete("DeleteImage"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_MODERATOR}")]
-        public async Task<IActionResult> DeleteImage(string link)
-        {
-            try
-            {
-                string wwwRootPath = _hostEnvironment.WebRootPath;
-                string location = (new Uri(link)).PathAndQuery;
-                System.IO.File.Delete(Path.Combine(wwwRootPath, location));
-                return Ok("Deleted " + link);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Error " + ex.Message);
-            }
-        }
         [HttpPost]
         [Route("Register"), AllowAnonymous]
         public async Task<string> Register(RegistrationRequest request)
@@ -91,7 +50,6 @@ namespace easyNetAPI.Controllers
                 Gender = request.Gender,
                 PhoneNumber = request.PhoneNumber,
                 DateOfBirth = request.DateOfBirth,
-                ProfilePicture = request.ProfilePicture,
                 NormalizedEmail = request.Email.ToUpper(),
                 Email = request.Email,
             };
@@ -149,7 +107,6 @@ namespace easyNetAPI.Controllers
                 Gender = request.Gender,
                 PhoneNumber = request.PhoneNumber,
                 DateOfBirth = request.DateOfBirth,
-                ProfilePicture = request.ProfilePicture,
                 NormalizedEmail = request.Email.ToUpper(),
                 Email = request.Email,
             };

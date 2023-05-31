@@ -33,7 +33,6 @@ namespace easyNetAPI.Models
         public DateOnly DateOfBirth { get; set; }
 
         [PersonalData]
-        [Required]
         public string ProfilePicture { get; set; } = null!;
     }
 }
