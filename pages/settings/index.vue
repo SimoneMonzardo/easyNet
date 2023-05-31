@@ -203,7 +203,7 @@ export default {
       document.getElementById('confirm-delete-modal-confirm').setAttribute('disabled', '');
     },
     async deleteUserAccount() {
-      await useFetch('https://localhost:44359/Auth/DeleteUser', {
+      await useFetch('https://progettoeasynet.azurewebsites.net/Auth/DeleteUser', {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Authorization': ''
@@ -231,7 +231,7 @@ export default {
         profilePicture: '' // TODO: Use -> document.getElementById('fileInputId').value
       };
 
-      await useFetch('https://localhost:44359/Auth/editUserData', {
+      await useFetch('https://progettoeasynet.azurewebsites.net/Auth/editUserData', {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Authorization': ''
@@ -246,10 +246,10 @@ export default {
     }
   },
   mounted: function() {
-    // const token = localStorage.getItem('token');
-    // if (token === undefined || token === null || token === '') {
-    //   this.$router.push ('/');
-    // }
+    const token = localStorage.getItem('token');
+    if (token === undefined || token === null || token === '') {
+      this.$router.push ('/');
+    }
   }
 }
 </script>
@@ -258,7 +258,7 @@ export default {
 var username = '';
 
 // Use real API call
-const { data: user, pending, error } = await useFetch('https://localhost:44359/Auth/GetUserData', {
+const { data: user, pending, error } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/GetUserData', {
   lazy: true,
   server: false,
   method: 'GET',

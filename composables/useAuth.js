@@ -2,8 +2,9 @@ export default () => {
 
   //to do: mettere gli auth token negli header
   // Bearer `authtoken`
+
   const register = async (reigsterData) => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Auth/register', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/Register', {
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
@@ -17,16 +18,18 @@ export default () => {
       },
       onResponse({ request, response, options }) {
         // Process the response data
-        return response
+        
       },
       onResponseError({ request, response, options }) {
         // Handle the response errors
       }
-    })
+    });
+
+    return data;
   }
 
   const login = async (credentials) => {
-    const { data, pending, error, refresh } = await useFetch('https://localhost:44359/Auth/login', {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/login', {
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
@@ -40,11 +43,14 @@ export default () => {
       },
       onResponse({ request, response, options }) {
         // Process the response data
-        localStorage.setItem('logged', true);
-        localStorage.setItem('username', response._data.username);
-        localStorage.setItem('email', response._data.email);
-        localStorage.setItem('profilePicture', response._data.profilePicture);
-        localStorage.setItem('token', response._data.token);
+        console.log(response);
+        if (response.ok) {
+          localStorage.setItem('logged', true);
+          localStorage.setItem('username', response._data.username);
+          localStorage.setItem('email', response._data.email);
+          localStorage.setItem('profilePicture', response._data.profilePicture);
+          localStorage.setItem('token', response._data.token);
+        }
         return response;
       },
       onResponseError({ request, response, options }) {
@@ -53,17 +59,16 @@ export default () => {
     })
   }
 
-
-  const changePassword = async ({ oldPassword, newPassword }) => {
-    const { data, pending, error, refresh } = await useFetch('/api/auth/changepassword', {
-      method: 'POST',
-      body: {
-        oldPassword,
-        newPassword
+  const changePassword = async (changePasswordData) => {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/changePassword', {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
       },
+      method: 'POST',
+      body: JSON.stringify(changePasswordData),
       onRequest({ request, options }) {
         // Set the request headers
-
+        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
       },
       onRequestError({ request, options, error }) {
         // Handle the request errors
@@ -74,19 +79,20 @@ export default () => {
       },
       onResponseError({ request, response, options }) {
         // Handle the response errors
-        return response.error;
       }
     })
   }
-
 
   const deleteUser = async () => {
-    const { data, pending, error, refresh } = await useFetch('/api/auth/deleteUser', {
-      method: 'POST',
-      body: {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/DeleteUser', {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': ''
       },
+      method: 'DELETE',
       onRequest({ request, options }) {
         // Set the request headers
+        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
       },
       onRequestError({ request, options, error }) {
@@ -102,25 +108,55 @@ export default () => {
     })
   }
 
-
-  const getUserData = async () => {
-    const { data, pending, error, refresh } = await useFetch('/api/auth/getUserData', {
-      method: 'GET',
+  const editUserData = async (editUserDataData) => {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/editUserData', {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      },
+      method: 'POST',
+      body: JSON.stringify(editUserDataData),
       onRequest({ request, options }) {
-
-
+        // Set the request headers
+        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
       },
       onRequestError({ request, options, error }) {
-
+        // Handle the request errors
       },
       onResponse({ request, response, options }) {
-
-        return response
+        // Process the response data
+        return response;
       },
       onResponseError({ request, response, options }) {
-
+        // Handle the response errors
       }
     })
+  }
+
+  const getUserData = async () => {
+    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/GetUserData', {
+      lazy: true,
+      server: false,
+      method: 'GET',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': ''
+      },
+      onRequest({ request, options }) {
+        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+      },
+      onResponse({request, response, options}) {
+        username = response._data.userName;
+        console.log(response._data);
+        localStorage.setItem('backupName', response._data.name);
+        localStorage.setItem('backupSurname', response._data.surname);
+        localStorage.setItem('backupGender', response._data.gender);
+        localStorage.setItem('backupBirthDate', response._data.birthdate);
+        localStorage.setItem('backupProfilePicture', response._data.profilePicture);
+      },
+      onResponseError() {
+        // TODO: Handle error
+      }
+    });
   }
 
   return {
@@ -128,6 +164,7 @@ export default () => {
     login,
     changePassword,
     deleteUser,
+    editUserData,
     getUserData
   }
 }

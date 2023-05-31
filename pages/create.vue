@@ -1,7 +1,7 @@
 <template>
   <section Modals>
     <!-- Upload Image Modal -->
-    <UploadImagePopup @setImage="setImage()" />
+    <UploadImagePopup @setImage="setImage" />
 
     <!-- Delete Image Modal -->
     <DangerConfirmModal 
@@ -14,7 +14,7 @@
     <RegisterPopup />
   </section>
 
-  <div class="my-auto w-screen">
+  <div class="my-20 w-screen">
     <div class="grid gap-4 px-8 lg:px-0 lg:mx-auto w-full" :class="imageUrl === '' ? 'grid-cols-1 lg:w-1/2' : 'grid-cols-1 md:grid-cols-2 lg:w-3/4'">
       <div class="order-0 md:col-span-2 items-center flex flex-col sm:flex-row sm:justify-between">
         <!-- Title -->
@@ -33,6 +33,8 @@
           
           <div class="flex-row flex-wrap justify-center sm:flex-nowrap sm:justify-between w-full ml-2 -mr-2" :class="imageUrl === '' ? 'hidden' : 'flex'">
             <button
+              data-modal-target="upload-image-modal"
+              data-modal-show="upload-image-modal"
               type="button"
               class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-md px-3 py-1.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
               Modifica Immagine
@@ -120,6 +122,10 @@ export default {
       this.onResize();
     });
     window.addEventListener('resize', this.onResize);
+    const token = localStorage.getItem('token');
+    if (token === undefined || token === null || token === '') {
+      this.$router.push ('/');
+    }
   },
   methods: {
     onResize() {
@@ -131,8 +137,31 @@ export default {
         this.rows = 3;
       }
     },
-    setImage() {
-      this.imageUrl = 'https://th.bing.com/th/id/OIP.X-ADmb6CprAv3vGb4M-cJQHaEK?pid=ImgDet&rs=1';
+    async setImage(images) {
+      const options = {};
+
+      const uplaodFileElement = document.getElementById('upload-image-modal');
+      const uplaodFileModal = new Modal(uplaodFileElement, options);
+      uplaodFileModal.hide();
+
+      const formData = new FormData();
+      formData.append('file', images[0]);
+
+      const { data } = await useFetch('https://progettoeasynet.azurewebsites.net/Post/UploadImage', {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Authorization': ''
+        },
+        method: 'POST',
+        body: formData,
+        onRequest({ request, options }) {
+          options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        }
+      });
+
+      if (data._value !== null) {
+        this.imageUrl = data._value;
+      }
     },
     removeImage() {
       this.imageUrl = '';
