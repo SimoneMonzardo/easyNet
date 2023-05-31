@@ -320,7 +320,7 @@ async function updateImage(images) {
   const formData = new FormData();
   formData.append('file', images[0]);
 
-  const { data } = await useFetch('https://progettoeasynet.azurewebsites.net/Post/UploadImage', {
+  const { data } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/UploadProfilePicture', {
     method: 'POST',
     headers: {
       'Access-Control-Allow-Origin': '*',
