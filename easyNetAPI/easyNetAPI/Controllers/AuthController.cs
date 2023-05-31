@@ -372,7 +372,7 @@ namespace easyNetAPI.Controllers
                     {
                         file.CopyTo(fileStreams);
                     }
-                    user.ProfilePicture = link;
+                    user.ProfilePicture = url;
                     _db.Users.Update(user);
                     _db.SaveChanges();
                     return Ok(url);
