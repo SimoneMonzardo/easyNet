@@ -103,6 +103,14 @@ namespace easyNetAPI.Data
                     user.MentionedPost.Remove(postId);
                 }
             }
+            if (user.ReportedPost.Count() != 0)
+            {
+                if (user.ReportedPost.Contains(postId))
+                {
+                    user.ReportedPost.Remove(postId);
+                }
+            }
+            unitOfWork.UserBehavior.UpdateOneAsync(user.UserId, user);
         }
     }
 }

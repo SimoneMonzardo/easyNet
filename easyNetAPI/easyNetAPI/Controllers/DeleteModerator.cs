@@ -35,7 +35,7 @@ namespace easyNetAPI.Controllers
             if (result)
             {
                 var userBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(post.UserId);
-                MongoDbAlignment.RemovePostDataAsync(post.PostId, userBehavior, _unitOfWork);
+                await MongoDbAlignment.RemovePostDataAsync(post.PostId, userBehavior, _unitOfWork);
                 return Ok("Post deleted successfully");
             }
             return BadRequest("Couldn't delete post");

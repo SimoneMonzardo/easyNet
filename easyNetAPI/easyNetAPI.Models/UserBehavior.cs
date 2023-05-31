@@ -33,5 +33,7 @@ namespace easyNetAPI.Models
         public List<int>? SavedPost { get; set; }
         [BsonElement("mentioned_posts")]
         public List<int>? MentionedPost { get; set; }
+        [BsonElement("reported_posts")]
+        public List<int>? ReportedPost { get; set; }
     }
 }

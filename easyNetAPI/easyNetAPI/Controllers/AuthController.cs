@@ -72,7 +72,8 @@ namespace easyNetAPI.Controllers
                     FollowersList = new List<string>(),
                     LikedPost = new List<int>(),
                     SavedPost = new List<int>(),
-                    MentionedPost = new List<int>()
+                    MentionedPost = new List<int>(),
+                    ReportedPost = new List<int>()
                 }) ;
 
                 if (!_roleManager.RoleExistsAsync(SD.ROLE_MODERATOR).GetAwaiter().GetResult())
@@ -129,7 +130,8 @@ namespace easyNetAPI.Controllers
                     FollowersList = new List<string>(),
                     LikedPost = new List<int>(),
                     SavedPost = new List<int>(),
-                    MentionedPost = new List<int>()
+                    MentionedPost = new List<int>(),
+                    ReportedPost = new List<int>()
                 });
 
                 if (!_roleManager.RoleExistsAsync(SD.ROLE_MODERATOR).GetAwaiter().GetResult())

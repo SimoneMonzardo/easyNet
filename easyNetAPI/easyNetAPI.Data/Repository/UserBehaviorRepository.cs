@@ -59,7 +59,8 @@ namespace easyNetAPI.Data.Repository
                         .Set(x => x.FollowersList, user.Value.FollowersList)
                         .Set(x => x.LikedPost, user.Value.LikedPost)
                         .Set(x => x.SavedPost, user.Value.SavedPost)
-                        .Set(x => x.MentionedPost, user.Value.MentionedPost);
+                        .Set(x => x.MentionedPost, user.Value.MentionedPost)
+                        .Set(x => x.ReportedPost, user.Value.ReportedPost);
                        _usersCollection.UpdateOne(filter, update);
                 }
                 return true;
@@ -83,8 +84,9 @@ namespace easyNetAPI.Data.Repository
                     .Set(x => x.FollowersList, user.FollowersList)
                     .Set(x => x.LikedPost, user.LikedPost)
                     .Set(x => x.SavedPost, user.SavedPost)
-                    .Set(x => x.MentionedPost, user.MentionedPost);
-                 var result = _usersCollection.UpdateOne(filter, update);
+                    .Set(x => x.MentionedPost, user.MentionedPost)
+                    .Set(x => x.ReportedPost, user.ReportedPost);
+                var result = _usersCollection.UpdateOne(filter, update);
                 return result.IsAcknowledged;
             }
             catch (Exception ex)

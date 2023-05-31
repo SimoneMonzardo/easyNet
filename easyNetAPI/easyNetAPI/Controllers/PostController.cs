@@ -152,7 +152,7 @@ public class PostController : ControllerBase
                 {
                     foreach (var user in usersFromDb)
                     {
-                        MongoDbAlignment.RemovePostDataAsync(postId, user, _unitOfWork);
+                        await MongoDbAlignment.RemovePostDataAsync(postId, user, _unitOfWork);
                     }
                 }
                 return Ok("Post removed succesfully");
