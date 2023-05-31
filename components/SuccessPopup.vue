@@ -1,9 +1,9 @@
-<!-- Main modal -->
+<!-- Main modal 
 <template>
     <div id="success-modal" tabindex="-1" aria-hidden="true"
         class="bg-gray-900 bg-opacity-50 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full">
         <div class="relative w-full max-w-2xl max-h-full">
-            <!-- Modal content -->
+  
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
                 <div
                     class="bg-gray-300 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex">
@@ -81,3 +81,4 @@ export default {
     }
 }
 </script>
+-->

@@ -47,7 +47,7 @@
     <UploadImagePopup 
       @setImage="updateImage"
       @delete="deleteImage" 
-      showDelete="true" />
+      :showDelete="user.profilePicture !== ''" />
 
     <!-- Login & Register Modals -->
     <RegisterPopup />
@@ -259,6 +259,10 @@ onMounted(() => {
 });
 
 async function saveChanges() {
+  if (user.profilePicture === null) {
+    user.profilePicture = '';
+  }
+
   const newUserInfo = {
     name: user.name,
     surname: user.surname,
@@ -268,7 +272,9 @@ async function saveChanges() {
   };
 
   const oldPicture = localStorage.getItem('backupProfilePicture');
-  if (oldPicture !== '' && user.profilePicture === '') {
+  if (oldPicture !== null && oldPicture !== '' && (user.profilePicture === '' || user.profilePicture !== oldPicture)) {
+    localStorage.setItem('profilePicture', user.profilePicture);
+
     await useFetch('https://progettoeasynet.azurewebsites.net/Auth/DeleteProfilePicture', {
       method: 'DELETE',
       headers: {
@@ -354,6 +360,7 @@ async function updateImage(images) {
 
   if (data._value !== null) {
     user.profilePicture = data._value;
+    localStorage.setItem('profilePicture', data._value);
   }
 }
 

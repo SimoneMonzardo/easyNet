@@ -40,7 +40,7 @@
               <span class="sr-only">Apri menù utente</span>
               <img
                 class="w-8 h-8 rounded-full overflow-x-hidden"
-                :src="imageUrl"
+                :src="profilePicture"
                 alt="Immagine Utente"
               />
             </button>
