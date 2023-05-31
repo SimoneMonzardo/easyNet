@@ -38,7 +38,7 @@ namespace easyNetAPI.Controllers
             _unitOfWork = unitOfWork;
             _hostEnvironment = hostEnvironment;
         }
-        [HttpPost("UploadImage")]
+        [HttpPost("UploadImage"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_MODERATOR}")]
         public async Task<IActionResult> PostImage(IFormFile? file)
         {
             try
@@ -64,7 +64,7 @@ namespace easyNetAPI.Controllers
                 return BadRequest("Error " + ex.Message);
             }
         }
-        [HttpDelete("DeleteImage")]
+        [HttpDelete("DeleteImage"), Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_MODERATOR}")]
         public async Task<IActionResult> DeleteImage(string link)
         {
             try
