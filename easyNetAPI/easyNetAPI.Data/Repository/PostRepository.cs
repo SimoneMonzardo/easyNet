@@ -87,7 +87,6 @@ namespace easyNetAPI.Data.Repository
             if (postFromDb is not null)
             {
                 postFromDb.Content = post.Content;
-                postFromDb.DataDiCreazione = DateTime.Now;
                 return await _users.UpdateOneAsync(userId, user);
             }
             return false;
