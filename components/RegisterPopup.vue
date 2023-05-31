@@ -162,6 +162,7 @@ import useAuth from '~/composables/useAuth';
         passwordInput.value = '';
 
         const response = await register(data);
+        console.log(data)
         console.log(response)
         if (response._value !== null || response._value !== "Bad Request" ) {
             const options = {};
@@ -169,12 +170,11 @@ import useAuth from '~/composables/useAuth';
             const registerElement = document.getElementById('register-modal');
             const registerModal = new Modal(registerElement, options);
             registerModal.hide();
-            
+
             const successElement = document.getElementById('success-modal');
             const successModal = new Modal(successElement, options);
             successModal.show();
             // TODO
-            alert('Iscrizione avvenuta con successo! Loggati per iniziare a navigate')
         }
       }
     }
