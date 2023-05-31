@@ -8,7 +8,7 @@
   <RegisterPopup />
   <ForgetPopup />
 
-  <div class="bg-gray-300 h-[calc(100vh-4rem)] w-screen sm:w-[calc(100vw-12rem)] lg:w-[calc(100vw-16rem)] block">
+  <div class="bg-gray-300 max-h-[calc(100vh-4rem)] w-screen sm:w-[calc(100vw-12rem)] lg:w-[calc(100vw-16rem)] block">
     <div class="flex flex-row">
       <button class="relative">
         <div class="block triangle"></div>
@@ -16,7 +16,7 @@
       </button>
     </div>
 
-    <PostsFeedSection title="Home" :loading="loading" class="w-full h-[calc(100%-12rem)]">
+    <PostsFeedSection title="" :loading="loading" class="w-full h-[calc(100%-12rem)]">
       <div>
         <PostsListFeed :posts="homePosts" />
       </div>

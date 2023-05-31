@@ -162,13 +162,17 @@ import useAuth from '~/composables/useAuth';
         passwordInput.value = '';
 
         const response = await register(data);
-        if (response._value !== null) {
+        console.log(response)
+        if (response._value !== null || response._value !== "Bad Request" ) {
             const options = {};
 
             const registerElement = document.getElementById('register-modal');
             const registerModal = new Modal(registerElement, options);
             registerModal.hide();
-
+            
+            const successElement = document.getElementById('success-modal');
+            const successModal = new Modal(successElement, options);
+            successModal.show();
             // TODO
             alert('Iscrizione avvenuta con successo! Loggati per iniziare a navigate')
         }
