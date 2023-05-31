@@ -569,7 +569,7 @@ namespace easyNetAPI.Controllers
             }
         }
         [HttpGet("GetUserData")]
-        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
+        [AllowAnonymous]
         public async Task<UserBehavior> GetUserDataAsync(string username)
         {
             try
