@@ -2,15 +2,13 @@
   <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-4 max-h-[calc(100vh-16rem)]">
     <PostHeader :username="post.username" :elapsedTime="elapsed" class="col-span-1 md:col-span-2 xl:col-span-3 order-1" />
 
-    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2">
-      <img class="rounded-xl w-full"
-        src="https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701353282.jpg" />
+    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2" v-html="content">
     </div>
 
     <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-2">
       <LikeCommentsButtons :likes="likes" :comments="comments" />
 
-      <div class="shadow-inner shadow-gray-500 rounded-xl bg-gray-400 flex flex-col justify-between h-full">
+      <div class="shadow-inner shadow-gray-500 rounded-xl bg-gray-400 flex flex-col justify-between h-40 md:h-full">
         <div>
 
         </div>
@@ -22,12 +20,7 @@
               placeholder="Commenta..." style="resize: none"></textarea>
             <button @click="postComment()" type="submit"
               class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
-              <svg aria-hidden="true" class="w-6 h-6 rotate-90" fill="white" viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z">
-                </path>
-              </svg>
+              <PaperAirplaneIcon class="w-6 h-6 text-gray-100" />
               <span class="sr-only">Invia</span>
             </button>
           </div>
@@ -38,11 +31,18 @@
 </template>
 
 <script>
+import { PaperAirplaneIcon } from "@heroicons/vue/24/outline";
+import { Markdown } from 'vue3-markdown-it';
+
 const suffixes = ['', ' K', 'M'];
 
 export default {
   props: {
     post: {}
+  },
+  components: {
+    PaperAirplaneIcon,
+    Markdown
   },
   computed: {
     elapsed() {
@@ -69,6 +69,10 @@ export default {
       }
 
       return commentsCount + suffixes[suffixIndex];
+    },
+    content() {
+      return '<img class="rounded-xl w-full" src="https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701353282.jpg" />';
+      return this.post.content;
     }
   },
   methods: {

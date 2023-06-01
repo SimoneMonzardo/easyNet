@@ -19,7 +19,8 @@
 }
 
 html {
-  overflow-y: overlay;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 :root {
