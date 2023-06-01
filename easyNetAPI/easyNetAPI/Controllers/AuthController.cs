@@ -38,6 +38,22 @@ namespace easyNetAPI.Controllers
             _unitOfWork = unitOfWork;
             _hostEnvironment = hostEnvironment;
         }
+
+        [HttpGet]
+        [Route("CheckToken"), AllowAnonymous]
+        public async Task<ActionResult<string>> CheckToken()
+        {
+            var token = Request.Headers["Authorization"].ToString();
+            try
+            {
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                return Ok("Token is valid");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Token is no longer valid");
+            }
+        }
         [HttpPost]
         [Route("Register"), AllowAnonymous]
         public async Task<ActionResult<string>> Register(RegistrationRequest request)

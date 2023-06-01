@@ -93,9 +93,13 @@ public class PostController : ControllerBase
         }
         return followedPost.OrderBy(p => p.DataDiCreazione).Take(index).Last();
     }
-    [HttpGet("GetPostsOfRandom"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
+    [HttpGet("GetPostsOfRandom"), AllowAnonymous]
     public async Task<IEnumerable<Post>?> GetRandomAsync(int numeroDiPost)
     {
+        if (numeroDiPost < 0 || numeroDiPost > 30)
+        {
+            return null;
+        }
         var token = Request.Headers["Authorization"].ToString();
         var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
         if (userId is null)
@@ -122,12 +126,6 @@ public class PostController : ControllerBase
             return null;
         var posts = await _unitOfWork.Post.GetAllAsync();
         return posts.OrderBy(p => p.DataDiCreazione).Take(index).Last();
-    }
-    [HttpGet("GetThreeRandomPostForNotauth")]
-    public async Task<IEnumerable<Post>?> GetThreeRandomAsync()
-    {
-        var posts = await _unitOfWork.Post.GetAllAsync();
-        return posts.OrderBy(p => p.DataDiCreazione).Take(3);
     }
 
     [HttpDelete("DeletePost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]

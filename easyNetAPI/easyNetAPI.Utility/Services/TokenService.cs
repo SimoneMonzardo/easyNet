@@ -10,7 +10,7 @@ namespace easyNetAPI.Utility.Services
 {
 	public class TokenService
 	{
-        private const int EXPIRATION_MINUTES = 30;
+        private const int EXPIRATION_MINUTES = 1;
         public string CreateToken(IdentityUser user, IList<string> roles)
         {
             var expiration = DateTime.UtcNow.AddMinutes(EXPIRATION_MINUTES);
