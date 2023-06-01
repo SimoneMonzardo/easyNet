@@ -107,6 +107,9 @@ import { ListBulletIcon } from "@heroicons/vue/24/outline";
 import { FaceSmileIcon } from "@heroicons/vue/24/outline";
 
 export default {
+  head: {
+    title:"Pubblica • easyNet"
+  },
   data: () => ({
     postText: '',
     imageUrl: '',
