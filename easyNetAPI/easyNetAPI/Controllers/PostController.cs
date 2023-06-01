@@ -97,29 +97,36 @@ public class PostController : ControllerBase
     [HttpGet("GetPostsOfRandom"), AllowAnonymous]
     public async Task<IEnumerable<Post>?> GetRandomAsync(int? numeroDiPost)
     {
+		var token = Request.Headers["Authorization"].ToString();
         if (numeroDiPost is null || numeroDiPost < 0 || numeroDiPost > 30)
         {
-            return null;
+            numeroDiPost = 7;
         }
 
-        try
-        {
-			var token = Request.Headers["Authorization"].ToString();
-			var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
-			if (userId is null)
-            {
-				return null;
-            }
-
-			var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
-			if (user is null)
-            {
-				return null;
-            }
-		}
-        catch (Exception)
+        if (string.IsNullOrWhiteSpace(token))
         {
             numeroDiPost = 7;
+        }
+        else
+        {
+            try
+            {
+			    var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+			    if (userId is null)
+                {
+				    return Enumerable.Empty<Post>();
+                }
+
+			    var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+	        	if (user is null)
+                {
+					return Enumerable.Empty<Post>();
+                }
+		    }
+            catch (Exception)
+            {
+                numeroDiPost = 7;
+            }
         }
       
         var posts = await _unitOfWork.Post.GetAllAsync();
