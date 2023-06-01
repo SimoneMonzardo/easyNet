@@ -258,6 +258,10 @@ onMounted(() => {
   }
 });
 
+useMeta({
+  title: "Settings • easyNet"
+});
+
 async function saveChanges() {
   if (user.profilePicture === null) {
     user.profilePicture = '';
