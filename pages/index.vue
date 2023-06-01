@@ -6,16 +6,34 @@
 
   <div class="bg-gray-300 max-h-[calc(100vh-4rem)] w-screen lg:w-[calc(100vw-16rem)] flex flex-col overflow-x-hidden">
     <div class="flex flex-row">
-      <button class="relative">
+      <button class="relative" @click="previousPost">
         <div class="block triangle"></div>
         <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-gray-900 rotate-45 bg-transparent" />
       </button>
     </div>
 
-    <PostsListFeed class="w-full min-h-[calc(100vh-16rem)] max-h-[calc(100vh-16rem)]" />
+    <div v-if="pending || status !== 201" class="w-full px-2 sm:px-8 md:px-12 xl:w-5/6 xl:px-0 2xl:w-3/4 mx-auto h-[calc(100vh-16rem)] flex flex-col justify-center">
+      <div role="status" class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+        <div class="flex items-center justify-center w-full h-64 bg-gray-300 rounded dark:bg-gray-700">
+          <svg class="w-96 h-96 text-gray-200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512"><path d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z"/></svg>
+        </div>
+        <div class="w-full">
+          <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
+          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5"></div>
+          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5"></div>
+          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5"></div>
+          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
+        </div>
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <div v-else class="w-full px-2 sm:px-8 md:px-12 xl:w-5/6 xl:px-0 2xl:w-3/4 mx-auto h-[calc(100vh-16rem)] flex flex-col justify-center">
+        <PostsFeedSection :post="data.posts[data.activePost]" />
+    </div>
 
     <div class="flex flex-row justify-end">
-      <button class="relative rotate-180">
+      <button class="relative rotate-180" @click="nextPost">
         <div class="block triangle"></div>
         <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-gray-900 rotate-45 bg-transparent" />
       </button>
@@ -29,10 +47,63 @@ import { ChevronDoubleLeftIcon } from "@heroicons/vue/24/outline";
 export default {
   head: {
     title: 'Home • easyNet',
-    description: 'TODO: Write for SEO'
   },
   components: {
     ChevronDoubleLeftIcon
+  }
+}
+</script>
+
+<script setup>
+const INITIAL_POST_FETCH_COUNT = 7;
+const MINIMUM_POST_TRIGGER = 5;
+
+const data = reactive({ 
+    posts: [],
+    activePost: 0,
+    nextFetchPost: 1,
+    status: 201
+});
+
+const { pending } = await useFetch(`https://progettoeasynet.azurewebsites.net/Post/GetPostsOfRandom?numeroDiPost=${INITIAL_POST_FETCH_COUNT}`, {
+  lazy: true,
+  server: false,
+  method: 'GET',
+  onResponse({ response }) {
+    data.status = response.status;
+
+    console.log(response);
+    for (const post of response._data) {
+        data.posts.push(post);    
+    }
+    data.nextFetchPost += data.posts.length;
+  }
+});
+
+async function nextPost() {
+  console.log(data);
+  console.log('Next');
+  if (data.activePost < data.nextFetchPost) {
+    data.activePost++;
+  }
+
+  if (data.nextFetchPost - data.activePost < MINIMUM_POST_TRIGGER) {
+    await useFetch(`https://progettoeasynet.azurewebsites.net/Post/GetNextRandom?index=${data.nextFetchPost}`, {
+      lazy: true,
+      server: false,
+      method: 'GET',
+      onResponse({ response }) {
+        data.posts.push(response._data);
+        data.nextFetchPost++;
+      }
+    });
+  }
+}
+
+function previousPost() {
+  console.log('Prima');
+  if (data.activePost > 0) {
+    data.activePost--;
   }
 }
 </script>

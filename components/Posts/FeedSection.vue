@@ -1,14 +1,14 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-4 max-h-[calc(100vh-16rem)]">
+  <div class="flex flex-col md:grid md:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-2 md:gap-3 max-h-[calc(100vh-16rem)]">
     <PostHeader :username="post.username" :elapsedTime="elapsed" class="col-span-1 md:col-span-2 xl:col-span-3 order-1" />
 
-    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2" v-html="content">
+    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2 max-h-[calc(35vh)] md:max-h-full flex justify-center" v-html="content">
     </div>
 
-    <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-2">
+    <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-1 sm:gap-2 md:gap-3">
       <LikeCommentsButtons :likes="likes" :comments="comments" />
 
-      <div class="shadow-inner shadow-gray-500 rounded-xl bg-gray-400 flex flex-col justify-between h-40 md:h-full">
+      <div class="shadow-inner shadow-gray-500 rounded-xl bg-gray-400 flex flex-col justify-between h-[calc(20vh)] md:h-full">
         <div>
 
         </div>
@@ -71,7 +71,7 @@ export default {
       return commentsCount + suffixes[suffixIndex];
     },
     content() {
-      return '<img class="rounded-xl w-full" src="https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701353282.jpg" />';
+      return '<img class="rounded-xl max-h-full" src="https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701353282.jpg" />';
       return this.post.content;
     }
   },

@@ -19,7 +19,7 @@
 }
 
 html {
-  overflow-y: auto;
+  overflow-y: overlay;
   overflow-x: hidden;
 }
 
