@@ -187,6 +187,9 @@ import { ExclamationCircleIcon } from "@heroicons/vue/24/outline";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 
 export default {
+  head: {
+    title:"Settings • easyNet"
+  },
   data: () => ({
     confirmDeleteText: '',
     user: {
