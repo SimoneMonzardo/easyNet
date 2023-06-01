@@ -100,13 +100,6 @@ public class PostController : ControllerBase
         {
             return null;
         }
-        var token = Request.Headers["Authorization"].ToString();
-        var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
-        if (userId is null)
-            return null;
-        var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
-        if (user is null)
-            return null;
         var posts = await _unitOfWork.Post.GetAllAsync();
         if (numeroDiPost == null)
             return posts.OrderBy(p => p.DataDiCreazione).Take(numeroDiPost);
