@@ -21,17 +21,17 @@
             <h3 class="text-lg font-normal text-gray-500 dark:text-gray-400">Sei certo di voler cancellare l'account?</h3>
             <div class="my-5">
               <label for="confirm-delete-text" class="text-left block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                Scrivi <span class="text-red-600 font-semibold">elimina.{{ username }}</span> per confermare
+                Scrivi <span class="text-red-600 font-semibold">elimina.{{ user.username }}</span> per confermare
               </label>
-              <input @input="confirmDeleteText = $event.target.value" :value="confirmDeleteText" type="text"
+              <input @input="confirmDelete.text = $event.target.value" :value="confirmDelete.text" type="text"
                 class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             </div>
             <button
-              id="confirm-delete-modal-confirm"
-              :disabled="confirmDeleteText !== `elimina.${username}`" 
+              id="confirm-delete-modal-confirm" 
+              :disabled="confirmDelete.text !== `elimina.${user.username}`" 
               data-modal-hide="confirm-delete-modal" 
               @click="deleteUserAccount()"
-              type="button" 
+              type="button"
               class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-semibold rounded-xl text-sm inline-flex items-center px-5 py-2.5 text-center mr-2 disabled:cursor-not-allowed disabled:bg-red-400">
               Sì, elimina
             </button>
@@ -44,7 +44,10 @@
     </div>
 
     <!-- Change Image Modal -->
-    <UploadImagePopup />
+    <UploadImagePopup 
+      @setImage="updateImage"
+      @delete="deleteImage" 
+      :showDelete="user.profilePicture !== ''" />
 
     <!-- Login & Register Modals -->
     <RegisterPopup />
@@ -57,17 +60,24 @@
     <div class="justify-center flex flex-col sm:flex-row gap-4 mx-10 md:mx-auto mt-12">
       <div class="w-40 lg:w-48 flex flex-col items-center gap-2 lg:pt-4 mx-auto sm:mx-0">
         <!-- Loading -->
-        <div v-if="pending" class="flex items-center justify-center w-32 h-32 lg:h-40 lg:w-40 bg-gray-300 rounded-full dark:bg-gray-700">
+        <div v-if="pending || user.profilePicture === ''" class="flex items-center justify-center w-32 h-32 lg:h-40 lg:w-40 bg-gray-300 rounded-full dark:bg-gray-700">
           <svg class="w-12 h-12 text-gray-200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512">
             <path d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z" />
           </svg>
         </div>
 
         <!-- Loaded Successfully -->
-        <img v-else :src="user.profilePicture" class="w-32 h-32 lg:h-40 lg:w-40 rounded-full border border-gray-600 dark:border-gray-100" />
+        <img
+          v-else 
+          :src="user.profilePicture" 
+          class="w-32 h-32 lg:h-40 lg:w-40 rounded-full border border-gray-600 dark:border-gray-100" />
 
-        <button type="button" data-modal-target="upload-image-modal" data-modal-toggle="upload-image-modal" :disabled="pending ? true : false"
-          class="w-[calc(100%-2rem)] text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-lg py-2 text-center mr-2 mb-2 dark:text-white dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-blue-800 disabled:bg-gray-100 disabled:cursor-not-allowed">Modifica</button>
+        <button
+          type="button"
+          data-modal-target="upload-image-modal"
+          data-modal-toggle="upload-image-modal"
+          :disabled="pending ? true : false"
+          class="w-[calc(100%-2rem)] text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-lg py-2 text-center mb-2 dark:text-white dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-blue-800 disabled:bg-gray-100 disabled:cursor-not-allowed">Modifica</button>
       </div>
       <div class="w-full md:w-1/2 2xl:w-1/3 py-3">
         <!-- Loading -->
@@ -89,67 +99,67 @@
         <!-- Loaded Successfully -->
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="relative">
-            <input 
+            <input
               type="email" 
-              id="updateEmail" 
+              id="updateEmail"
               name="email"
               class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               readonly 
-              placeholder=" " 
               :value="user.email" />
             <label for="updateEmail"
               class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Email</label>
           </div>
 
           <div class="relative">
-            <input 
-              type="tel" 
-              id="updatePhoneNumber" 
+            <input
+              type="tel"
+              id="updatePhoneNumber"
               name="phoneNumber"
               class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              readonly 
-              placeholder=" " 
+              readonly
+              placeholder=" "
               :value="user.phoneNumber" />
-            <label for="updatePhoneNumber"
-              class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Numero
-              di telefono</label>
+            <label for="updatePhoneNumber" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Numero di telefono</label>
           </div>
 
           <div class="relative">
-            <input 
-              type="text" 
-              id="updateName" 
+            <input
+              type="text"
+              id="updateName"
               name="name"
               class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" " 
-              required 
+              placeholder=" "
+              required
+              @input="user.name = $event.target.value"
               :value="user.name" />
             <label for="updateName"
               class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Nome</label>
           </div>
 
           <div class="relative">
-            <input 
-              type="text" 
-              id="updateSurname" 
+            <input
+              type="text"
+              id="updateSurname"
               name="surname"
               class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" " 
-              required 
-              :value="user.surname"/>
+              placeholder=" "
+              required
+              @input="user.surname = $event.target.value"
+              :value="user.surname" />
             <label for="updateSurname"
               class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Cognome</label>
           </div>
 
           <div class="relative">
-            <input 
-              type="date" 
-              id="updateBirthDate" 
+            <input
+              type="date"
+              id="updateBirthDate"
               name="dateOfBirth"
               class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" " 
-              required 
-              :value="user.dateOfBirth"/>
+              placeholder=" "
+              required
+              @input="user.birthDate = $event.target.value"
+              :value="user.birthDate" />
             <label for="updateBirthDate"
               class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Data
               di nascita
@@ -157,11 +167,12 @@
           </div>
 
           <div>
-            <select 
-              id="updateGender" 
-              required 
+            <select
+              id="updateGender"
+              required
               name="gender"
               :value="user.gender"
+              @input="user.gender = $event.target.value"
               class="px-2.5 pb-2.5 pt-4 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-900 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option selected disabled class="disabled:text-gray-500 dark:disabled:text-gray-400">Inserisci il genere</option>
               <option value="male">Maschio</option>
@@ -174,94 +185,41 @@
             <button id="cancel-changes" @click="cancelChanges()" :disabled="pending" class="w-24 lg:w-28 bg-gray-300 hover:bg-gray-400 text-gray-1000 font-bold py-2 rounded-l-xl disabled:bg-gray-100 disabled:cursor-not-allowed">Annulla</button>
             <button id="save-changes" @click="saveChanges()" :disabled="pending" class="w-24 lg:w-28 bg-green-400 hover:bg-green-500 text-gray-1000 font-bold py-2 rounded-r-xl disabled:bg-green-300 disabled:cursor-not-allowed">Salva</button>
           </div>
-          <button id="delete-account" :disabled="pending" @click="resetModal()" data-modal-target="confirm-delete-modal" data-modal-toggle="confirm-delete-modal"
-            class="bg-red-500 hover:bg-red-600 text-gray-1000 font-bold py-2 px-4 rounded-xl disabled:bg-red-400 disabled:cursor-not-allowed">Elimina profilo</button>
+          <button
+            id="delete-account"
+            :disabled="pending" 
+            @click="resetModal()" 
+            data-modal-target="confirm-delete-modal"
+            data-modal-toggle="confirm-delete-modal"
+            class="bg-red-500 hover:bg-red-600 text-gray-1000 font-bold py-2 px-4 rounded-xl disabled:bg-red-400 disabled:cursor-not-allowed">
+            Elimina profilo
+          </button>
         </div>
       </div>
     </div>
   </section>
 </template>
 
-<script>
+<script setup>
 import { ExclamationCircleIcon } from "@heroicons/vue/24/outline";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
+import { reactive } from 'vue';
+import { useRouter } from "vue-router";
 
-export default {
-  head: {
-    title:"Settings • easyNet"
-  },
-  data: () => ({
-    confirmDeleteText: '',
-    user: {
+const router = useRouter();
+const confirmDelete = reactive({ text: '' });
+const  user = reactive({
+  username: '',
+  name: '',
+  surname: '',
+  gender: '',
+  email: '',
+  phoneNumber: '',
+  birthDate: '',
+  profilePicture: '',
+});
 
-    }
-  }),
-  components: {
-    ExclamationCircleIcon,
-    XMarkIcon
-  },
-  methods: {
-    resetModal() {
-      this.confirmDeleteText = '';
-      document.getElementById('confirm-delete-modal-confirm').setAttribute('disabled', '');
-    },
-    async deleteUserAccount() {
-      await useFetch('https://progettoeasynet.azurewebsites.net/Auth/DeleteUser', {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Authorization': ''
-        },
-        method: 'DELETE',
-        onRequest({ request, options }) {
-          options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
-        }
-      });
-      this.$router.go('/');
-    },
-    cancelChanges() {
-      document.getElementById('updateName').value = localStorage.getItem('backupName');
-      document.getElementById('updateSurname').value = localStorage.getItem('backupSurname');
-      document.getElementById('updateGender').value = localStorage.getItem('backupGender');
-      document.getElementById('updateBirthDate').value = localStorage.getItem('backupBirthDate');
-      //document.getAnimations('id').value = localStorage.getItem('backupProfilePicture');
-    },
-    async saveChanges() {
-      var newUserInfo = {
-        name: document.getElementById('updateName').value,
-        surname: document.getElementById('updateSurname').value,
-        gender: document.getElementById('updateGender').value,
-        birthDate: document.getElementById('updateBirthDate').value,
-        profilePicture: '' // TODO: Use -> document.getElementById('fileInputId').value
-      };
-
-      await useFetch('https://progettoeasynet.azurewebsites.net/Auth/editUserData', {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Authorization': ''
-        },
-        body: JSON.stringify(newUserInfo),
-        method: 'POST',
-        onRequest({ request, options }) {
-          options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
-        }
-      });
-      this.$router.go();
-    }
-  },
-  mounted: function() {
-    const token = localStorage.getItem('token');
-    if (token === undefined || token === null || token === '') {
-      this.$router.push ('/');
-    }
-  }
-}
-</script>
-
-<script setup>
-var username = '';
-
-// Use real API call
-const { data: user, pending, error } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/GetUserData', {
+const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Auth/GetUserData', {
   lazy: true,
   server: false,
   method: 'GET',
@@ -272,17 +230,146 @@ const { data: user, pending, error } = await useFetch('https://progettoeasynet.a
   onRequest({ request, options }) {
     options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
   },
-  onResponse({request, response, options}) {
-    username = response._data.userName;
-    console.log(response._data);
+  onResponse({ request, response, options }) {
+    user.username = response._data.userName;
+    user.name = response._data.name;
+    user.surname = response._data.surname;
+    user.gender = response._data.gender;
+    user.email = response._data.email;
+    user.phoneNumber = response._data.phoneNumber;
+    user.birthDate = response._data.dateOfBirth;
+    user.profilePicture = response._data.profilePicture;
+
     localStorage.setItem('backupName', response._data.name);
     localStorage.setItem('backupSurname', response._data.surname);
     localStorage.setItem('backupGender', response._data.gender);
-    localStorage.setItem('backupBirthDate', response._data.birthdate);
+    localStorage.setItem('backupBirthDate', response._data.dateOfBirth);
     localStorage.setItem('backupProfilePicture', response._data.profilePicture);
   },
   onResponseError() {
     // TODO: Handle error
   }
 });
+
+onMounted(() => {
+  const token = localStorage.getItem('token');
+  if (token === undefined || token === null || token === '') {
+    router.push('/');
+  }
+});
+
+async function saveChanges() {
+  if (user.profilePicture === null) {
+    user.profilePicture = '';
+  }
+
+  const newUserInfo = {
+    name: user.name,
+    surname: user.surname,
+    gender: user.gender,
+    dateOfBirth: user.birthDate,
+    profilePicture: user.profilePicture
+  };
+
+  const oldPicture = localStorage.getItem('backupProfilePicture');
+  if (oldPicture !== null && oldPicture !== '' && (user.profilePicture === '' || user.profilePicture !== oldPicture)) {
+    localStorage.setItem('profilePicture', user.profilePicture);
+
+    await useFetch('https://progettoeasynet.azurewebsites.net/Auth/DeleteProfilePicture', {
+      method: 'DELETE',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': ''
+      },
+      onRequest({ request, options }) {
+        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+      },
+      onResponseError({response}) {
+        console.log(response);
+      }
+    });
+  }  
+
+  await useFetch('https://progettoeasynet.azurewebsites.net/Auth/editUserData', {
+    method: 'POST',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': ''
+    },
+    body: JSON.stringify(newUserInfo),
+    onRequest({ request, options }) {
+      options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+    }
+  });
+
+  router.go();
+}
+
+function resetModal() {
+  confirmDelete.text = '';
+}
+
+async function deleteUserAccount() {
+  await useFetch('https://progettoeasynet.azurewebsites.net/Auth/DeleteUser', {
+    method: 'DELETE',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': ''
+    },
+    onRequest({ request, options }) {
+      options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+    }
+  });
+
+  localStorage.setItem('logged', false);
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+  localStorage.removeItem('email');
+  localStorage.removeItem('profilePicture');
+  router.push('/');
+}
+
+function cancelChanges() {
+  user.name = localStorage.getItem('backupName');
+  user.surname = localStorage.getItem('backupSurname');
+  user.gender = localStorage.getItem('backupGender');
+  user.birthDate = localStorage.getItem('backupBirthDate');
+  user.profilePicture = localStorage.getItem('backupProfilePicture');
+}
+
+async function updateImage(images) {
+  const options = {};
+  const uploadFileElement = document.getElementById('upload-image-modal');
+  const uploadFileModal = new Modal(uploadFileElement, options);
+  uploadFileModal.hide();
+
+  const formData = new FormData();
+  formData.append('file', images[0]);
+
+  const { data } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/UploadProfilePicture', {
+    method: 'POST',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': ''
+    },
+    body: formData,
+    onRequest({ request, options }) {
+      options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+    }
+  });
+
+  if (data._value !== null) {
+    user.profilePicture = data._value;
+    localStorage.setItem('profilePicture', data._value);
+  }
+}
+
+async function deleteImage() {
+  const options = {};
+  const uploadFileElement = document.getElementById('upload-image-modal');
+  const uploadFileModal = new Modal(uploadFileElement, options);
+  uploadFileModal.hide();
+
+  user.profilePicture = '';
+}
 </script>

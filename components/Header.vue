@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white max-w-8xl dark:bg-gray-900 h-16">
+  <header class="bg-white max-w-screen dark:bg-gray-900 h-16">
     <nav class="mx-4 py-3">
       <div class="flex flex-wrap justify-between items-center">
         <div class="flex justify-start items-center">
@@ -39,8 +39,8 @@
             >
               <span class="sr-only">Apri menù utente</span>
               <img
-                class="w-8 h-8 rounded-full"
-                :src="imageUrl"
+                class="w-8 h-8 rounded-full overflow-x-hidden"
+                :src="profilePicture"
                 alt="Immagine Utente"
               />
             </button>
