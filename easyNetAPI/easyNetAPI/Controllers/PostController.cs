@@ -123,7 +123,7 @@ public class PostController : ControllerBase
         }
       
         var posts = await _unitOfWork.Post.GetAllAsync();
-        return posts.OrderBy(p => p.DataDiCreazione).Take(numeroDiPost);
+        return posts.OrderBy(p => p.DataDiCreazione).Take((int)numeroDiPost);
     }
     [HttpGet("GetNextRandom"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
     public async Task<Post?> GetNextRandomAsync(int index)
