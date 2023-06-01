@@ -7,7 +7,7 @@
       :profilePicture="profilePicture"
     />
     <div class="min-h-[calc(100vh-4rem)] flex flex-row">
-      <div class="flex justify-center h-screen">
+      <div class="flex justify-center">
         <slot />
       </div>
       <Sidebar />
