@@ -8,6 +8,7 @@ using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Data;
 using easyNetAPI.Models.UpsertModels;
 using Microsoft.Extensions.Hosting;
+using System.Configuration;
 
 namespace easyNetAPI.Controllers;
 
@@ -94,23 +95,35 @@ public class PostController : ControllerBase
         return followedPost.OrderBy(p => p.DataDiCreazione).Take(index).Last();
     }
     [HttpGet("GetPostsOfRandom"), AllowAnonymous]
-    public async Task<IEnumerable<Post>?> GetRandomAsync(int numeroDiPost)
+    public async Task<IEnumerable<Post>?> GetRandomAsync(int? numeroDiPost)
     {
-        if (numeroDiPost < 0 || numeroDiPost > 30)
+        if (numeroDiPost is null || numeroDiPost < 0 || numeroDiPost > 30)
         {
             return null;
         }
-        var token = Request.Headers["Authorization"].ToString();
-        var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
-        if (userId is null)
-            return null;
-        var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
-        if (user is null)
-            return null;
+
+        try
+        {
+			var token = Request.Headers["Authorization"].ToString();
+			var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+			if (userId is null)
+            {
+				return null;
+            }
+
+			var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+			if (user is null)
+            {
+				return null;
+            }
+		}
+        catch (Exception)
+        {
+            numeroDiPost = 7;
+        }
+      
         var posts = await _unitOfWork.Post.GetAllAsync();
-        if (numeroDiPost == null)
-            return posts.OrderBy(p => p.DataDiCreazione).Take(numeroDiPost);
-        return posts.OrderBy(p => p.DataDiCreazione);
+        return posts.OrderBy(p => p.DataDiCreazione).Take(numeroDiPost);
     }
     [HttpGet("GetNextRandom"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
     public async Task<Post?> GetNextRandomAsync(int index)
@@ -125,7 +138,7 @@ public class PostController : ControllerBase
         if (user is null)
             return null;
         var posts = await _unitOfWork.Post.GetAllAsync();
-        return posts.OrderBy(p => p.DataDiCreazione).Take(index).Last();
+        return posts.OrderBy(p => p.DataDiCreazione).Skip(index).FirstOrDefault();
     }
 
     [HttpDelete("DeletePost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
