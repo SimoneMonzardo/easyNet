@@ -244,6 +244,39 @@ namespace easyNetAPI.Controllers
             }
         }
 
+        [HttpPost("AcceptRequestToAddCompany")]
+        [Authorize(Roles = $"{SD.ROLE_MODERATOR}")]
+        public async Task<IActionResult> AcceptRequestToAddCompany(string username)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest("Model is not valid");
+                var userId = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
+                if (userId is null)
+                    return BadRequest("UserId is null");
+                var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                if (user is null)
+                    return BadRequest("User not found");
+                var company = user.Company;
+                if (company is null)
+                    return BadRequest("Company not found");
+                if (company.CompanyId != 0 && company.CompanyName.IsNullOrEmpty())
+                    return BadRequest("there isn't any request");
+                company.CompanyId = await IdAutoincrementService.GetCompanyAutoincrementId(_unitOfWork);
+                var risultato = await _unitOfWork.Company.AddAsync(company, userId);
+                var dbUser = _db.Users.Find(userId);
+                await _userManager.AddToRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN);
+                if (risultato)
+                    return Ok("Request sent succesfully");
+                return BadRequest("Request couldn't be sent");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong: " + ex.Message);
+            }
+        }
+
         [HttpPost("RequestToDeleteCompany")]
         [Authorize(Roles = $"{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<IActionResult> RequestToDeleteCompany()
@@ -266,10 +299,15 @@ namespace easyNetAPI.Controllers
                     return BadRequest("Request already sent");
                 if (company.CompanyId == 0)
                     return BadRequest("User doesn't have a company");
+                List<UserBehavior> users = _unitOfWork.UserBehavior.GetAllAsync().Result.ToList().Where(user => user.Company.CompanyId == company.CompanyId).ToList();
                 company.CompanyId = -company.CompanyId;
-                var risultato = await _unitOfWork.Company.AddAsync(company, userId);
-                if (risultato)
-                    return Ok("Request sent succesfully");
+                foreach (var u in users)
+                {
+                    u.Company = company;
+                    var risultato = await _unitOfWork.UserBehavior.UpdateOneAsync(u.UserId, u);
+                    if (risultato)
+                        return Ok("Request sent succesfully");
+                }
                 return BadRequest("Request couldn't be sent");
             }
             catch (Exception ex)
@@ -316,6 +354,7 @@ namespace easyNetAPI.Controllers
                 return BadRequest("Something went wrong: " + ex.Message);
             }
         }
+        
 
     }
 }
