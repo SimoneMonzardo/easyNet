@@ -185,23 +185,27 @@ namespace easyNetAPI.Controllers
                 var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 if (userId == null)
                     return BadRequest("Not Logged in");
+                var dbUser = _db.Users.Find(userId);
+                if (dbUser is null)
+                    return BadRequest("User not found");
+                var username = dbUser.UserName;
                 var reply = await _unitOfWork.Reply.GetFirstOrDefault(replyId);
                 if (reply == null)
                     return BadRequest("Reply doesn't exist");
                 bool alreadyLiked = false;
                 if (reply.Likes is null)
                     reply.Likes = new List<string>();
-                alreadyLiked = reply.Likes.Contains(userId);
+                alreadyLiked = reply.Likes.Contains(username);
                 if (alreadyLiked)
                 {
-                    reply.Likes.Remove(userId);
+                    reply.Likes.Remove(username);
                     var result = await _unitOfWork.Reply.UpdateOneAsync(reply,commentId, postId);
                     if (result)
                     {
                         return Ok("Like removed succesfully");
                     }
                 }
-                reply.Likes.Add(userId);
+                reply.Likes.Add(username);
                 var result1 = await _unitOfWork.Reply.UpdateOneAsync(reply,commentId, postId);
                 if (result1)
                 {
