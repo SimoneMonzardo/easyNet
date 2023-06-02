@@ -1,10 +1,12 @@
 ﻿using easyNetAPI.Data;
 using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
+using easyNetAPI.Models.ModelVM;
 using easyNetAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Drawing;
 
@@ -190,6 +192,45 @@ namespace easyNetAPI.Controllers
                 if (risultato)
                     return Ok("Request sent succesfully");
                 return BadRequest("Request couldn't be sent");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong: " + ex.Message);
+            }
+        }
+
+        [HttpGet("GetAddCompanyRequest")]
+        [Authorize(Roles = $"{SD.ROLE_MODERATOR}")]
+        public async Task<IActionResult> GetAddCompanyRequest()
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString();
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                if (userId is null)
+                    return BadRequest("UserId is null");
+                var aziende = await _unitOfWork.Company.GetAllAsync();
+                var companies = new List<Company>();
+                var companyRequest = new List<CompanyRequest>();
+                foreach (var company in aziende)
+                {
+                    if (company.CompanyId == 0 && !companies.Contains(company) && !company.CompanyName.IsNullOrEmpty())
+                    {
+                        companies.Add(company);
+                        string userOfCompanyId;
+                        try
+                        {
+                            userOfCompanyId = _unitOfWork.UserBehavior.GetAllAsync().Result.ToList().Where(u => u.Company.CompanyName == company.CompanyName).First().UserId;
+                        }catch(Exception ex)
+                        {
+                            return BadRequest("Couldn't get user who made a request: " + ex.Message);
+                        }
+                        var user = _db.Users.Find(userOfCompanyId);
+                        if (user is not null)
+                            companyRequest.Add(new CompanyRequest() { company = company, username = user.UserName });
+                    }
+                }
+                return Json(companies);
             }
             catch (Exception ex)
             {
