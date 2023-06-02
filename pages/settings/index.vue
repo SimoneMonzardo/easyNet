@@ -373,3 +373,11 @@ async function deleteImage() {
   user.profilePicture = '';
 }
 </script>
+
+<script>
+  export default {
+    head: {
+      title: 'Impostazioni • easyNet'
+    }
+  }
+</script>
