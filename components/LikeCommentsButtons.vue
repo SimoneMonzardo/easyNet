@@ -1,11 +1,11 @@
 <template>
-  <div class="inline-flex rounded-md w-full 2xl:w-4/5" role="group">
+  <div class="inline-flex rounded-md w-full" role="group">
     <button
       @click="$emit('likeToggled')"
       type="button" 
       class="shadow-inner shadow-neutral-600 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm font-medium text-black bg-neutral-400 border-r border-r-gray-900 rounded-l-xl hover:bg-neutral-500 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700">
       <HeartIcon 
-        v-if="!hasUserLike" 
+        v-if="!getHasUserLike" 
         class="h-6 w-6" />
         <!-- TODO: Use the right color -->
         <!-- Filled HeartIcon. We can't use both solid and outline heroicons as components -->
@@ -40,6 +40,11 @@
       likes: String,
       comments: String,
       hasUserLike: false
+    },
+    computed: {
+      getHasUserLike() {
+        return this.hasUserLike;
+      },
     },
     components: {
       HeartIcon,

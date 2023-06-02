@@ -143,8 +143,6 @@ function requireLogin() {
 }
 
 function getPostHasUserLike(post, username) {
-  return false;
-  // TODO
-  // return post.likes.includes(username);
+  return post.likes.includes(username);
 }
 </script>
