@@ -409,13 +409,14 @@ namespace easyNetAPI.Controllers
                 List<UserBehavior> users = _unitOfWork.UserBehavior.GetAllAsync().Result.ToList().Where(user => user.Company.CompanyId == company.CompanyId).ToList();
                 foreach (var u in users)
                 {
-                    u.Company = company;
                     var risultato = await _unitOfWork.Company.AddAsync(new Company() { CompanyId = 0, CompanyName = "" }, u.UserId);
                     if (!risultato)
                         return BadRequest("Couldn't remove a company");
                     var dbUser = _db.Users.Find(userId);
                     if (await _userManager.IsInRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN))
                     await _userManager.RemoveFromRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN);
+                    if (await _userManager.IsInRoleAsync(dbUser, SD.ROLE_EMPLOYEE))
+                        await _userManager.RemoveFromRoleAsync(dbUser, SD.ROLE_EMPLOYEE);
                 }
                 return Ok("Request sent succesfully");
             }
@@ -424,6 +425,39 @@ namespace easyNetAPI.Controllers
                 return BadRequest("Something went wrong: " + ex.Message);
             }
         }
-
+        [HttpPost("RefuseRequestToDeleteCompany")]
+        [Authorize(Roles = $"{SD.ROLE_MODERATOR}")]
+        public async Task<IActionResult> RefuseRequestToDeleteCompany(string username)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest("Model is not valid");
+                var userId = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
+                if (userId is null)
+                    return BadRequest("UserId is null");
+                var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                if (user is null)
+                    return BadRequest("User not found");
+                var company = user.Company;
+                if (company is null)
+                    return BadRequest("Company not found");
+                if (company.CompanyId >= 0)
+                    return BadRequest("there isn't any request");
+                List<UserBehavior> users = _unitOfWork.UserBehavior.GetAllAsync().Result.ToList().Where(user => user.Company.CompanyId == company.CompanyId).ToList();
+                company.CompanyId = -company.CompanyId;
+                foreach (var u in users)
+                {
+                    var risultato = await _unitOfWork.Company.AddAsync(company, u.UserId);
+                    if (!risultato)
+                        return BadRequest("Couldn't remove a company");
+                }
+                return Ok("Request sent succesfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong: " + ex.Message);
+            }
+        }
     }
 }
