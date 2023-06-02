@@ -172,5 +172,29 @@ namespace easyNetAPI.Controllers
                 return BadRequest("Something went wrong: " + ex.Message);
             }
         }
+
+        [HttpPost("RequestToAddCompany")]
+        [Authorize(Roles = $"{SD.ROLE_USER}")]
+        public async Task<IActionResult> RequestToAddCompany(Company company)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest("Model is not valid");
+                var token = Request.Headers["Authorization"].ToString();
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                if (userId is null)
+                    return BadRequest("UserId is null");
+                company.CompanyId = 0;
+                var risultato = await _unitOfWork.Company.AddAsync(company, userId);
+                if (risultato)
+                    return Ok("Request sent succesfully");
+                return BadRequest("Request couldn't be sent");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong: " + ex.Message);
+            }
+        }
     }
 }
