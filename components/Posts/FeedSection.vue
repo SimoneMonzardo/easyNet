@@ -2,11 +2,16 @@
   <div class="flex flex-col md:grid md:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-2 md:gap-3 max-h-[calc(100vh-16rem)]">
     <PostHeader :username="post.username" :elapsedTime="elapsed" class="col-span-1 md:col-span-2 xl:col-span-3 order-1" />
 
-    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2 max-h-[calc(35vh)] md:max-h-full flex justify-center" v-html="content">
+    <!-- TODO: Remove bg color. It's there as a placholder -->
+    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2 h-[calc(30rem)] max-h-[calc(35vh)] md:max-h-full flex justify-center bg-red-900" v-html="content">
     </div>
 
-    <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-1 sm:gap-2 md:gap-3">
-      <LikeCommentsButtons :likes="likes" :comments="comments" />
+    <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-1 sm:gap-2 md:gap-3 h-[calc(50rem)]">
+      <LikeCommentsButtons
+        :likes="likes"
+        :comments="comments"
+        :hasUserLike="post.hasUserLike"
+        @likeToggled="toggleLike" />
 
       <div class="shadow-inner shadow-gray-500 rounded-xl bg-gray-400 flex flex-col justify-between h-[calc(20vh)] md:h-full">
         <div>
@@ -16,6 +21,7 @@
           <label for="chat" class="sr-only">Commenta...</label>
           <div class="flex items-center px-2 bg-gray-500 bg-opacity-20 rounded-xl">
             <textarea
+              v-model="userComment"
               id="chat" 
               rows="1"
               class="block py-1 px-1.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -85,7 +91,55 @@ export default {
   },
   methods: {
     async postComment() {
-      console.log(this.userComment);
+      const comment = {
+        postId: this.post.postId,
+        commentId: 0,
+        content: this.userComment
+      };
+
+      await useFetch('https://progettoeasynet.azurewebsites.net/Comments/UpsertComment', {
+        lazy: true,
+        server: false,
+        method: 'POST',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Authorization': ''
+        },
+        body: JSON.stringify(comment),
+        onRequest({ options }) {
+          options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        },
+        onResponse({ response }) {
+          if (response.status === 200) {
+            //this.post.comments.append()
+            // TODO: Refresh Comment List
+          } else if (response.status === 401) {
+            // TODO: Show login modal, create a common method to reuse
+          }
+        }
+      });
+    },
+    async toggleLike() {
+      await useFetch('https://progettoeasynet.azurewebsites.net/Like/PostLike', {
+        lazy: true,
+        server: false,
+        method: 'POST',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Authorization': ''
+        },
+        body: JSON.stringify({ postId: this.post.postId }),
+        onRequest({ options }) {
+          options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        },
+        onResponse({ response }) {
+          if (response.status === 200) {
+            this.post.hasUserLike = !this.post.hasUserLike;
+          } else if (response.status === 401) {
+            // TODO: Show login modal, create a common method to reuse
+          }
+        }
+      });
     }
   }
 }

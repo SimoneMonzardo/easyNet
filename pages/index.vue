@@ -58,11 +58,16 @@ export default {
 const INITIAL_POST_FETCH_COUNT = 7;
 const MINIMUM_POST_TRIGGER = 5;
 
+const nextApiRoutes = new Map();
+nextApiRoutes.set(false, 'Post/GetNextRandom');
+nextApiRoutes.set(true, 'Post/GetNextFollowed');
+
 const data = reactive({ 
-    posts: [],
-    activePost: 0,
-    lastFetchedPost: -1,
-    status: 401
+  posts: [],
+  activePost: 0,
+  lastFetchedPost: -1,
+  status: 401,
+  getFollowedPosts: false
 });
 
 const { pending } = useFetch(`https://progettoeasynet.azurewebsites.net/Post/GetPostsOfRandom?numeroDiPost=${INITIAL_POST_FETCH_COUNT}`, {
@@ -72,8 +77,11 @@ const { pending } = useFetch(`https://progettoeasynet.azurewebsites.net/Post/Get
   onResponse({ response }) {
     data.status = response.status;
 
+    const username = localStorage.getItem('username');
+
     for (const post of response._data) {
-        data.posts.push(post);    
+      post.hasUserLike = getPostHasUserLike(post, username);
+      data.posts.push(post);    
     }
     data.lastFetchedPost += data.posts.length;
   }
@@ -88,7 +96,7 @@ async function nextPost() {
 
   if (token !== null) {
     if (data.lastFetchedPost - data.activePost < MINIMUM_POST_TRIGGER) {
-      await useFetch(`https://progettoeasynet.azurewebsites.net/Post/GetNextRandom?index=${data.lastFetchedPost}`, {
+      await useFetch(`https://progettoeasynet.azurewebsites.net/${nextApiRoutes.get(data.getFollowedPosts)}?index=${data.lastFetchedPost}`, {
         lazy: true,
         server: false,
         method: 'GET',
@@ -101,11 +109,13 @@ async function nextPost() {
         },
         onResponse({ response }) {
           if (response.status === 200) {
+            response._data.hasUserLike = getPostHasUserLike(response._data, localStorage.getItem('username'));
+
             data.posts.push(response._data);
             data.lastFetchedPost++;
           } else if (response.status === 401 && data.activePost >= data.lastFetchedPost) {
+            // TODO: Logout (Clear localstorage). Create a common method to do that
             requireLogin();
-
           }
         }
       });
@@ -130,5 +140,11 @@ function requireLogin() {
   document.getElementById('close-login-modal-button').classList.add('hidden');
   const loginModal = new Modal(loginElement, options);
   loginModal.show();
+}
+
+function getPostHasUserLike(post, username) {
+  return false;
+  // TODO
+  // return post.likes.includes(username);
 }
 </script>
