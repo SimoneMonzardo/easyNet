@@ -1,4 +1,5 @@
-﻿using easyNetAPI.Data.Repository.IRepository;
+﻿using easyNetAPI.Data;
+using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
 using easyNetAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -15,11 +16,13 @@ namespace easyNetAPI.Controllers
     {
         private readonly ILogger<LikeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        public AppDbContext _db;
 
-        public LikeController(ILogger<LikeController> logger, IUnitOfWork unitOfWork)
+        public LikeController(ILogger<LikeController> logger, IUnitOfWork unitOfWork, AppDbContext db)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _db = db;
         }
 
         [HttpPost("PostLike")]
@@ -36,6 +39,10 @@ namespace easyNetAPI.Controllers
                 var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 if (userId == null)
                     return BadRequest("Not Logged in");
+                var dbUser = _db.Users.Find(userId);
+                if (dbUser is null)
+                    return BadRequest("User not found");
+                var username = dbUser.UserName;
                 var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
                 if (post == null)
                     return BadRequest("Post doesn't exist");
@@ -45,16 +52,16 @@ namespace easyNetAPI.Controllers
                     user.LikedPost = new List<int>();
                     if (post.Likes is null)
                     post.Likes = new List<string>();
-                alreadyLiked = post.Likes.Contains(userId);
+                alreadyLiked = post.Likes.Contains(username);
                 if (alreadyLiked)
                 {
-                    post.Likes.Remove(userId);
+                    post.Likes.Remove(username);
                     _unitOfWork.Post.UpdateOneAsync(post);
                     if (user.LikedPost.Contains(postId))
                         user.LikedPost.Remove(postId);
                         return Ok("Like removed succesfully");
                 }
-                post.Likes.Add(userId);
+                post.Likes.Add(username);
                 var result = await _unitOfWork.Post.UpdateOneAsync(post);
                 if (!result)
                     return BadRequest("couldn't update post");
