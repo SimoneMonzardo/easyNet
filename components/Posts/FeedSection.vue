@@ -12,19 +12,24 @@
         <div>
 
         </div>
-        <form class="w-full">
+        <div class="w-full">
           <label for="chat" class="sr-only">Commenta...</label>
           <div class="flex items-center px-2 bg-gray-500 bg-opacity-20 rounded-xl">
-            <textarea id="chat" rows="1"
+            <textarea
+              id="chat" 
+              rows="1"
               class="block py-1 px-1.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Commenta..." style="resize: none"></textarea>
-            <button @click="postComment()" type="submit"
+              placeholder="Commenta..." 
+              style="resize: none"></textarea>
+            <button 
+              @click="postComment()" 
+              type="submit"
               class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
               <PaperAirplaneIcon class="w-6 h-6 text-gray-100" />
               <span class="sr-only">Invia</span>
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
@@ -40,6 +45,9 @@ export default {
   props: {
     post: {}
   },
+  data: () => ({
+    userComment: ''
+  }),
   components: {
     PaperAirplaneIcon,
     Markdown
@@ -71,13 +79,13 @@ export default {
       return commentsCount + suffixes[suffixIndex];
     },
     content() {
-      return '<img class="rounded-xl max-h-full" src="https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701353282.jpg" />';
+      // return '<img class="rounded-xl max-h-full" src="https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701353282.jpg" />';
       return this.post.content;
     }
   },
   methods: {
     async postComment() {
-
+      console.log(this.userComment);
     }
   }
 }
