@@ -40,10 +40,14 @@ namespace easyNetAPI.Controllers
                     return BadRequest("UserId is null");
                 var aziende = await _unitOfWork.Company.GetAllAsync();
                 var companies = new List<Company>();
+                var companiesId = new List<int>();
                 foreach ( var company in aziende)
                 {
-                    if(company.CompanyId!=0 && !companies.Contains(company))
+                    if (company.CompanyId != 0 && !companiesId.Contains(company.CompanyId))
+                    {
                         companies.Add(company);
+                        companiesId.Add(company.CompanyId);
+                    }
                 }
                 return Json(companies);
             }
@@ -217,12 +221,14 @@ namespace easyNetAPI.Controllers
                     return BadRequest("UserId is null");
                 var aziende = await _unitOfWork.Company.GetAllAsync();
                 var companies = new List<Company>();
+                var companiesId = new List<int>();
                 var companyRequest = new List<CompanyRequest>();
                 foreach (var company in aziende)
                 {
-                    if (company.CompanyId == 0 && !companies.Contains(company) && !company.CompanyName.IsNullOrEmpty())
+                    if (company.CompanyId == 0 && !companiesId.Contains(company.CompanyId) && !company.CompanyName.IsNullOrEmpty())
                     {
                         companies.Add(company);
+                        companiesId.Add(company.CompanyId);
                         string userOfCompanyId;
                         try
                         {
@@ -360,12 +366,14 @@ namespace easyNetAPI.Controllers
                     return BadRequest("UserId is null");
                 var aziende = await _unitOfWork.Company.GetAllAsync();
                 var companies = new List<Company>();
+                var companiesId = new List<int>();
                 var companyRequest = new List<CompanyRequest>();
                 foreach (var company in aziende)
                 {
-                    if (company.CompanyId < 0 && !companies.Contains(company))
+                    if (company.CompanyId < 0 && !companiesId.Contains(company.CompanyId))
                     {
                         companies.Add(company);
+                        companiesId.Add(company.CompanyId);
                         string userOfCompanyId;
                         try
                         {
