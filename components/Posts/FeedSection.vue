@@ -3,7 +3,7 @@
     <PostHeader :username="post.username" :elapsedTime="elapsed" class="col-span-1 md:col-span-2 xl:col-span-3 order-1" />
 
     <!-- TODO: Remove bg color. It's there as a placholder -->
-    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2 h-[calc(30rem)] max-h-[calc(35vh)] md:max-h-full flex justify-center bg-red-900" v-html="content">
+    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2 h-[calc(30rem)] max-h-[calc(35vh)] md:max-h-full flex justify-center bg-red-900 rounded-xl" v-html="content">
     </div>
 
     <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-1 sm:gap-2 md:gap-3 h-[calc(50rem)]">
@@ -14,15 +14,18 @@
         @likeToggled="toggleLike" />
 
       <div class="shadow-inner shadow-gray-500 rounded-xl bg-gray-400 flex flex-col justify-between h-[calc(20vh)] md:h-full">
-        <div>
-
-        </div>
+        <ul class="tracking-tight text-white overflow-y-scroll max-h-[calc(22rem)] my-4">
+          <li v-for="comment in post.comments" class="w-full px-4 py-2">
+            <h6 class="text-md font-semibold">{{ comment.username }}</h6>
+            <p class="text-xs leading-tight">{{ comment.content }}</p>
+          </li>
+        </ul>
         <div class="w-full">
-          <label for="chat" class="sr-only">Commenta...</label>
+          <label for="addAComment" class="sr-only">Commenta...</label>
           <div class="flex items-center px-2 bg-gray-500 bg-opacity-20 rounded-xl">
             <textarea
               v-model="userComment"
-              id="chat" 
+              id="addAComment" 
               rows="1"
               class="block py-1 px-1.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Commenta..." 
@@ -63,6 +66,26 @@ export default {
       if (this.post.dataDiCreazione === null) {
         return "Ora";
       }
+
+      const postDate = new Date(this.post.dataDiCreazione);
+      const currentDate = new Date();
+
+      const yearDiff = currentDate.getFullYear() - postDate.getFullYear();
+      if (yearDiff > 0) {
+        return `${yearDiff} anni fa`;
+      }
+      
+      const monthDiff = currentDate.getMonth() - postDate.getMonth();
+      if (monthDiff > 0) {
+        return `${monthDiff} mesi fa`;
+      }
+      
+      const daysDiff = currentDate.getDate() - postDate.getDate();
+      if (daysDiff > 0) {
+        return `${daysDiff} giorni fa`;
+      }
+
+      return 'Oggi';
     },
     likes() {
       var suffixIndex = 0;
@@ -85,7 +108,6 @@ export default {
       return commentsCount + suffixes[suffixIndex];
     },
     content() {
-      // return '<img class="rounded-xl max-h-full" src="https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701353282.jpg" />';
       return this.post.content;
     }
   },
@@ -110,17 +132,22 @@ export default {
           options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
         },
         onResponse({ response }) {
-          if (response.status === 200) {
-            //this.post.comments.append()
-            // TODO: Refresh Comment List
-          } else if (response.status === 401) {
-            // TODO: Show login modal, create a common method to reuse
-          }
+          document.getElementById('addAComment').value = '';
+          // this.$data.userComment = '';
+
+          // if (response.status === 200) {
+          //   this.$props.post.comments.push({
+          //     username: localStorage.getItem('username'),
+          //     content: comment.content
+          //   });
+          // } else if (response.status === 401) {
+          //   // TODO: Show login modal, create a common method to reuse
+          // }
         }
       });
     },
     async toggleLike() {
-      await useFetch('https://progettoeasynet.azurewebsites.net/Like/PostLike', {
+      const { error } = await useFetch(`https://progettoeasynet.azurewebsites.net/Like/PostLike?postId=${this.$props.post.postId}`, {
         lazy: true,
         server: false,
         method: 'POST',
@@ -128,18 +155,33 @@ export default {
           'Access-Control-Allow-Origin': '*',
           'Authorization': ''
         },
-        body: JSON.stringify({ postId: this.post.postId }),
         onRequest({ options }) {
           options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
         },
         onResponse({ response }) {
-          if (response.status === 200) {
-            this.post.hasUserLike = !this.post.hasUserLike;
-          } else if (response.status === 401) {
-            // TODO: Show login modal, create a common method to reuse
-          }
+          console.log(response);
+          console.log()
+          //console.log($data);
+          // try {
+          // if (response.ok) {
+          //   console.log(Object.keys(this));
+          //   this.$props.post.hasUserLike = !this.$props.post.hasUserLike;
+          //   if (this.post.hasUserLike) {
+          //     this.$props.post.likes.push({});
+          //   } else {
+          //     this.$props.post.likes.pop();
+          //   }
+          // } else if (response.status === 401) {
+          //   console.log('Errore');
+          //   // TODO: Show login modal, create a common method to reuse
+          // }
+          console.log('fine');
+        // } catch (error) {
+        //     console.log(error);
+        //   }
         }
       });
+      console.log(error);
     }
   }
 }
