@@ -208,7 +208,7 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 const confirmDelete = reactive({ text: '' });
-const  user = reactive({
+const user = reactive({
   username: '',
   name: '',
   surname: '',
