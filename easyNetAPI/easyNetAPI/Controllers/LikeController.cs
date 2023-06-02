@@ -229,11 +229,15 @@ namespace easyNetAPI.Controllers
                 var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 if (userId == null)
                     return BadRequest("Not Logged in");
+                var dbUser = _db.Users.Find(userId);
+                if (dbUser is null)
+                    return BadRequest("User not found");
+                var username = dbUser.UserName;
                 var replies = await _unitOfWork.Reply.GetAllAsync();
                 var likedReplies = new List<Reply>();
                 foreach (var item in replies)
                 {
-                    if (item.Likes.Contains(userId))
+                    if (item.Likes.Contains(username))
                         likedReplies.Add(item);
                 }
                 return Json(likedReplies);
