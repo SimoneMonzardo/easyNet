@@ -8,7 +8,7 @@
       v-html="content">
     </div>
 
-    <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-1 sm:gap-2 md:gap-3 h-[calc(50rem)]">
+    <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-1 sm:gap-2 md:gap-3">
       <LikeCommentsButtons :likes="likes" :comments="comments" :hasUserLike="post.hasUserLike"
         @likeToggled="toggleLike()" />
 

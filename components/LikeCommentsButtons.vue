@@ -3,7 +3,7 @@
     <button
       @click="$emit('likeToggled')"
       type="button" 
-      class="shadow-inner shadow-neutral-600 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm font-medium text-black bg-neutral-400 border-r border-r-gray-900 rounded-l-xl hover:bg-neutral-500 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700">
+      class="shadow-inner shadow-neutral-600 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-black bg-neutral-400 border-r border-r-gray-900 rounded-l-xl hover:bg-neutral-500 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700">
       <HeartIcon 
         v-if="!hasUserLike" 
         class="h-6 w-6" />
@@ -22,7 +22,7 @@
     </button>
     <button 
       type="button" 
-      class="shadow-inner shadow-neutral-600 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm font-medium text-black bg-neutral-400 border-l border-l-gray-900 rounded-r-xl hover:bg-neutral-500 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700">
+      class="shadow-inner shadow-neutral-600 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-black bg-neutral-400 border-l border-l-gray-900 rounded-r-xl hover:bg-neutral-500 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700">
       <ChatBubbleBottomCenterTextIcon class="h-6 w-6" />
       {{ comments }}
     </button>
