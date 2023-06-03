@@ -94,5 +94,36 @@ namespace easyNetAPI.Controllers
             }
         }
 
-    }
+		[HttpGet("GetSavedPostsIds")]
+		[Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+		public async Task<IActionResult> GetSavedPostsAsync()
+		{
+			try
+			{
+				var token = Request.Headers["Authorization"].ToString();
+				var userId = string.IsNullOrWhiteSpace(token) 
+                    ? null 
+                    : await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+
+				if (userId is null)
+                {
+					return Unauthorized("Not Logged in");
+                }
+
+				var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                if (user is null)
+                {
+                    return NotFound("User not found");
+                }
+
+                user.SavedPost ??= new();
+				
+				return Json(user.SavedPost);
+			}
+			catch (Exception)
+			{
+				return BadRequest("Something went wrong");
+			}
+		}
+	}
 }
