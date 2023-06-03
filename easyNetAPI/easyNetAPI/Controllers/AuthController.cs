@@ -118,7 +118,7 @@ namespace easyNetAPI.Controllers
         [HttpPost]
         [Route("RegisterFromModerator")]
         [Authorize(Roles = SD.ROLE_MODERATOR)]
-        public async Task<string> RegisterFromModerator(RegistrationRequestFromModerator request)
+        public async Task<ActionResult<string>> RegisterFromModerator(RegistrationRequestFromModerator request)
         {
             User applicationUser = new()
             {
@@ -133,8 +133,12 @@ namespace easyNetAPI.Controllers
             };
             if (!ModelState.IsValid)
             {
-                return "Model state invalid";
+                return BadRequest("Model state invalid");
             }
+            if (_db.Users.Where(u => u.NormalizedEmail == applicationUser.NormalizedEmail).Count() > 0)
+                return BadRequest("Mail already used");
+            if (_db.Users.Where(u => u.UserName == request.Username).Count() > 0)
+                return BadRequest("Username already used");
             var result = await _userManager.CreateAsync(
                applicationUser, request.Password);
             if (result.Succeeded)
@@ -166,13 +170,13 @@ namespace easyNetAPI.Controllers
                 else
                     await _userManager.AddToRoleAsync(applicationUser, SD.ROLE_USER);
                 request.Password = "";
-                return "User created successfully";
+                return Ok("User created successfully");
             }
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(error.Code, error.Description);
             }
-            return "Bad Request";
+            return BadRequest("Something went wrong");
         }
 
         [HttpPost]
