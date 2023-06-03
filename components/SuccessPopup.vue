@@ -69,26 +69,8 @@ export default {
     closeModal() {
       const options = {};
 
-      const loginElement = document.getElementById("forget-modal");
-      const loginModal = new Modal(loginElement, options);
-      loginModal.hide();
-    },
-    //metodo richesta passsword da definire (copiato da login con dati opportuni per ora)
-    async executeRequest() {
-      const { login } = useAuth();
-      const options = {};
-
-      const loginElement = document.getElementById("authentication-modal");
-      const loginModal = new Modal(loginElement, options);
-      loginModal.hide();
-
-      var data = {
-        username: document.getElementById("forget-email").value,
-      };
-
-      await login(data);
-      this.$router.go();
-    },
-  },
-};
+      const successElement = document.getElementById("forget-modal");
+      const successModal = new Modal(loginElement, options);
+      successModal.hide();
+    }
 </script>
