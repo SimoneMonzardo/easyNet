@@ -20,6 +20,12 @@
 
 html {
   overflow-y: overlay;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  position: relative;
 }
 
 :root {

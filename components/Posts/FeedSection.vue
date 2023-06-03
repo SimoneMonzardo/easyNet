@@ -1,80 +1,165 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-4 max-h-[calc(100vh-16rem)]">
+  <div class="flex flex-col md:grid md:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-2 md:gap-3 max-h-[calc(100vh-16rem)]">
     <PostHeader :username="post.username" :elapsedTime="elapsed" class="col-span-1 md:col-span-2 xl:col-span-3 order-1" />
 
-    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2">
-      <img class="rounded-xl w-full"
-        src="https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701353282.jpg" />
+    <!-- TODO: Remove bg color. It's there as a placholder -->
+    <div
+      class="col-span-1 md:col-span-2 xl:col-span-3 order-2 h-[calc(30rem)] max-h-[calc(35vh)] md:max-h-full flex justify-center bg-red-900 rounded-xl"
+      v-html="content">
     </div>
 
-    <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-2">
-      <LikeCommentsButtons :likes="likes" :comments="comments" />
+    <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-1 sm:gap-2 md:gap-3">
+      <LikeCommentsButtons :likes="likes" :comments="comments" :hasUserLike="post.hasUserLike"
+        @likeToggled="toggleLike()" />
 
-      <div class="shadow-inner shadow-gray-500 rounded-xl bg-gray-400 flex flex-col justify-between h-full">
-        <div>
-
-        </div>
-        <form class="w-full">
-          <label for="chat" class="sr-only">Commenta...</label>
+      <div
+        class="shadow-inner shadow-gray-500 rounded-xl bg-gray-400 flex flex-col justify-between h-[calc(20vh)] md:h-full">
+        <ul class="tracking-tight text-white overflow-y-scroll max-h-[calc(22rem)] my-4">
+          <li v-for="comment in post.comments" class="w-full px-4 py-2">
+            <h6 class="text-md font-semibold">{{ comment.username }}</h6>
+            <p class="text-xs leading-tight">{{ comment.content }}</p>
+          </li>
+        </ul>
+        <div class="w-full">
+          <label for="addAComment" class="sr-only">Commenta...</label>
           <div class="flex items-center px-2 bg-gray-500 bg-opacity-20 rounded-xl">
-            <textarea id="chat" rows="1"
+            <textarea v-model="additionalData.userComment" id="addAComment" rows="1"
               class="block py-1 px-1.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Commenta..." style="resize: none"></textarea>
             <button @click="postComment()" type="submit"
               class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
-              <svg aria-hidden="true" class="w-6 h-6 rotate-90" fill="white" viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z">
-                </path>
-              </svg>
+              <PaperAirplaneIcon class="w-6 h-6 text-gray-100" />
               <span class="sr-only">Invia</span>
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { PaperAirplaneIcon } from "@heroicons/vue/24/outline";
+import { reactive } from 'vue';
+
 const suffixes = ['', ' K', 'M'];
+const props = defineProps({
+  post: { }
+});
+const additionalData = reactive({
+  userComment: '',
+});
 
-export default {
-  props: {
-    post: {}
-  },
-  computed: {
-    elapsed() {
-      if (this.post.dataDiCreazione === null) {
-        return "Ora";
-      }
-    },
-    likes() {
-      var suffixIndex = 0;
-      var likesCount = this.post.likes.length;
-      while (likesCount > 999) {
-        likesCount = Math - floor(likesCount / 1000);
-        suffixIndex++;
-      }
+const content = computed(() => {
+  return props.post.content;
+})
 
-      return likesCount + suffixes[suffixIndex];
-    },
-    comments() {
-      var suffixIndex = 0;
-      var commentsCount = this.post.comments.length;
-      while (commentsCount > 999) {
-        commentsCount = Math - floor(commentsCount / 1000);
-        suffixIndex++;
-      }
-
-      return commentsCount + suffixes[suffixIndex];
-    }
-  },
-  methods: {
-    async postComment() {
-
-    }
+const likes = computed(() => {
+  var suffixIndex = 0;
+  var likesCount = props.post.likes.length;
+  while (likesCount > 999) {
+    likesCount = Math - floor(likesCount / 1000);
+    suffixIndex++;
   }
+
+  return likesCount + suffixes[suffixIndex];
+});
+
+const comments = computed(() => {
+  var suffixIndex = 0;
+  var commentsCount = props.post.comments.length;
+  while (commentsCount > 999) {
+    commentsCount = Math - floor(commentsCount / 1000);
+    suffixIndex++;
+  }
+
+  return commentsCount + suffixes[suffixIndex];
+});
+
+const elapsed = computed(() => {
+  if (props.post.dataDiCreazione === null) {
+    return "Ora";
+  }
+
+  const postDate = new Date(props.post.dataDiCreazione);
+  const currentDate = new Date();
+
+  const yearDiff = currentDate.getFullYear() - postDate.getFullYear();
+  if (yearDiff > 0) {
+    return `${yearDiff} anni fa`;
+  }
+
+  const monthDiff = currentDate.getMonth() - postDate.getMonth();
+  if (monthDiff > 0) {
+    return `${monthDiff} mesi fa`;
+  }
+
+  const daysDiff = currentDate.getDate() - postDate.getDate();
+  if (daysDiff > 0) {
+    return `${daysDiff} giorni fa`;
+  }
+
+  return 'Oggi';
+});
+
+async function postComment() {
+  const comment = {
+    postId: props.post.postId,
+    commentId: 0,
+    content: additionalData.userComment
+  };
+
+  await useFetch('https://progettoeasynet.azurewebsites.net/Comments/UpsertComment', {
+    lazy: true,
+    server: false,
+    method: 'POST',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': ''
+    },
+    body: JSON.stringify(comment),
+    onRequest({ options }) {
+      options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+    },
+    onResponse({ response }) {
+      additionalData.userComment = '';
+
+      if (response.ok) {
+        props.post.comments.push({
+          username: localStorage.getItem('username'),
+          content: comment.content
+        })
+      } else {
+        // TODO: Show login modal, create a common method to reuse
+      }
+    }
+  });
+}
+async function toggleLike() {
+  console.log('toggled');
+  await useFetch(`https://progettoeasynet.azurewebsites.net/Like/PostLike?postId=${props.post.postId}`, {
+    lazy: true,
+    server: false,
+    method: 'POST',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': ''
+    },
+    onRequest({ options }) {
+      options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+    },
+    onResponse({ response }) {
+      if (response.ok) {
+        props.post.hasUserLike = !props.post.hasUserLike;
+        if (props.post.hasUserLike) {
+          props.post.likes.push({ });
+        } else {
+          props.post.likes.pop();
+        }
+      } else {
+        // TODO: Show login modal, create a common method to reuse
+      }
+    }
+  });
 }
 </script>
