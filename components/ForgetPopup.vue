@@ -52,6 +52,7 @@
 import { Modal } from 'flowbite';
 import useAuth from '~/composables/useAuth';
 
+
 export default {
     name: "ForgetPopup",
     methods: {

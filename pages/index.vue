@@ -3,6 +3,7 @@
   <LoginPopup />
   <RegisterPopup />
   <ForgetPopup />
+  <SuccessPopup />
 
   <div class="bg-gray-300 max-h-[calc(100vh-4rem)] w-screen lg:w-[calc(100vw-16rem)] flex flex-col overflow-x-hidden">
     <div class="flex flex-row">
