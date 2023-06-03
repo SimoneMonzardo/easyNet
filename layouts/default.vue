@@ -6,11 +6,8 @@
       :userName="username"
       :profilePicture="profilePicture"
     />
-    <div class="min-h-[calc(100vh-4rem)] flex flex-row">
-      <div class="flex justify-center">
-        <slot />
-      </div>
-      <Sidebar />
+    <div class="min-h-[calc(100vh-4rem)] flex justify-center">
+      <slot />
     </div>
     <Footer />
   </div>

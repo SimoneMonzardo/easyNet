@@ -34,7 +34,7 @@ body {
 .triangle {
   border-style: solid;
   border-width: 0px 0px 6rem 6rem;
-  border-color: transparent transparent transparent #6b7280;
+  border-color: transparent transparent transparent #e5e7eb;
 }
 
 @layer base {

@@ -3,16 +3,15 @@
     <button
       @click="$emit('likeToggled')"
       type="button" 
-      class="shadow-inner shadow-neutral-600 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-black bg-neutral-400 border-r border-r-gray-900 rounded-l-xl hover:bg-neutral-500 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700">
+      class="shadow-inner shadow-gray-400 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-gray-900 bg-gray-100 border-r border-r-gray-400 rounded-l-xl hover:bg-gray-200 dark:bg-gray-600 dark:shadow-gray-800 dark:border-gray-900 dark:text-gray-50 dark:hover:bg-gray-700">
       <HeartIcon 
         v-if="!hasUserLike" 
         class="h-6 w-6" />
-        <!-- TODO: Use the right color -->
-        <!-- Filled HeartIcon. We can't use both solid and outline heroicons as components -->
+      <!-- Filled HeartIcon. We can't use both solid and outline heroicons as components -->
       <svg 
         v-else 
         aria-hidden="true" 
-        fill="red"
+        fill="#3f83f8"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
         class="h-6 w-6">
@@ -22,7 +21,7 @@
     </button>
     <button 
       type="button" 
-      class="shadow-inner shadow-neutral-600 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-black bg-neutral-400 border-l border-l-gray-900 rounded-r-xl hover:bg-neutral-500 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700">
+      class="shadow-inner shadow-gray-400 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-gray-900 bg-gray-100 border-l border-l-gray-400 rounded-r-xl hover:bg-gray-200 dark:bg-gray-600 dark:shadow-gray-800 dark:border-gray-900 dark:text-gray-50 dark:hover:bg-gray-700">
       <ChatBubbleBottomCenterTextIcon class="h-6 w-6" />
       {{ comments }}
     </button>

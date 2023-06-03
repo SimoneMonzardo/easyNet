@@ -1,11 +1,11 @@
 <template>
   <div class="flex flex-row justify-between align-middle">
     <div class="flex flex-row gap-3">
-      <UserCircleIcon v-if="profilePictureUrl !== ''" class="h-12 w-12 my-auto text-gray-800" />
+      <UserCircleIcon v-if="profilePictureUrl !== ''" class="h-12 w-12 my-auto text-gray-300 dark:text-gray-600" />
       <img v-else class="rounded-full h-12 w-12 my-auto" :src="profilePictureUrl" alt="profile" />
-      <div class="px-1 flex flex-col">
+      <div class="px-1 flex flex-col text-gray-900 dark:text-gray-50">
         <a :href="`/${username}`">
-          <h3 class="text-xl font-semibold md:text-2xl text-gray-700">{{ username }}</h3>
+          <h3 class="text-xl font-semibold md:text-2xl">{{ username }}</h3>
         </a>
         <small class="text-gray-400 text-xs font-md">
           {{ elapsedTime }}
@@ -18,7 +18,7 @@
         data-popover-trigger="click"
         data-popover-placement="left"
         type="button">
-        <EllipsisVerticalIcon class="h-8 w-8 text-gray-700 dark:text-white" />
+        <EllipsisVerticalIcon class="h-8 w-8 text-gray-900 dark:text-white" />
       </button>
       <div 
         data-popover 

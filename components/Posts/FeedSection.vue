@@ -1,19 +1,19 @@
 <template>
-  <div class="flex flex-col md:grid md:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-2 md:gap-3 max-h-[calc(100vh-16rem)]">
-    <PostHeader :username="post.username" :elapsedTime="elapsed" class="col-span-1 md:col-span-2 xl:col-span-3 order-1" />
+  <div class="grid grid-cols-4 grid-rows-[10] w-full h-full gap-x-1 sm:gap-x-2 md:gap-x-3 gap-y-3">
+    <PostHeader :username="post.username" :elapsedTime="elapsed" class="row-span-1 col-span-1 md:col-span-3" />
 
-    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2 h-[calc(30rem)] max-h-[calc(35vh)] md:max-h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3">
-      <div v-html="content.content" class="mx-auto" :class="content.data.image === '' ? 'h-full' : 'h-9'"></div>
-      <img v-if="content.data.image !== ''" :src="content.data.image" class="h-full rounded-xl mx-auto"/>
+    <div class="row-start-2 row-end-[10] col-span-1 md:col-span-3 h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3 p-6 bg-white border border-gray-200 shadow-xl dark:bg-gray-800 dark:border-gray-700">
+      <div v-html="content.content" class="mx-auto text-gray-900 dark:text-gray-50" :class="content.data.image === '' ? 'h-full' : 'h-9'"></div>
+      <img v-if="content.data.image !== ''" :src="content.data.image" class="h-full rounded-lg mx-auto"/>
     </div>
 
-    <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-1 sm:gap-2 md:gap-3">
+    <div class="col-start-4 row-start-1 row-end-[10] h-full mx-auto w-full flex flex-col gap-1 sm:gap-2 md:gap-6">
       <LikeCommentsButtons :likes="likes" :comments="comments" :hasUserLike="post.hasUserLike"
         @likeToggled="toggleLike()" />
 
       <div
-        class="shadow-inner shadow-gray-500 rounded-xl bg-gray-400 flex flex-col justify-between h-[calc(20vh)] md:h-full">
-        <ul class="tracking-tight text-white overflow-y-scroll max-h-[calc(22rem)] my-4">
+        class="shadow-inner shadow-gray-400 dark:shadow-gray-800 rounded-xl bg-gray-100 dark:bg-gray-600 flex flex-col justify-between h-[calc(20vh)] md:h-full">
+        <ul class="tracking-tight text-gray-900 dark:text-gray-50 overflow-y-scroll max-h-full my-4">
           <li v-for="comment in post.comments" class="w-full px-4 py-2">
             <h6 class="text-md font-semibold">{{ comment.username }}</h6>
             <p class="text-xs leading-tight">{{ comment.content }}</p>
@@ -21,13 +21,13 @@
         </ul>
         <div class="w-full">
           <label for="addAComment" class="sr-only">Commenta...</label>
-          <div class="flex items-center px-2 bg-gray-500 bg-opacity-20 rounded-xl">
+          <div class="flex items-center px-2 bg-gray-300 bg-opacity-80 rounded-xl dark:bg-gray-700">
             <textarea v-model="additionalData.userComment" id="addAComment" rows="1"
-              class="block py-1 px-1.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="block py-1 px-1.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-50 dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Commenta..." style="resize: none"></textarea>
             <button @click="postComment()" type="submit"
-              class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
-              <PaperAirplaneIcon class="w-6 h-6 text-gray-100" />
+              class="inline-flex justify-center p-2 rounded-full cursor-pointer text-blue-500 dark:text-blue-800">
+              <PaperAirplaneIcon class="w-6 h-6" />
               <span class="sr-only">Invia</span>
             </button>
           </div>
@@ -140,7 +140,19 @@ async function postComment() {
   });
 }
 async function toggleLike() {
-  console.log('toggled');
+  const token = localStorage.getItem('token');
+  if (token === null || token === '') {
+    // TODO: Show Login Modal
+    return;
+  }
+
+  props.post.hasUserLike = !props.post.hasUserLike;
+  if (props.post.hasUserLike) {
+    props.post.likes.push({ });
+  } else {
+    props.post.likes.pop();
+  }
+
   await useFetch(`https://progettoeasynet.azurewebsites.net/Like/PostLike?postId=${props.post.postId}`, {
     lazy: true,
     server: false,
@@ -150,18 +162,16 @@ async function toggleLike() {
       'Authorization': ''
     },
     onRequest({ options }) {
-      options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+      options.headers['Authorization'] = `Bearer ${token}`;
     },
     onResponse({ response }) {
-      if (response.ok) {
+      if (!response.ok) {
         props.post.hasUserLike = !props.post.hasUserLike;
         if (props.post.hasUserLike) {
           props.post.likes.push({ });
         } else {
           props.post.likes.pop();
         }
-      } else {
-        // TODO: Show login modal, create a common method to reuse
       }
     }
   });
