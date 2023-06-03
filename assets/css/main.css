@@ -21,6 +21,7 @@
 html {
   overflow-y: overlay;
   overflow-x: hidden;
+  font-family: 'Roboto Slab', sans-serif;
 }
 
 body {

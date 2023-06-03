@@ -7,7 +7,7 @@
 
   <div class="max-h-[calc(100vh-4rem)] w-screen grid grid-cols-[repeat(12,_minmax(0,_1fr))] grid-rows-[repeat(12,_minmax(0,_1fr))]">
     <button class="relative" @click="previousPost">
-      <div class="block triangle"></div>
+      <div class="block triangle drop-shadow-lg"></div>
       <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-blue-500 rotate-45 bg-transparent" />
     </button>
 
@@ -30,7 +30,7 @@
     <PostsFeedSection :post="data.posts[data.activePost]" v-else class="col-start-2 col-end-12 row-start-2 row-end-[12]"/>
 
     <button class="col-start-12 col-end-[13] row-start-[12] row-end-[13] rotate-180" @click="nextPost">
-      <div class="block triangle"></div>
+      <div class="block triangle drop-shadow-lg"></div>
       <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-blue-500 rotate-45 bg-transparent" />
     </button>
   </div>
