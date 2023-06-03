@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button data-modal-target="following-modal" data-modal-toggle="following-modal" class="ml-5" type="button">
+        <button  data-modal-target="following-modal" data-modal-toggle="following-modal" class="ml-5" type="button">
             <div v-if="pending">
                 following:
             </div>
@@ -19,7 +19,7 @@
                     <!-- Modal header -->
                     <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-xl font-medium text-gray-900 dark:text-white">
-                            following
+                            Following
                         </h3>
                         <div class="relative m-2">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -30,14 +30,14 @@
                                         clip-rule="evenodd"></path>
                                 </svg>
                             </div>
-                            <input type="text" v-model="input" id="table-search-users"
+                            <input v-on:input="filterUsers()" type="text" v-model="input" id="table-search-users-following"
                                 class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Search for users">
 
                         </div>
                         <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-hide="following-modal">
+                            data-modal-hide="followers-modal">
                             <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -73,9 +73,9 @@
                             <table id="following-table" class="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
 
                                 <tbody>
-
-                                    <tr v-for="user in users"
-                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                               
+                                    <tr v-for="user in filteredUsers()" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"> 
+                                      
                                         <th scope="row"
                                             class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                                             <img class="w-10 h-10 rounded-full" :src="user.profilePicture" alt="Jese image">
@@ -99,7 +99,8 @@
                                             </button>
                                         </th>
                                     </tr>
-                                    <div class="item error" v-if="input && !filteredList().length">
+                             
+                                    <div class="item error" v-if="input && !filteredUsers().length">
                                         <p>No results found!</p>
                                     </div>
                                 </tbody>
@@ -116,9 +117,10 @@
 
 export default {
     name: 'FollowingPopup',
-    props: ['following'],
+    props: ['followedBy'],
     async setup(props) {
-        const { data: users, pending } = await useFetch(`https://progettoeasynet.azurewebsites.net/User/GetUserFollowedList?userName=${props.following}`, {
+        
+        const { data: users, pending } = await useFetch(`https://progettoeasynet.azurewebsites.net/User/GetUserFollowedList?userName=${props.followedBy}`, {
             lazy: true,
             server: false,
             method: 'GET',
@@ -127,10 +129,12 @@ export default {
                 'Authorization': ''
             },
             onRequest({ request, options }) {
+                this.filteredUsers = this.users;
                 console.log(localStorage.getItem('token'));
                 options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
             }
         });
+        
         return {
             users,
             pending
@@ -138,9 +142,8 @@ export default {
     },
     methods: {
         async unfollow(user) {
-            await useFetch('https://progettoeasynet.azurewebsites.net/User/Unfollow', {
+            await useFetch(`https://progettoeasynet.azurewebsites.net/User/Unfollow?userName=${user.username}`, {
                 method: 'POST',
-                body: JSON.stringify({ userName: user.username }),
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Authorization': ''
@@ -152,9 +155,8 @@ export default {
             user.followed = false;
         },
         async follow(user) {
-            await useFetch('https://progettoeasynet.azurewebsites.net/User/Follow', {
+            await useFetch(`https://progettoeasynet.azurewebsites.net/User/Follow?userName=${user.username}`, {
                 method: 'POST',
-                body: JSON.stringify({ userName: user.username }),
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Authorization': ''
@@ -164,9 +166,30 @@ export default {
                 }
             });
             user.followed = true;
+        },
+        filteredUsers() {
+            var input = document.getElementById("table-search-users-following").value
+            if(input != "" && input != null)
+            {
+                var tempUsers = [];
+                for (var item of this.users){
+                    
+                    if(item.username.toLowerCase().includes(input.toLowerCase())){
+                        tempUsers.push(item);
+                    }
+                }
+                return tempUsers;
+            }
+            else{
+               return this.users;
+            }
+        },
+        filterUsers(){
+            this.$forceUpdate();
         }
     }
 
 }
+
 
 </script>

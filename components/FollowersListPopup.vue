@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button data-modal-target="followers-modal" data-modal-toggle="followers-modal" class="ml-5" type="button">
+        <button  data-modal-target="followers-modal" data-modal-toggle="followers-modal" class="ml-5" type="button">
             <div v-if="pending">
                 followers:
             </div>
@@ -30,7 +30,7 @@
                                         clip-rule="evenodd"></path>
                                 </svg>
                             </div>
-                            <input type="text" v-model="input" id="table-search-users"
+                            <input v-on:input="filterUsers()" type="text" v-model="input" id="table-search-users"
                                 class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Search for users">
 
@@ -73,9 +73,9 @@
                             <table id="followers-table" class="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
 
                                 <tbody>
-
-                                    <tr v-for="user in users"
-                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    
+                                    <tr v-for="user in filteredUsers()" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"> 
+                                      
                                         <th scope="row"
                                             class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                                             <img class="w-10 h-10 rounded-full" :src="user.profilePicture" alt="Jese image">
@@ -99,7 +99,8 @@
                                             </button>
                                         </th>
                                     </tr>
-                                    <div class="item error" v-if="input && !filteredList().length">
+                               
+                                    <div class="item error" v-if="input && !filteredUsers().length">
                                         <p>No results found!</p>
                                     </div>
                                 </tbody>
@@ -115,10 +116,11 @@
 <script>
 
 export default {
-    name: 'FollowedPopup',
-    props: ['followedBy'],
+    name: 'FollowersPopup',
+    props: ['followersOf'],
     async setup(props) {
-        const { data: users, pending } = await useFetch(`https://progettoeasynet.azurewebsites.net/User/GetUserFollowers?userName=${props.followedBy}`, {
+        
+        const { data: users, pending } = await useFetch(`https://progettoeasynet.azurewebsites.net/User/GetUserFollowers?userName=${props.followersOf}`, {
             lazy: true,
             server: false,
             method: 'GET',
@@ -127,10 +129,12 @@ export default {
                 'Authorization': ''
             },
             onRequest({ request, options }) {
+                this.filteredUsers = this.users;
                 console.log(localStorage.getItem('token'));
                 options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
             }
         });
+        
         return {
             users,
             pending
@@ -138,9 +142,8 @@ export default {
     },
     methods: {
         async unfollow(user) {
-            await useFetch('https://progettoeasynet.azurewebsites.net/User/Unfollow', {
+            await useFetch(`https://progettoeasynet.azurewebsites.net/User/Unfollow?userName=${user.username}`, {
                 method: 'POST',
-                body: JSON.stringify({ userName: user.username }),
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Authorization': ''
@@ -152,9 +155,8 @@ export default {
             user.followed = false;
         },
         async follow(user) {
-            await useFetch('https://progettoeasynet.azurewebsites.net/User/Follow', {
+            await useFetch(`https://progettoeasynet.azurewebsites.net/User/Follow?userName=${user.username}`, {
                 method: 'POST',
-                body: JSON.stringify({ userName: user.username }),
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Authorization': ''
@@ -164,9 +166,30 @@ export default {
                 }
             });
             user.followed = true;
+        },
+        filteredUsers() {
+            var input = document.getElementById("table-search-users").value
+            if(input != "" && input != null)
+            {
+                var tempUsers = [];
+                for (var item of this.users){
+                    
+                    if(item.username.toLowerCase().includes(input.toLowerCase())){
+                        tempUsers.push(item);
+                    }
+                }
+                return tempUsers;
+            }
+            else{
+               return this.users;
+            }
+        },
+        filterUsers(){
+            this.$forceUpdate();
         }
     }
 
 }
+
 
 </script>
