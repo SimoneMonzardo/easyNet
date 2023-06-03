@@ -50,16 +50,17 @@ import { reactive } from 'vue';
 import * as matter from 'gray-matter';
 
 const suffixes = ['', 'K', 'M'];
+
 const props = defineProps({
-  post: { }
+  post: { username: '' }
 });
+
 const additionalData = reactive({
   userComment: '',
 });
 
 const content = computed(() => {
   const data = matter(`---\nimage: https://media-assets.wired.it/photos/615f1a10cae11de32015125c/16:9/w_1280,c_limit/1486735809_Colosseo.jpg\n---\n<h1>${props.post.content}</h1>`);
-  console.log(data);
   return data;
   //return props.post.content;
 })
