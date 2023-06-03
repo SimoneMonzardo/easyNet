@@ -1,20 +1,26 @@
 <template>
-  <div class="grid sm:grid-cols-2 lg:grid-cols-4 grid-rows-[repeat(12,_minmax(0,_1fr))] w-full h-full gap-x-1 sm:gap-x-2 md:gap-x-3 gap-y-3">
+  <div
+    class="grid sm:grid-cols-2 lg:grid-cols-4 grid-rows-[repeat(12,_minmax(0,_1fr))] w-full h-full gap-x-1 sm:gap-x-2 md:gap-x-3 gap-y-3">
     <PostHeader :username="post.username" :elapsedTime="elapsed" class="lg:col-span-3" />
 
-    <div class="row-start-2 row-end-[8] sm:row-end-[9] lg:row-end-[13] sm:col-span-2 lg:col-span-3 h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3 p-6 bg-white border border-gray-200 shadow-xl dark:bg-gray-800 dark:border-gray-700">
-      <div v-html="content.content" class="mx-auto text-gray-900 dark:text-gray-50" :class="content.data.image === '' ? 'h-full' : 'h-9'"></div>
+    <div
+      class="row-start-2 row-end-[8] sm:row-end-[9] lg:row-end-[13] sm:col-span-2 lg:col-span-3 h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3 p-6 bg-white border border-gray-200 shadow-xl dark:bg-gray-800 dark:border-gray-700">
+      <div v-html="content.content" class="mx-auto text-gray-900 dark:text-gray-50"
+        :class="content.data.image === '' ? 'h-full' : 'h-9'"></div>
       <img v-if="content.data.image !== ''" :src="content.data.image" class="h-auto max-h-full rounded-lg mx-auto" />
     </div>
 
     <LikeCommentsButtons
-      class="row-start-[8] sm:row-start-1 sm:col-start-2 lg:col-start-4 w-full h-10"
-      :likes="likes" 
+      class="row-start-[8] sm:row-start-1 sm:col-start-2 lg:col-start-4 w-full h-10" 
+      :likes="likes"
       :comments="comments" 
       :hasUserLike="post.hasUserLike"
-      @likeToggled="toggleLike()" />
+      :isSavedByUser="post.isSavedByUser"
+      @likeToggled="toggleLike()"
+      @saveToggled="toggleSave()" />
 
-    <div class="row-start-[9] col-span-2 lg:col-span-1 lg:col-start-4 lg:row-start-2 row-end-[13] shadow-inner shadow-gray-400 dark:shadow-gray-800 rounded-xl bg-gray-100 dark:bg-gray-600 flex flex-col justify-between h-full max-h-full">
+    <div
+      class="row-start-[9] col-span-2 lg:col-span-1 lg:col-start-4 lg:row-start-2 row-end-[13] shadow-inner shadow-gray-400 dark:shadow-gray-800 rounded-xl bg-gray-100 dark:bg-gray-600 flex flex-col justify-between h-full max-h-full">
       <ul class="tracking-tight text-gray-900 dark:text-gray-50 overflow-y-scroll max-h-full my-4">
         <li v-for="comment in post.comments" class="w-full px-4 py-2">
           <h6 class="text-md font-semibold">{{ comment.username }}</h6>
@@ -43,9 +49,9 @@ import { PaperAirplaneIcon } from "@heroicons/vue/24/outline";
 import { reactive } from 'vue';
 import * as matter from 'gray-matter';
 
-const suffixes = ['', ' K', 'M'];
+const suffixes = ['', 'K', 'M'];
 const props = defineProps({
-  post: {}
+  post: { }
 });
 const additionalData = reactive({
   userComment: '',
@@ -173,6 +179,33 @@ async function toggleLike() {
         } else {
           props.post.likes.pop();
         }
+      }
+    }
+  });
+}
+async function toggleSave() {
+  const token = localStorage.getItem('token');
+  if (token === null || token === '') {
+    // TODO: Show Login Modal
+    return;
+  }
+
+  props.post.isSavedByUser = !props.post.isSavedByUser;
+  
+  await useFetch(`https://progettoeasynet.azurewebsites.net/Save/PostSave?postId=${props.post.postId}`, {
+    lazy: true,
+    server: false,
+    method: 'POST',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': ''
+    },
+    onRequest({ options }) {
+      options.headers['Authorization'] = `Bearer ${token}`;
+    },
+    onResponse({ response }) {
+      if (!response.ok) {
+        props.post.isSavedByUser = !props.post.isSavedByUser;
       }
     }
   });

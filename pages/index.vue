@@ -76,6 +76,7 @@ const { pending } = useFetch(`https://progettoeasynet.azurewebsites.net/Post/Get
 
     for (const post of response._data) {
       post.hasUserLike = getPostHasUserLike(post, username);
+      post.isSavedByUser = getIsPostSavedByUser(post, null);
       data.posts.push(post);    
     }
     data.lastFetchedPost += data.posts.length;
@@ -105,6 +106,7 @@ async function nextPost() {
         onResponse({ response }) {
           if (response.status === 200) {
             response._data.hasUserLike = getPostHasUserLike(response._data, localStorage.getItem('username'));
+            post.isSavedByUser = getIsPostSavedByUser(post, null);
 
             data.posts.push(response._data);
             data.lastFetchedPost++;
@@ -139,5 +141,10 @@ function requireLogin() {
 
 function getPostHasUserLike(post, username) {
   return post.likes.includes(username);
+}
+
+function getIsPostSavedByUser(post, savedPosts) {
+  return false;
+  return savedPosts.includes(post.postId);
 }
 </script>
