@@ -98,6 +98,7 @@
           </div>
         </div>
       </div>
+      <button data-modal-target = "forget-modal" hidden > </button>
     </nav>
   </header>
 </template>

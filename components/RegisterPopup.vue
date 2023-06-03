@@ -244,13 +244,17 @@ export default {
             if(response._data == "User created successfully") {
                 const options = {};
                 console.log("success")
+
                 const registerElement = document.getElementById("register-modal");
                 const registerModal = new Modal(registerElement, options);
                 registerModal.hide();
-                console.log("closed modal")
-                const successElement = document.getElementById("success-modal");
-                const successModal = new Modal(successElement, options);
-                successModal.show();
+                try {
+                    const forgetElement = document.getElementById('forget-modal');
+                    const forgetModal = new Modal(forgetElement, options);
+                    forgetModal.show();
+                } catch (error){
+                    consol.log(error)
+                }
             }
             if(response._data == "Mail already used"){
                 console.log(document.getElementById("emailText").innerHTML);
