@@ -2,10 +2,9 @@
   <div class="flex flex-col md:grid md:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-2 md:gap-3 max-h-[calc(100vh-16rem)]">
     <PostHeader :username="post.username" :elapsedTime="elapsed" class="col-span-1 md:col-span-2 xl:col-span-3 order-1" />
 
-    <!-- TODO: Remove bg color. It's there as a placholder -->
-    <div
-      class="col-span-1 md:col-span-2 xl:col-span-3 order-2 h-[calc(30rem)] max-h-[calc(35vh)] md:max-h-full flex justify-center bg-red-900 rounded-xl"
-      v-html="content">
+    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2 h-[calc(30rem)] max-h-[calc(35vh)] md:max-h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3">
+      <div v-html="content.content" class="mx-auto" :class="content.data.image === '' ? 'h-full' : 'h-9'"></div>
+      <img v-if="content.data.image !== ''" :src="content.data.image" class="h-full rounded-xl mx-auto"/>
     </div>
 
     <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-1 sm:gap-2 md:gap-3">
@@ -41,6 +40,7 @@
 <script setup>
 import { PaperAirplaneIcon } from "@heroicons/vue/24/outline";
 import { reactive } from 'vue';
+import * as matter from 'gray-matter';
 
 const suffixes = ['', ' K', 'M'];
 const props = defineProps({
@@ -51,7 +51,10 @@ const additionalData = reactive({
 });
 
 const content = computed(() => {
-  return props.post.content;
+  const data = matter(`---\nimage: https://media-assets.wired.it/photos/615f1a10cae11de32015125c/16:9/w_1280,c_limit/1486735809_Colosseo.jpg\n---\n<h1>${props.post.content}</h1>`);
+  console.log(data);
+  return data; 
+  //return props.post.content;
 })
 
 const likes = computed(() => {
@@ -84,6 +87,7 @@ const elapsed = computed(() => {
   const postDate = new Date(props.post.dataDiCreazione);
   const currentDate = new Date();
 
+  // TODO: Calcolare meglio le date e sistemare i singolari
   const yearDiff = currentDate.getFullYear() - postDate.getFullYear();
   if (yearDiff > 0) {
     return `${yearDiff} anni fa`;
