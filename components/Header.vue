@@ -99,6 +99,7 @@
         </div>
       </div>
       <button data-modal-target = "forget-modal" hidden > </button>
+      <button data-modal-target = "success-modal" hidden > </button>
     </nav>
   </header>
 </template>

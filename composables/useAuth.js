@@ -160,7 +160,6 @@ export default () => {
   }
 
   return {
-    register,
     login,
     changePassword,
     deleteUser,

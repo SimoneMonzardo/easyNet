@@ -249,9 +249,9 @@ export default {
                 const registerModal = new Modal(registerElement, options);
                 registerModal.hide();
                 try {
-                    const forgetElement = document.getElementById('forget-modal');
-                    const forgetModal = new Modal(forgetElement, options);
-                    forgetModal.show();
+                    const successElement = document.getElementById('success-modal');
+                    const successModal = new Modal(successElement, options);
+                    successModal.show();
                 } catch (error){
                     consol.log(error)
                 }
