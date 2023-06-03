@@ -42,12 +42,6 @@
 
             <span class="sr-only">Chiudi</span>
           </button>
-          <button
-            type="submit"
-            @click="handleRegister()"
-            class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-          </button>
           <div class="px-6 py-6 lg:px-8">
             <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
               Inviata mail di conferma
@@ -64,13 +58,6 @@ import { Modal } from "flowbite";
 import useAuth from "~/composables/useAuth";
 
 export default {
-  name: "SuccessPopup",
-  methods: {
-    closeModal() {
-      const options = {};
-
-      const successElement = document.getElementById("forget-modal");
-      const successModal = new Modal(loginElement, options);
-      successModal.hide();
-    }
+  name: "SuccessPopup"
+  }
 </script>
