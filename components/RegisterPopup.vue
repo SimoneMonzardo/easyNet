@@ -241,8 +241,19 @@ export default {
         },
         onResponse({ request, response, options }) {
             console.log(response._data);
+            if(response._data == "User created successfully") {
+                const options = {};
+                console.log("success")
+                const registerElement = document.getElementById("register-modal");
+                const registerModal = new Modal(registerElement, options);
+                registerModal.hide();
+                console.log("closed modal")
+                const successElement = document.getElementById("success-modal");
+                const successModal = new Modal(successElement, options);
+                successModal.show();
+            }
             if(response._data == "Mail already used"){
-                console.log("MAIL");
+                console.log(document.getElementById("emailText").innerHTML);
                 try {
                 document.getElementById("emailText").innerHTML = "Email già in uso";
                 document.getElementById("email").style.borderColor = "red";
@@ -251,7 +262,7 @@ export default {
                     console.log(error)
                 }
             }
-            else{
+            else if(response._data != "Mail already used"){
                 document.getElementById("emailText").innerHTML = "Email";
                 document.getElementById("email").style.borderColor = "rgba(80,80,80,0.3)";
                 document.getElementById("emailText").style.color = "gray";
@@ -265,22 +276,12 @@ export default {
                     console.log(error)
                 }
             }
-            else{
-                document.getElementById("emailText").innerHTML = "Email";
+            else if(response._data != "Username already used"){
+                document.getElementById("usernameText").innerHTML = "Username";
                 document.getElementById("usernameRegister").style.borderColor = "rgba(80,80,80,0.3)";
                 document.getElementById("usernameText").style.color = "gray";
             }
-            if(response._value !== null || response._value !== "Bad Request") {
-                const options = {};
 
-                const registerElement = document.getElementById("register-modal");
-                const registerModal = new Modal(registerElement, options);
-                registerModal.hide();
-
-                const successElement = document.getElementById("success-modal");
-                const successModal = new Modal(successElement, options);
-                successModal.show();
-            }
         },
         onResponseError({ request, response, options }) {
           // Handle the response errors
@@ -313,7 +314,7 @@ export default {
     async handleRegister() {
       //const { register } = useAuth();
       const passwordInput = document.getElementById("passwordRegister");
-      const confirmPasswordInput = document.getElementById("passwordRegister");
+      const confirmPasswordInput = document.getElementById("confirmPassword");
       var data = {
         username: document.getElementById("usernameRegister").value,
         name: document.getElementById("name").value,
