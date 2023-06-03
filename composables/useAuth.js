@@ -3,30 +3,30 @@ export default () => {
   //to do: mettere gli auth token negli header
   // Bearer `authtoken`
 
-  const register = async (reigsterData) => {
-    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/Register', {
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
-      method: 'POST',
-      body: JSON.stringify(reigsterData),
-      onRequest({ request, options }) {
-        // Set the request headers
-      },
-      onRequestError({ request, options, error }) {
-        // Handle the request errors
-      },
-      onResponse({ request, response, options }) {
-        // Process the response data
+  // const register = async (reigsterData) => {
+  //   const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/Register', {
+  //     headers: {
+  //       'Access-Control-Allow-Origin': '*'
+  //     },
+  //     method: 'POST',
+  //     body: JSON.stringify(reigsterData),
+  //     onRequest({ request, options }) {
+  //       // Set the request headers
+  //     },
+  //     onRequestError({ request, options, error }) {
+  //       // Handle the request errors
+  //     },
+  //     onResponse({ request, response, options }) {
+  //       console.log(response);
         
-      },
-      onResponseError({ request, response, options }) {
-        // Handle the response errors
-      }
-    });
+  //     },
+  //     onResponseError({ request, response, options }) {
+  //       // Handle the response errors
+  //     }
+  //   });
 
-    return data;
-  }
+  //   return data;
+  // }
 
   const login = async (credentials) => {
     const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/login', {
