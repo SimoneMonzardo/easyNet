@@ -96,7 +96,7 @@ namespace easyNetAPI.Controllers
 
 		[HttpGet("GetSavedPostsIds")]
 		[Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
-		public async Task<IActionResult> GetSavedPostsAsync()
+		public async Task<IActionResult> GetSavedPostIdsAsync()
 		{
 			try
 			{
