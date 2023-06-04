@@ -14,9 +14,8 @@
     </div>
     <div>
       <button
-        data-popover-target="actions-popover" 
-        data-popover-trigger="click"
-        data-popover-placement="left"
+        id="actions-trigger"
+        @click="openPopoverMenu()"
         type="button">
         <EllipsisVerticalIcon class="h-8 w-8 text-gray-900 dark:text-white" />
       </button>
@@ -27,20 +26,23 @@
         class="absolute z-10 invisible inline-block w-48 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
         <button
           @click="reportPost()"
-          class="text-red-600 font-bold block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-          Report
+          class="text-red-600 font-bold text-start block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+          Segnala
         </button>
-        <a @click="copyLink()"
-          class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-          Copy Link
-        </a>
-        <a @click="openShare()"
-          class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-          Share
-        </a>
-        <a :href="`/${username}`"
+        <button 
+          @click="copyLink()"
+          class="block text-start w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+          Copia link
+        </button>
+        <!-- <button 
+          @click="openShare()"
+          class="block text-start w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+          Condividi
+        </button> -->
+        <a 
+          :href="`/${username}`"
           class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-          About this account
+          Vai all'account
         </a>
         <div data-popper-arrow></div>
       </div>
@@ -51,6 +53,7 @@
 <script>
 import { EllipsisVerticalIcon } from "@heroicons/vue/24/outline";
 import { UserCircleIcon } from "@heroicons/vue/20/solid";
+import { Popover } from "flowbite";
 
 export default {
   name: 'PostHeader',
@@ -67,20 +70,12 @@ export default {
   computed: {
     profilePictureUrl() {
       return this.profilePicture;
-    },
-    postUrl() {
-      // TODO: Use the right link
-      return `./posts/${this.postId}`;
-    },
-    reportUrl() {
-      // TODO: Use the right link
-      return `./posts/${this.postId}/report`;
     }
   },
   methods: {
     copyLink: function () {
       // TODO: Use the right link
-      const link = `http://localhost:3000/posts/${this.postId}`;
+      const link = `http://localhost:3000/${this.username}#${this.postId}`;
       navigator.clipboard.writeText(link);
     },
     openShare: function () {
@@ -100,6 +95,17 @@ export default {
           options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
         }
       });
+    },
+    openPopoverMenu() {
+      const popoverElement = document.getElementById('actions-popover');
+      const triggerElement = document.getElementById('actions-trigger');
+      const options = {
+        placement: 'left',
+        triggerType: 'click'
+      };
+
+      const popover = new Popover(popoverElement, triggerElement, options);
+      popover.toggle();
     }
   }
 }

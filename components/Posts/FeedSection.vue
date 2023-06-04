@@ -1,7 +1,6 @@
 <template>
-  <div
-    class="grid sm:grid-cols-2 lg:grid-cols-4 grid-rows-[repeat(12,_minmax(0,_1fr))] w-full h-full gap-x-1 sm:gap-x-2 md:gap-x-3 gap-y-3">
-    <PostHeader :username="post.username" :elapsedTime="elapsed" class="lg:col-span-3" />
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 grid-rows-[repeat(12,_minmax(0,_1fr))] w-full h-full gap-x-1 sm:gap-x-2 md:gap-x-3 gap-y-3">
+    <PostHeader :username="post.username" :elapsedTime="elapsed" :postId="post.postId" class="lg:col-span-3" />
 
     <div
       class="row-start-2 row-end-[8] sm:row-end-[9] lg:row-end-[13] sm:col-span-2 lg:col-span-3 h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3 p-6 bg-white border border-gray-200 shadow-xl dark:bg-gray-800 dark:border-gray-700">
