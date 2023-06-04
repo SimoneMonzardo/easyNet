@@ -126,7 +126,7 @@ export default {
     });
     window.addEventListener('resize', this.onResize);
     const token = sessionStorage.getItem('token');
-    if (token === undefined || token === null || token === '') {
+    if (token === null || token === '' || token === 'null') {
       this.$router.push ('/');
     }
   },

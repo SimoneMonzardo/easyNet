@@ -74,7 +74,6 @@ export default {
   },
   methods: {
     copyLink: function () {
-      // TODO: Use the right link
       const link = `http://localhost:3000/${this.username}#${this.postId}`;
       navigator.clipboard.writeText(link);
     },

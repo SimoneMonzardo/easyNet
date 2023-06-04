@@ -52,6 +52,7 @@
 import { PaperAirplaneIcon } from "@heroicons/vue/24/outline";
 import { reactive } from 'vue';
 import * as matter from 'gray-matter';
+import useModal from '~/composables/useModal';
 
 const suffixes = ['', 'K', 'M'];
 
@@ -64,9 +65,9 @@ const additionalData = reactive({
 });
 
 const content = computed(() => {
+  // TODO: Use only props content
   const data = matter(`---\nimage: https://media-assets.wired.it/photos/615f1a10cae11de32015125c/16:9/w_1280,c_limit/1486735809_Colosseo.jpg\n---\n<h1>${props.post.content}</h1>`);
   return data;
-  //return props.post.content;
 })
 
 const likes = computed(() => {
@@ -99,20 +100,20 @@ const elapsed = computed(() => {
   const postDate = new Date(props.post.dataDiCreazione);
   const currentDate = new Date();
 
-  // TODO: Calcolare meglio le date e sistemare i singolari
-  const yearDiff = currentDate.getFullYear() - postDate.getFullYear();
-  if (yearDiff > 0) {
-    return `${yearDiff} anni fa`;
-  }
-
-  const monthDiff = currentDate.getMonth() - postDate.getMonth();
-  if (monthDiff > 0) {
-    return `${monthDiff} mesi fa`;
-  }
-
   const daysDiff = currentDate.getDate() - postDate.getDate();
-  if (daysDiff > 0) {
-    return `${daysDiff} giorni fa`;
+  const yearDiff = currentDate.getFullYear() - postDate.getFullYear();
+  const monthDiff = currentDate.getMonth() - postDate.getMonth();
+
+  if (((yearDiff === 0 && monthDiff === 1) || (yearDiff === 1 && monthDiff === -11)) && daysDiff > 0) {
+    return `${daysDiff} giorn${yearDiff > 1 ? 'i' : 'o'} fa`;
+  }
+
+  if ((yearDiff === 0 && monthDiff > 0) || (yearDiff === 1 && monthDiff < 0)) {
+    return `${monthDiff} mes${yearDiff > 1 ? 'i' : 'e'} fa`;
+  }
+
+  if (yearDiff > 0) {
+    return `${yearDiff} ann${yearDiff > 1 ? 'i' : 'o'} fa`;
   }
 
   return 'Oggi';
@@ -146,15 +147,17 @@ async function postComment() {
           content: comment.content
         })
       } else {
-        // TODO: Show login modal, create a common method to reuse
+        const { requireLogin } = useModal();
+        requireLogin(true);
       }
     }
   });
 }
 async function toggleLike() {
   const token = sessionStorage.getItem('token');
-  if (token === null || token === '') {
-    // TODO: Show Login Modal
+  if (token === null || token === '' || token === 'null') {
+    const { requireLogin } = useModal();
+    requireLogin(true);
     return;
   }
 
@@ -190,8 +193,9 @@ async function toggleLike() {
 }
 async function toggleSave() {
   const token = sessionStorage.getItem('token');
-  if (token === null || token === '') {
-    // TODO: Show Login Modal
+  if (token === null || token === '' || token === 'null') {
+    const { requireLogin } = useModal();
+    requireLogin(true);
     return;
   }
 

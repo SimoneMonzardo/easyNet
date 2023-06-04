@@ -1,8 +1,3 @@
-<!-- TODO: Check if user is logged -->
-<!-- TODO: Submit changes -->
-<!-- TODO: Cancel changes -->
-<!-- TODO: Use user data -->
-
 <template>
   <section Modals>
     <!-- Confirm Delete Modal -->
@@ -205,6 +200,7 @@ import { ExclamationCircleIcon } from "@heroicons/vue/24/outline";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { reactive } from 'vue';
 import { useRouter } from "vue-router";
+import useStorage from "~/composables/useStorage";
 
 const router = useRouter();
 const confirmDelete = reactive({ text: '' });
@@ -231,20 +227,23 @@ const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Auth/Get
     options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
   },
   onResponse({ request, response, options }) {
-    user.username = response._data.userName;
-    user.name = response._data.name;
-    user.surname = response._data.surname;
-    user.gender = response._data.gender;
-    user.email = response._data.email;
-    user.phoneNumber = response._data.phoneNumber;
-    user.birthDate = response._data.dateOfBirth;
-    user.profilePicture = response._data.profilePicture;
+    if (response.ok) {
 
-    sessionStorage.setItem('backupName', response._data.name);
-    sessionStorage.setItem('backupSurname', response._data.surname);
-    sessionStorage.setItem('backupGender', response._data.gender);
-    sessionStorage.setItem('backupBirthDate', response._data.dateOfBirth);
-    sessionStorage.setItem('backupProfilePicture', response._data.profilePicture);
+      user.username = response._data.userName;
+      user.name = response._data.name;
+      user.surname = response._data.surname;
+      user.gender = response._data.gender;
+      user.email = response._data.email;
+      user.phoneNumber = response._data.phoneNumber;
+      user.birthDate = response._data.dateOfBirth;
+      user.profilePicture = response._data.profilePicture;
+
+      sessionStorage.setItem('backupName', response._data.name);
+      sessionStorage.setItem('backupSurname', response._data.surname);
+      sessionStorage.setItem('backupGender', response._data.gender);
+      sessionStorage.setItem('backupBirthDate', response._data.dateOfBirth);
+      sessionStorage.setItem('backupProfilePicture', response._data.profilePicture);
+    }
   },
   onResponseError() {
     // TODO: Handle error
@@ -253,7 +252,7 @@ const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Auth/Get
 
 onMounted(() => {
   const token = sessionStorage.getItem('token');
-  if (token === undefined || token === null || token === '') {
+  if (token === null || token === '' || token === 'null') {
     router.push('/');
   }
 });
@@ -321,11 +320,9 @@ async function deleteUserAccount() {
     }
   });
 
-  sessionStorage.setItem('logged', false);
-  sessionStorage.removeItem('token');
-  sessionStorage.removeItem('username');
-  sessionStorage.removeItem('email');
-  sessionStorage.removeItem('profilePicture');
+  const { clearSession } = useStorage();
+  clearSession();
+
   router.push('/');
 }
 

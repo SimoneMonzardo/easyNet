@@ -202,8 +202,6 @@
                   >
                 </div>
 
-                <!-- TODO: Add profile picture upload -->
-
                 <button
                   type="submit"
                   @click="handleRegister()"

@@ -88,6 +88,9 @@ export default {
 </script>
 
 <script setup>
+import useModal from '~/composables/useModal';
+import useStorage from '~/composables/useStorage';
+
 const INITIAL_POST_FETCH_COUNT = 7;
 const MINIMUM_POST_TRIGGER = 5;
 
@@ -133,6 +136,7 @@ async function nextPost() {
   }
 
   const token = sessionStorage.getItem('token');
+  const { requireLogin } = useModal();
 
   if (token !== null) {
     if (data.lastFetchedPost - data.activePost < MINIMUM_POST_TRIGGER) {
@@ -155,14 +159,15 @@ async function nextPost() {
             data.posts.push(response._data);
             data.lastFetchedPost++;
           } else if (response.status === 401 && data.activePost >= data.lastFetchedPost) {
-            // TODO: Logout (Clear localstorage). Create a common method to do that
-            requireLogin();
+            const { clearSession } = useStorage();
+            clearSession();
+            requireLogin(false);
           }
         }
       });
     }
   } else if (data.activePost >= data.lastFetchedPost) {
-    requireLogin();
+    requireLogin(false);
   }
 }
 
@@ -170,17 +175,6 @@ function previousPost() {
   if (data.activePost > 0) {
     data.activePost--;
   }
-}
-
-function requireLogin() {
-  const options = {
-    closable: false
-  };
-
-  const loginElement = document.getElementById('authentication-modal');
-  document.getElementById('close-login-modal-button').classList.add('hidden');
-  const loginModal = new Modal(loginElement, options);
-  loginModal.show();
 }
 
 function getPostHasUserLike(post, username) {
@@ -227,7 +221,9 @@ async function feedChangeRequested() {
     });
   } else {
     document.getElementById('feed-explore').checked = true;
-    // TODO: Show Login Dialog
+
+    const { requireLogin } = useModal();
+    requireLogin(true);
   }
 }
 
