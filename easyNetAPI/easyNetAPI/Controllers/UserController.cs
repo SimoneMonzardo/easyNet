@@ -42,12 +42,18 @@ namespace easyNetAPI.Controllers
             {
                 return BadRequest("User not found");
             }
-            var managedUserBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
-            if (managedUserBehavior is null)
+            var managedUser = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
+            if (managedUser is null)
             {
                 return BadRequest("User not found");
             }
-            if (managedUserBehavior.Company.CompanyId != 0)
+            var roleId = _db.UserRoles.Where(ur => ur.UserId == userId).FirstOrDefault().RoleId;
+            if (roleId is null)
+            {
+                return BadRequest("Something went wrong");
+            }
+            var roleName = _db.Roles.Where(r => r.Id == roleId).FirstOrDefault().Name;
+            if (roleName.Equals(SD.ROLE_COMPANY_ADMIN) || roleName.Equals(SD.ROLE_EMPLOYEE))
             {
                 return Ok(true);
             }
