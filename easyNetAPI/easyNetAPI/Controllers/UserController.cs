@@ -598,7 +598,7 @@ namespace easyNetAPI.Controllers
         }
         [HttpGet("GetUserData")]
         [AllowAnonymous]
-        public async Task<UserBehavior> GetUserDataAsync(string username)
+        public async Task<object> GetUserDataAsync(string username)
         {
             try
             {
@@ -607,8 +607,9 @@ namespace easyNetAPI.Controllers
                 {
                     return null;
                 }
-                var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(id);
-                return user;
+                var profilepic = _db.Users.FirstOrDefault(u => u.Id == id).ProfilePicture;
+                var userData = await _unitOfWork.UserBehavior.GetFirstOrDefault(id);
+                return new { userData, profilepic };
             }
             catch (Exception ex)
             {
