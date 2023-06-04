@@ -32,6 +32,28 @@ namespace easyNetAPI.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet("IsCompany")]
+        [Authorize(Roles = $"{SD.ROLE_MODERATOR},{SD.ROLE_USER},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_EMPLOYEE}")]
+        public async Task<ActionResult<bool>> IsCompany()
+        {
+            var token = Request.Headers["Authorization"].ToString();
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+            if (userId is null)
+            {
+                return BadRequest("User not found");
+            }
+            var managedUserBehavior = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+            if (managedUserBehavior is null)
+            {
+                return BadRequest("User not found");
+            }
+            if (managedUserBehavior.Company.CompanyId != 0)
+            {
+                return Ok(true);
+            }
+            return Ok(false);
+        }
+
         [HttpPost("Follow"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
         public async Task<ActionResult<string>> FollowUserAsync(string userName)
         {
