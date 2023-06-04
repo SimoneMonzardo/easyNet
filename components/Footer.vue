@@ -5,7 +5,7 @@
       <div class="sm:flex sm:items-center sm:justify-between text-center">
         <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
           © 2023
-          <a href="./" class="hover:underline">easyNet™</a>
+          <a href="./" class="hover:text-blue-500">easyNet™</a>
         </span>
         <div class="mt-4 sm:mt-1">
            <ul class="flex flex-col sm:flex-row sm:gap-6 text-gray-600 dark:text-gray-400 font-medium items-center">
