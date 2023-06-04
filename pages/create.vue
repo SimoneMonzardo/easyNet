@@ -125,7 +125,7 @@ export default {
       this.onResize();
     });
     window.addEventListener('resize', this.onResize);
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token === undefined || token === null || token === '') {
       this.$router.push ('/');
     }
@@ -158,7 +158,7 @@ export default {
         method: 'POST',
         body: formData,
         onRequest({ request, options }) {
-          options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+          options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
         }
       });
 

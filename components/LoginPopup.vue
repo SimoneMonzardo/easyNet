@@ -108,6 +108,7 @@ export default {
             loginModal.hide();
 
             const passwordInput = document.getElementById('password'); 
+            const remindMe = document.getElementById('remember').checked;
 
             var data = {
                 username: document.getElementById('username').value,
@@ -116,7 +117,7 @@ export default {
 
             passwordInput.value = '';
 
-            await login(data);
+            await login(data, remindMe);
             this.$router.go();
         }
     }

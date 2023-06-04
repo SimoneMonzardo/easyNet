@@ -11,7 +11,7 @@ export default () => {
         body: JSON.stringify(getUserFollowersData),
         onRequest({ request, options }) {
             // Set the request headers
-            options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+            options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
         },
         onRequestError({ request, options, error }) {
             // Handle the request errors
@@ -36,7 +36,7 @@ const getFollowers = async () => {
     method: 'GET',
     onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     },
     onRequestError({ request, options, error }) {
         // Handle the request errors
@@ -62,7 +62,7 @@ const getUserFollowedList = async (getUserFollowedListData) => {
     body: JSON.stringify(getUserFollowedListData),
     onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     },
     onRequestError({ request, options, error }) {
         // Handle the request errors
@@ -87,7 +87,7 @@ const getFollowed = async () => {
     method: 'GET',
     onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     },
     onRequestError({ request, options, error }) {
         // Handle the request errors
@@ -111,7 +111,7 @@ const follow = async (followData) => {
     body: JSON.stringify(followData),
     onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     },
     onRequestError({ request, options, error }) {
         // Handle the request errors
@@ -135,7 +135,7 @@ const unfollow = async (unfollowData) => {
     body: JSON.stringify(unfollowData),
     onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     },
     onRequestError({ request, options, error }) {
         // Handle the request errors

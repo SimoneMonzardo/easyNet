@@ -228,7 +228,7 @@ const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Auth/Get
     'Authorization': ''
   },
   onRequest({ request, options }) {
-    options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+    options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
   },
   onResponse({ request, response, options }) {
     user.username = response._data.userName;
@@ -240,11 +240,11 @@ const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Auth/Get
     user.birthDate = response._data.dateOfBirth;
     user.profilePicture = response._data.profilePicture;
 
-    localStorage.setItem('backupName', response._data.name);
-    localStorage.setItem('backupSurname', response._data.surname);
-    localStorage.setItem('backupGender', response._data.gender);
-    localStorage.setItem('backupBirthDate', response._data.dateOfBirth);
-    localStorage.setItem('backupProfilePicture', response._data.profilePicture);
+    sessionStorage.setItem('backupName', response._data.name);
+    sessionStorage.setItem('backupSurname', response._data.surname);
+    sessionStorage.setItem('backupGender', response._data.gender);
+    sessionStorage.setItem('backupBirthDate', response._data.dateOfBirth);
+    sessionStorage.setItem('backupProfilePicture', response._data.profilePicture);
   },
   onResponseError() {
     // TODO: Handle error
@@ -252,7 +252,7 @@ const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Auth/Get
 });
 
 onMounted(() => {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   if (token === undefined || token === null || token === '') {
     router.push('/');
   }
@@ -271,9 +271,9 @@ async function saveChanges() {
     profilePicture: user.profilePicture
   };
 
-  const oldPicture = localStorage.getItem('backupProfilePicture');
+  const oldPicture = sessionStorage.getItem('backupProfilePicture');
   if (oldPicture !== null && oldPicture !== '' && (user.profilePicture === '' || user.profilePicture !== oldPicture)) {
-    localStorage.setItem('profilePicture', user.profilePicture);
+    sessionStorage.setItem('profilePicture', user.profilePicture);
 
     await useFetch('https://progettoeasynet.azurewebsites.net/Auth/DeleteProfilePicture', {
       method: 'DELETE',
@@ -282,7 +282,7 @@ async function saveChanges() {
         'Authorization': ''
       },
       onRequest({ request, options }) {
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
       },
       onResponseError({response}) {
         console.log(response);
@@ -298,7 +298,7 @@ async function saveChanges() {
     },
     body: JSON.stringify(newUserInfo),
     onRequest({ request, options }) {
-      options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+      options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     }
   });
 
@@ -317,24 +317,24 @@ async function deleteUserAccount() {
       'Authorization': ''
     },
     onRequest({ request, options }) {
-      options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+      options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     }
   });
 
-  localStorage.setItem('logged', false);
-  localStorage.removeItem('token');
-  localStorage.removeItem('username');
-  localStorage.removeItem('email');
-  localStorage.removeItem('profilePicture');
+  sessionStorage.setItem('logged', false);
+  sessionStorage.removeItem('token');
+  sessionStorage.removeItem('username');
+  sessionStorage.removeItem('email');
+  sessionStorage.removeItem('profilePicture');
   router.push('/');
 }
 
 function cancelChanges() {
-  user.name = localStorage.getItem('backupName');
-  user.surname = localStorage.getItem('backupSurname');
-  user.gender = localStorage.getItem('backupGender');
-  user.birthDate = localStorage.getItem('backupBirthDate');
-  user.profilePicture = localStorage.getItem('backupProfilePicture');
+  user.name = sessionStorage.getItem('backupName');
+  user.surname = sessionStorage.getItem('backupSurname');
+  user.gender = sessionStorage.getItem('backupGender');
+  user.birthDate = sessionStorage.getItem('backupBirthDate');
+  user.profilePicture = sessionStorage.getItem('backupProfilePicture');
 }
 
 async function updateImage(images) {
@@ -354,13 +354,13 @@ async function updateImage(images) {
     },
     body: formData,
     onRequest({ request, options }) {
-      options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+      options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     }
   });
 
   if (data._value !== null) {
     user.profilePicture = data._value;
-    localStorage.setItem('profilePicture', data._value);
+    sessionStorage.setItem('profilePicture', data._value);
   }
 }
 

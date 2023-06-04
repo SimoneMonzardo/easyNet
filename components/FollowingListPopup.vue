@@ -127,8 +127,7 @@ export default {
                 'Authorization': ''
             },
             onRequest({ request, options }) {
-                console.log(localStorage.getItem('token'));
-                options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+                options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
             }
         });
         return {
@@ -146,7 +145,7 @@ export default {
                     'Authorization': ''
                 },
                 onRequest({ request, options }) {
-                    options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+                    options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
                 }
             });
             user.followed = false;
@@ -160,7 +159,7 @@ export default {
                     'Authorization': ''
                 },
                 onRequest({ request, options }) {
-                    options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+                    options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
                 }
             });
             user.followed = true;

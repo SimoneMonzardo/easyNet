@@ -121,11 +121,20 @@ export default {
   },
   methods: {
     logOut() {
+      // Clear session cache
+      sessionStorage.setItem("logged", false);
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("username");
+      sessionStorage.removeItem("email");
+      sessionStorage.removeItem("profilePicture");
+
+      // Clear browser cache
       localStorage.setItem("logged", false);
       localStorage.removeItem("token");
       localStorage.removeItem("username");
       localStorage.removeItem("email");
       localStorage.removeItem("profilePicture");
+
       this.$router.go("/");
     },
   },

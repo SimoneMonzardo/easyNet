@@ -76,7 +76,7 @@ const { pending } = useFetch(`https://progettoeasynet.azurewebsites.net/Post/Get
   onResponse({ response }) {
     data.status = response.status;
 
-    const username = localStorage.getItem('username');
+    const username = sessionStorage.getItem('username');
 
     for (const post of response._data) {
       post.hasUserLike = getPostHasUserLike(post, username);
@@ -92,7 +92,7 @@ async function nextPost() {
     data.activePost++;
   }
 
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
 
   if (token !== null) {
     if (data.lastFetchedPost - data.activePost < MINIMUM_POST_TRIGGER) {
@@ -109,7 +109,7 @@ async function nextPost() {
         },
         onResponse({ response }) {
           if (response.status === 200) {
-            response._data.hasUserLike = getPostHasUserLike(response._data, localStorage.getItem('username'));
+            response._data.hasUserLike = getPostHasUserLike(response._data, sessionStorage.getItem('username'));
             post.isSavedByUser = getIsPostSavedByUser(post);
 
             data.posts.push(response._data);
@@ -152,7 +152,7 @@ function getIsPostSavedByUser(post) {
 }
 
 onMounted(() => {
-  var token = localStorage.getItem('token');
+  var token = sessionStorage.getItem('token');
   if (token !== null && token !== '') {
     useFetch('https://progettoeasynet.azurewebsites.net/Save/GetSavedPostsIds', {
       lazy: true,
