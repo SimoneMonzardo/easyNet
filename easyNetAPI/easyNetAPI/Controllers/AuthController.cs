@@ -426,7 +426,8 @@ namespace easyNetAPI.Controllers
                     return BadRequest("There is no profile picture");
                 string wwwRootPath = _hostEnvironment.WebRootPath;
                 string location = (new Uri(link)).PathAndQuery;
-                System.IO.File.Delete(Path.Combine(wwwRootPath, location));
+                var path = wwwRootPath+ location;
+                System.IO.File.Delete(path);
                 user.ProfilePicture = "";
                 _db.Users.Update(user);
                 _db.SaveChanges();
