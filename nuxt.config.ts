@@ -11,7 +11,16 @@ export default defineNuxtConfig({
   typescript: {
     strict: true,
   },
-  modules: ["@nuxtjs/tailwindcss"],
+  modules: [
+    "@nuxtjs/tailwindcss", 
+    ["@nuxtjs/google-fonts", {
+      families: {
+        'Roboto': true,
+        download: true,
+        inject: true
+      }
+    }]
+  ],
   vite: {
     optimizeDeps: {
       esbuildOptions: {
@@ -25,5 +34,5 @@ export default defineNuxtConfig({
         ]
       }
     }
-  }
+  },
 });

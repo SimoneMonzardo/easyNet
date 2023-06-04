@@ -7,20 +7,21 @@
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+  background-color: #dbeafe;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #bbb;
+  background-color: #3f83f8;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #888;
+  background-color: #2563eb;
 }
 
 html {
   overflow-y: overlay;
   overflow-x: hidden;
+  font-family: 'Roboto Slab', sans-serif;
 }
 
 body {
@@ -34,7 +35,7 @@ body {
 .triangle {
   border-style: solid;
   border-width: 0px 0px 6rem 6rem;
-  border-color: transparent transparent transparent #6b7280;
+  border-color: transparent transparent transparent #e5e7eb;
 }
 
 @layer base {

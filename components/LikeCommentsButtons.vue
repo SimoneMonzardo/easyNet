@@ -3,16 +3,15 @@
     <button
       @click="$emit('likeToggled')"
       type="button" 
-      class="shadow-inner shadow-neutral-600 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-black bg-neutral-400 border-r border-r-gray-900 rounded-l-xl hover:bg-neutral-500 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700">
+      class="shadow-inner shadow-gray-400 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-gray-900 bg-gray-100 border-r border-r-gray-400 rounded-l-xl hover:bg-gray-200 dark:bg-gray-600 dark:shadow-gray-800 dark:border-gray-900 dark:text-gray-50 dark:hover:bg-gray-700">
       <HeartIcon 
         v-if="!hasUserLike" 
         class="h-6 w-6" />
-        <!-- TODO: Use the right color -->
-        <!-- Filled HeartIcon. We can't use both solid and outline heroicons as components -->
+      <!-- Filled HeartIcon. We can't use both solid and outline heroicons as components -->
       <svg 
         v-else 
         aria-hidden="true" 
-        fill="red"
+        fill="#3f83f8"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
         class="h-6 w-6">
@@ -20,9 +19,27 @@
       </svg>
       {{ likes }}
     </button>
+    <button
+      @click="$emit('saveToggled')"
+      type="button" 
+      class="shadow-inner shadow-gray-400 font-semibold gap-1 inline-flex items-center px-3 justify-center py-1.5 text-sm text-gray-900 bg-gray-100 border-r border-l border-r-gray-400 border-l-gray-400 hover:bg-gray-200 dark:bg-gray-600 dark:shadow-gray-800 dark:border-gray-900 dark:text-gray-50 dark:hover:bg-gray-700">
+      <BookmarkIcon
+        v-if="!isSavedByUser"
+        class="h-6 w-6" />
+      <!-- Filled BookmarkSlashIcon. We can't use both solid and outline heroicons as components -->
+      <svg
+        v-else 
+        aria-hidden="true" 
+        fill="#3f83f8"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6">
+        <path clip-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z" fill-rule="evenodd"></path>
+      </svg>
+    </button>
     <button 
       type="button" 
-      class="shadow-inner shadow-neutral-600 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-black bg-neutral-400 border-l border-l-gray-900 rounded-r-xl hover:bg-neutral-500 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700">
+      class="shadow-inner shadow-gray-400 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-gray-900 bg-gray-100 border-l border-l-gray-400 rounded-r-xl hover:bg-gray-200 dark:bg-gray-600 dark:shadow-gray-800 dark:border-gray-900 dark:text-gray-50 dark:hover:bg-gray-700">
       <ChatBubbleBottomCenterTextIcon class="h-6 w-6" />
       {{ comments }}
     </button>
@@ -31,18 +48,21 @@
 
 <script>
   import { HeartIcon } from "@heroicons/vue/24/outline"
+  import { BookmarkIcon } from "@heroicons/vue/24/outline";
   import { ChatBubbleBottomCenterTextIcon } from "@heroicons/vue/24/outline";
 
   export default {
     name: 'LikeCommentButtons',
-    emits: ['likeToggled'],
+    emits: ['likeToggled', 'saveToggled'],
     props: {
       likes: String,
       comments: String,
-      hasUserLike: false
+      hasUserLike: false,
+      isSavedByUser: false
     },
     components: {
       HeartIcon,
+      BookmarkIcon,
       ChatBubbleBottomCenterTextIcon
     }
   }

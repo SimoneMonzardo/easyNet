@@ -9,10 +9,10 @@
       <!-- Modal content -->
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
         <div
-          class="bg-gray-300 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex"
+          class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex"
         >
-          <h4 class="text-2xl font-semibold mx-auto">Benvenuto</h4>
-          <h6 class="mx-auto text-4xl font-semibold">easyNet</h6>
+          <h4 class="text-2xl font-semibold mx-auto text-blue-500">Benvenuto</h4>
+          <h6 class="mx-auto text-4xl font-semibold text-blue-500">easyNet</h6>
           <img
             src="https://flowbite.s3.amazonaws.com/logo.svg"
             class="mt-3 h-15 rounded-full"
@@ -202,12 +202,10 @@
                   >
                 </div>
 
-                <!-- TODO: Add profile picture upload -->
-
                 <button
                   type="submit"
                   @click="handleRegister()"
-                  class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  class="w-full text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
                   Crea Account
                 </button>

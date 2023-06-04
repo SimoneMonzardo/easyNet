@@ -1,36 +1,47 @@
 <template>
-  <div class="flex flex-col md:grid md:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-2 md:gap-3 max-h-[calc(100vh-16rem)]">
-    <PostHeader :username="post.username" :elapsedTime="elapsed" class="col-span-1 md:col-span-2 xl:col-span-3 order-1" />
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 grid-rows-[repeat(12,_minmax(0,_1fr))] w-full h-full gap-x-1 sm:gap-x-2 md:gap-x-3 gap-y-3">
+    <PostHeader
+      :username="post.username" 
+      :elapsedTime="elapsed" 
+      :profilePicture="post.imgUrl"
+      :postId="post.postId" 
+      class="lg:col-span-3" />
 
-    <div class="col-span-1 md:col-span-2 xl:col-span-3 order-2 h-[calc(30rem)] max-h-[calc(35vh)] md:max-h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3">
-      <div v-html="content.content" class="mx-auto" :class="content.data.image === '' ? 'h-full' : 'h-9'"></div>
-      <img v-if="content.data.image !== ''" :src="content.data.image" class="h-full rounded-xl mx-auto"/>
+    <div
+      class="row-start-2 row-end-[8] sm:row-end-[9] lg:row-end-[13] sm:col-span-2 lg:col-span-3 h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3 p-6 bg-white border border-gray-200 shadow-xl dark:bg-gray-800 dark:border-gray-700">
+      <div v-html="content.content" class="mx-auto text-gray-900 dark:text-gray-50"
+        :class="content.data.image === '' ? 'h-full' : 'h-9'"></div>
+      <img v-if="content.data.image !== ''" :src="content.data.image" class="h-auto max-h-full rounded-lg mx-auto" />
     </div>
 
-    <div class="order-3 h-full mx-auto w-full 2xl:w-4/5 flex flex-col gap-1 sm:gap-2 md:gap-3">
-      <LikeCommentsButtons :likes="likes" :comments="comments" :hasUserLike="post.hasUserLike"
-        @likeToggled="toggleLike()" />
+    <LikeCommentsButtons
+      class="row-start-[8] sm:row-start-1 sm:col-start-2 lg:col-start-4 w-full h-10" 
+      :likes="likes"
+      :comments="comments" 
+      :hasUserLike="post.hasUserLike"
+      :isSavedByUser="post.isSavedByUser"
+      @likeToggled="toggleLike()"
+      @saveToggled="toggleSave()" />
 
-      <div
-        class="shadow-inner shadow-gray-500 rounded-xl bg-gray-400 flex flex-col justify-between h-[calc(20vh)] md:h-full">
-        <ul class="tracking-tight text-white overflow-y-scroll max-h-[calc(22rem)] my-4">
-          <li v-for="comment in post.comments" class="w-full px-4 py-2">
-            <h6 class="text-md font-semibold">{{ comment.username }}</h6>
-            <p class="text-xs leading-tight">{{ comment.content }}</p>
-          </li>
-        </ul>
-        <div class="w-full">
-          <label for="addAComment" class="sr-only">Commenta...</label>
-          <div class="flex items-center px-2 bg-gray-500 bg-opacity-20 rounded-xl">
-            <textarea v-model="additionalData.userComment" id="addAComment" rows="1"
-              class="block py-1 px-1.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Commenta..." style="resize: none"></textarea>
-            <button @click="postComment()" type="submit"
-              class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
-              <PaperAirplaneIcon class="w-6 h-6 text-gray-100" />
-              <span class="sr-only">Invia</span>
-            </button>
-          </div>
+    <div
+      class="row-start-[9] col-span-2 lg:col-span-1 lg:col-start-4 lg:row-start-2 row-end-[13] shadow-inner shadow-gray-400 dark:shadow-gray-800 rounded-xl bg-gray-100 dark:bg-gray-600 flex flex-col justify-between h-full max-h-full">
+      <ul class="tracking-tight text-gray-900 dark:text-gray-50 overflow-y-scroll max-h-full my-4">
+        <li v-for="comment in post.comments" class="w-full px-4 py-2">
+          <h6 class="text-md font-semibold">{{ comment.username }}</h6>
+          <p class="text-xs leading-tight">{{ comment.content }}</p>
+        </li>
+      </ul>
+      <div class="w-full">
+        <label for="addAComment" class="sr-only">Commenta...</label>
+        <div class="flex items-center px-2 bg-gray-300 bg-opacity-80 rounded-xl dark:bg-gray-700">
+          <textarea v-model="additionalData.userComment" id="addAComment" rows="1"
+            class="block py-1 px-1.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-50 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Commenta..." style="resize: none"></textarea>
+          <button @click="postComment()" type="submit"
+            class="inline-flex justify-center p-2 rounded-full cursor-pointer text-blue-500 dark:text-blue-800">
+            <PaperAirplaneIcon class="w-6 h-6" />
+            <span class="sr-only">Invia</span>
+          </button>
         </div>
       </div>
     </div>
@@ -41,20 +52,22 @@
 import { PaperAirplaneIcon } from "@heroicons/vue/24/outline";
 import { reactive } from 'vue';
 import * as matter from 'gray-matter';
+import useModal from '~/composables/useModal';
 
-const suffixes = ['', ' K', 'M'];
+const suffixes = ['', 'K', 'M'];
+
 const props = defineProps({
-  post: { }
+  post: { username: '' }
 });
+
 const additionalData = reactive({
   userComment: '',
 });
 
 const content = computed(() => {
+  // TODO: Use only props content
   const data = matter(`---\nimage: https://media-assets.wired.it/photos/615f1a10cae11de32015125c/16:9/w_1280,c_limit/1486735809_Colosseo.jpg\n---\n<h1>${props.post.content}</h1>`);
-  console.log(data);
-  return data; 
-  //return props.post.content;
+  return data;
 })
 
 const likes = computed(() => {
@@ -87,20 +100,20 @@ const elapsed = computed(() => {
   const postDate = new Date(props.post.dataDiCreazione);
   const currentDate = new Date();
 
-  // TODO: Calcolare meglio le date e sistemare i singolari
-  const yearDiff = currentDate.getFullYear() - postDate.getFullYear();
-  if (yearDiff > 0) {
-    return `${yearDiff} anni fa`;
-  }
-
-  const monthDiff = currentDate.getMonth() - postDate.getMonth();
-  if (monthDiff > 0) {
-    return `${monthDiff} mesi fa`;
-  }
-
   const daysDiff = currentDate.getDate() - postDate.getDate();
-  if (daysDiff > 0) {
-    return `${daysDiff} giorni fa`;
+  const yearDiff = currentDate.getFullYear() - postDate.getFullYear();
+  const monthDiff = currentDate.getMonth() - postDate.getMonth();
+
+  if (((yearDiff === 0 && monthDiff === 1) || (yearDiff === 1 && monthDiff === -11)) && daysDiff > 0) {
+    return `${daysDiff} giorn${yearDiff > 1 ? 'i' : 'o'} fa`;
+  }
+
+  if ((yearDiff === 0 && monthDiff > 0) || (yearDiff === 1 && monthDiff < 0)) {
+    return `${monthDiff} mes${yearDiff > 1 ? 'i' : 'e'} fa`;
+  }
+
+  if (yearDiff > 0) {
+    return `${yearDiff} ann${yearDiff > 1 ? 'i' : 'o'} fa`;
   }
 
   return 'Oggi';
@@ -123,24 +136,38 @@ async function postComment() {
     },
     body: JSON.stringify(comment),
     onRequest({ options }) {
-      options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+      options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     },
     onResponse({ response }) {
       additionalData.userComment = '';
 
       if (response.ok) {
         props.post.comments.push({
-          username: localStorage.getItem('username'),
+          username: sessionStorage.getItem('username'),
           content: comment.content
         })
       } else {
-        // TODO: Show login modal, create a common method to reuse
+        const { requireLogin } = useModal();
+        requireLogin(true);
       }
     }
   });
 }
 async function toggleLike() {
-  console.log('toggled');
+  const token = sessionStorage.getItem('token');
+  if (token === null || token === '' || token === 'null') {
+    const { requireLogin } = useModal();
+    requireLogin(true);
+    return;
+  }
+
+  props.post.hasUserLike = !props.post.hasUserLike;
+  if (props.post.hasUserLike) {
+    props.post.likes.push({});
+  } else {
+    props.post.likes.pop();
+  }
+
   await useFetch(`https://progettoeasynet.azurewebsites.net/Like/PostLike?postId=${props.post.postId}`, {
     lazy: true,
     server: false,
@@ -150,18 +177,44 @@ async function toggleLike() {
       'Authorization': ''
     },
     onRequest({ options }) {
-      options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+      options.headers['Authorization'] = `Bearer ${token}`;
     },
     onResponse({ response }) {
-      if (response.ok) {
+      if (!response.ok) {
         props.post.hasUserLike = !props.post.hasUserLike;
         if (props.post.hasUserLike) {
-          props.post.likes.push({ });
+          props.post.likes.push({});
         } else {
           props.post.likes.pop();
         }
-      } else {
-        // TODO: Show login modal, create a common method to reuse
+      }
+    }
+  });
+}
+async function toggleSave() {
+  const token = sessionStorage.getItem('token');
+  if (token === null || token === '' || token === 'null') {
+    const { requireLogin } = useModal();
+    requireLogin(true);
+    return;
+  }
+
+  props.post.isSavedByUser = !props.post.isSavedByUser;
+  
+  await useFetch(`https://progettoeasynet.azurewebsites.net/Save/PostSave?postId=${props.post.postId}`, {
+    lazy: true,
+    server: false,
+    method: 'POST',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': ''
+    },
+    onRequest({ options }) {
+      options.headers['Authorization'] = `Bearer ${token}`;
+    },
+    onResponse({ response }) {
+      if (!response.ok) {
+        props.post.isSavedByUser = !props.post.isSavedByUser;
       }
     }
   });
