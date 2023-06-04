@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-blue-500 max-w-screen dark:bg-blue-800 h-16 shadow-lg shadow-indigo-300 dark:shadow-indigo-900">
+  <header class="bg-blue-500 max-w-screen dark:bg-blue-800 h-16 shadow-lg shadow-indigo-300 dark:shadow-indigo-900 top-0 w-screen" style="position: absolute; z-index: 20;">
     <nav class="mx-4 py-3">
       <div class="flex flex-wrap justify-between items-center">
         <div class="flex justify-start items-center">
@@ -17,19 +17,19 @@
         </div>
         <div class="flex items-center lg:order-2">
           <ThemeToggle />
-          <!-- <button
-            data-drawer-target="sidebar"
-            data-drawer-toggle="sidebar"
-            data-drawer-placement="right"
-            aria-controls="sidebar"
-            id="sidebar-toggle"
-            class="p-1.5 mr-2 text-gray-600 rounded-lg cursor-pointer lg:hidden hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          <button
+            data-drawer-target="filters-drawer"
+            data-drawer-toggle="filters-drawer"
+            data-drawer-placement="top"
+            aria-controls="filters-drawer"
+            id="filters-toggle"
+            class="p-1.5 mr-2 text-gray-600 rounded-full cursor-pointer"
           >
-            <Bars3CenterLeftIcon
-              class="h-6 w-6 text-gray-500 dark:text-gray-400 rotate-180"
+            <MagnifyingGlassIcon
+              class="h-6 w-6 text-gray-100 dark:text-gray-700"
             />
             <span class="sr-only">Attiva sidebar</span>
-          </button> -->
+          </button>
           <div :class="loggedIn ? 'block' : 'hidden'">
             <button
               type="button"
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { Bars3CenterLeftIcon } from "@heroicons/vue/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
 import { UserCircleIcon } from "@heroicons/vue/24/outline";
 
 export default {
@@ -116,9 +116,9 @@ export default {
     },
   },
   components: {
-    Bars3CenterLeftIcon,
-    UserCircleIcon
-  },
+    UserCircleIcon,
+    MagnifyingGlassIcon
+},
   methods: {
     logOut() {
       // Clear session cache
