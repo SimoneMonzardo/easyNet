@@ -9,6 +9,7 @@ using easyNetAPI.Data;
 using easyNetAPI.Models.UpsertModels;
 using Microsoft.Extensions.Hosting;
 using System.Configuration;
+using easyNetAPI.Models.ModelVM;
 
 namespace easyNetAPI.Controllers;
 
@@ -55,7 +56,7 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("GetPostsOfFollowed"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
-    public async Task<IEnumerable<Post>?> GetFollowedAsync(int numeroDiPost)
+    public async Task<IEnumerable<PostVM>?> GetFollowedAsync(int numeroDiPost)
     {
         var token = Request.Headers["Authorization"].ToString();
         var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
@@ -65,18 +66,31 @@ public class PostController : ControllerBase
         if (user is null || user.FollowedUsers is null || user.FollowedUsers.Count == 0)
             return null;
         var posts = await _unitOfWork.Post.GetAllAsync();
-        var followedPost = new List<Post>();
+        var followedPost = new List<PostVM>();
         foreach (var post in posts)
         {
             if (user.FollowedUsers.Contains(post.UserId))
-                followedPost.Add(post);
+            {
+                var profilepic = _db.Users.Where(u => u.Id == post.UserId).FirstOrDefault().ProfilePicture;
+                followedPost.Add(new PostVM {
+                    Username = post.Username,
+                    PostId = post.PostId,
+                    Comments = post.Comments,
+                    Content = post.Content,
+                    DataDiCreazione = post.DataDiCreazione,
+                    Hashtags = post.Hashtags,
+                    ImgUrl = profilepic,
+                    Likes = post.Likes,
+                    Tags = post.Tags
+                });
+            }
         }
         if(numeroDiPost == null)
             return followedPost.OrderBy(p => p.DataDiCreazione).Take(numeroDiPost);
         return followedPost.OrderBy(p => p.DataDiCreazione);
     }
     [HttpGet("GetNextFollowed"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
-    public async Task<Post?> GetNextFollowedAsync(int index)
+    public async Task<PostVM?> GetNextFollowedAsync(int index)
     {
         if(index == null)
             return null;
@@ -88,21 +102,35 @@ public class PostController : ControllerBase
         if (user is null || user.FollowedUsers is null || user.FollowedUsers.Count == 0)
             return null;
         var posts = await _unitOfWork.Post.GetAllAsync();
-        var followedPost = new List<Post>();
+        var followedPost = new List<PostVM>();
         foreach (var post in posts)
         {
             if (user.FollowedUsers.Contains(post.UserId))
-                followedPost.Add(post);
+            {
+                var profilepic = _db.Users.Where(u => u.Id == post.UserId).FirstOrDefault().ProfilePicture;
+                followedPost.Add(new PostVM
+                {
+                    Username = post.Username,
+                    PostId = post.PostId,
+                    Comments = post.Comments,
+                    Content = post.Content,
+                    DataDiCreazione = post.DataDiCreazione,
+                    Hashtags = post.Hashtags,
+                    ImgUrl = profilepic,
+                    Likes = post.Likes,
+                    Tags = post.Tags
+                });
+            }
         }
         return followedPost.OrderBy(p => p.DataDiCreazione).Take(index).Last();
     }
     [HttpGet("GetPostsOfRandom"), AllowAnonymous]
-    public async Task<IEnumerable<Post>?> GetRandomAsync(int? numeroDiPost)
+    public async Task<IEnumerable<PostVM>?> GetRandomAsync(int? numeroDiPost)
     {
         var token = Request.Headers["Authorization"].ToString();
         if (numeroDiPost is null || numeroDiPost < 0 || numeroDiPost > 30)
         {
-            return Enumerable.Empty<Post>();
+            return Enumerable.Empty<PostVM>();
         }
         
         if (string.IsNullOrWhiteSpace(token))
@@ -116,13 +144,13 @@ public class PostController : ControllerBase
                 var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 if (userId is null)
                 {
-                    return Enumerable.Empty<Post>();
+                    return Enumerable.Empty<PostVM>();
                 }
 
                 var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
                 if (user is null)
                 {
-                    return Enumerable.Empty<Post>();
+                    return Enumerable.Empty<PostVM>();
                 }
             }
             catch (Exception)
@@ -132,10 +160,27 @@ public class PostController : ControllerBase
         }
       
         var posts = await _unitOfWork.Post.GetAllAsync();
-        return posts.OrderBy(p => p.DataDiCreazione).Take((int)numeroDiPost);
+        var postsList = new List<PostVM>();
+        foreach (var post in posts)
+        {
+            var profilepic = _db.Users.Where(u => u.Id == post.UserId).FirstOrDefault().ProfilePicture;
+            postsList.Add(new PostVM
+            {
+                Username = post.Username,
+                PostId = post.PostId,
+                Comments = post.Comments,
+                Content = post.Content,
+                DataDiCreazione = post.DataDiCreazione,
+                Hashtags = post.Hashtags,
+                ImgUrl = profilepic,
+                Likes = post.Likes,
+                Tags = post.Tags
+            });
+        }
+        return postsList.OrderBy(p => p.DataDiCreazione).Take((int)numeroDiPost);
     }
     [HttpGet("GetNextRandom"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
-    public async Task<Post?> GetNextRandomAsync(int index)
+    public async Task<PostVM?> GetNextRandomAsync(int index)
     {
         if (index == null)
             return null;
@@ -147,7 +192,24 @@ public class PostController : ControllerBase
         if (user is null)
             return null;
         var posts = await _unitOfWork.Post.GetAllAsync();
-        return posts.OrderBy(p => p.DataDiCreazione).Skip(index).FirstOrDefault();
+        var postsList = new List<PostVM>();
+        foreach (var post in posts)
+        {
+            var profilepic = _db.Users.Where(u => u.Id == post.UserId).FirstOrDefault().ProfilePicture;
+            postsList.Add(new PostVM
+            {
+                Username = post.Username,
+                PostId = post.PostId,
+                Comments = post.Comments,
+                Content = post.Content,
+                DataDiCreazione = post.DataDiCreazione,
+                Hashtags = post.Hashtags,
+                ImgUrl = profilepic,
+                Likes = post.Likes,
+                Tags = post.Tags
+            });
+        }
+        return postsList.OrderBy(p => p.DataDiCreazione).Skip(index).FirstOrDefault();
     }
 
     [HttpDelete("DeletePost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
