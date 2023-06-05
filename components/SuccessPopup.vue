@@ -15,9 +15,9 @@
           <h4 class="text-2xl font-semibold mx-auto"></h4>
           <h6 class="mx-auto text-4xl font-semibold">easyNet</h6>
           <img
-            src="https://flowbite.s3.amazonaws.com/logo.svg"
+            src="~/public/logo.png"
             class="mt-3 h-15 rounded-full"
-            alt="FlowBite Logo"
+            alt="EasyNet Logo"
           />
         </div>
         <div class="w-full">

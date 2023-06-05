@@ -5,7 +5,7 @@
       <div class="sm:flex sm:items-center sm:justify-between text-center">
         <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
           © 2023
-          <a href="./" class="hover:text-blue-500">easyNet™</a>
+          <a href="./" class="hover:text-violet-600">easyNet™</a>
         </span>
         <div class="mt-4 sm:mt-1">
            <ul class="flex flex-col sm:flex-row sm:gap-6 text-gray-600 dark:text-gray-400 font-medium items-center">
@@ -14,7 +14,7 @@
                 <button
                   data-modal-target="privacy-modal"
                   data-modal-toggle="privacy-modal"
-                  class="block text-dark focus:ring-0 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center hover:text-blue-500"
+                  class="block text-dark focus:ring-0 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center hover:text-violet-600"
                   type="button">
                   Privacy
                 </button>
@@ -25,7 +25,7 @@
                 <button
                   data-modal-target="terms-modal"
                   data-modal-toggle="terms-modal"
-                  class="block text-dark focus:ring-0 focus:outline-none font-medium rounded-lg text-md py-2.5 text-center hover:text-blue-500"
+                  class="block text-dark focus:ring-0 focus:outline-none font-medium rounded-lg text-md py-2.5 text-center hover:text-violet-600"
                   type="button">
                   Termini &amp; Condizioni
                 </button>
@@ -35,7 +35,7 @@
                 <!-- Report a bug -->
                 <a 
                   href="https://github.com/SimoneMonzardo/easyNet/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml" 
-                  class="block text-dark focus:ring-0 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center hover:text-blue-500">
+                  class="block text-dark focus:ring-0 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center hover:text-violet-600">
                   Report Bug
                 </a>
               </li>

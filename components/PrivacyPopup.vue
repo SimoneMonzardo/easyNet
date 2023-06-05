@@ -4,8 +4,8 @@
     <div class="relative w-full max-w-3xl max-h-full">
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
         <div class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex">
-          <h6 class="mx-auto text-4xl font-semibold text-blue-500">easyNet</h6>
-          <img src="https://flowbite.s3.amazonaws.com/logo.svg" class="mt-3 h-15 rounded-full" alt="FlowBite Logo" />
+          <h6 class="mx-auto text-4xl font-semibold text-violet-600">easyNet</h6>
+          <img src="~/public/logo.png" class="mt-3 h-15 rounded-full" alt="EasyNet Logo" />
         </div>
         <!-- Content -->
         <div class="w-full bg-white rounded-lg shadow dark:bg-gray-700">
@@ -110,13 +110,13 @@
             <button
               data-modal-hide="privacy-modal"
               type="button"
-              class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              class="text-white bg-violet-600 hover:bg-violet-700 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-violet-700 dark:hover:bg-violet-700 dark:focus:ring-violet-800">
               Accetta
             </button>
             <button
               data-modal-hide="privacy-modal"
               type="button"
-              class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+              class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-violet-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
               Rifiuta
             </button>
           </div>
