@@ -163,6 +163,7 @@
                   />
                   <label
                     for="passwordRegister"
+                    id="passwordText"
                     class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
                     >Password</label
                   >
@@ -292,24 +293,46 @@ export default {
       var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
       const password = document.getElementById("passwordRegister").value;
       const confirmPassword = document.getElementById("confirmPassword").value;
-      if (!re.test(password)) {
-        document.getElementById("confirmText").innerHTML = "Password non valida";
-        document.getElementById("confirmPassword").style.borderColor = "red";
-        document.getElementById("confirmText").style.color = "red";
-      } else if (password === confirmPassword && password != "") {
+      if (password === confirmPassword && password != "") {
         document.getElementById("confirmText").innerHTML = "Conferma password";
         document.getElementById("confirmPassword").style.borderColor = "green";
         document.getElementById("confirmText").style.color = "green";
-      } else if (password != confirmPassword) {
-        document.getElementById("confirmText").innerHTML = "Non coincidono";
-        document.getElementById("confirmPassword").style.borderColor = "red";
-        document.getElementById("confirmText").style.color = "red";
-      } else if (confirmPassword == "") {
-        document.getElementById("confirmText").innerHTML = "Conferma password";
+
+        document.getElementById("passwordText").innerHTML = "Password valida";
+        document.getElementById("passwordRegister").style.borderColor = "green";
+        document.getElementById("passwordText").style.color = "green";
+      }
+        if (!re.test(password)) {
+        document.getElementById("passwordText").innerHTML = "Password non valida";
+        document.getElementById("passwordRegister").style.borderColor = "red";
+        document.getElementById("passwordText").style.color = "red";
+          if (password === "") {
+            console.log("entrato");
+
+            document.getElementById("confirmText").innerHTML = "Conferma Password";
+            document.getElementById("confirmPassword").style.borderColor =
+              "rgba(80,80,80,0.3)";
+            document.getElementById("confirmText").style.color = "gray";
+
+            document.getElementById("passwordText").innerHTML = "Password";
+            document.getElementById("passwordRegister").style.borderColor =
+              "rgba(80,80,80,0.3)";
+            document.getElementById("passwordText").style.color = "gray";
+          }
+        document.getElementById("confirmText").innerHTML = "Conferma Password";
         document.getElementById("confirmPassword").style.borderColor =
           "rgba(80,80,80,0.3)";
         document.getElementById("confirmText").style.color = "gray";
-      }
+        }
+        else{
+        document.getElementById("passwordText").innerHTML = "Password valida";
+        document.getElementById("passwordRegister").style.borderColor = "green";
+        document.getElementById("passwordText").style.color = "green";
+        if (password != confirmPassword) {
+        document.getElementById("confirmText").innerHTML = "Non coincidono";
+        document.getElementById("confirmPassword").style.borderColor = "red";
+        document.getElementById("confirmText").style.color = "red";}
+        }
     },
     async handleRegister() {
       //const { register } = useAuth();
