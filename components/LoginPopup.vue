@@ -98,7 +98,7 @@
                 <button
                   type="button"
                   @click="openForgetModal()"
-                  class="text-blue-700 hover:underline dark:text-blue-500"
+                  class="text-violet-700 hover:underline dark:text-violet-600"
                 >
                   Password dimenticata?
                 </button>
@@ -106,7 +106,7 @@
               <button
                 type="submit"
                 @click="executeLogin()"
-                class="w-full text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                class="w-full text-white bg-violet-600 hover:bg-violet-700 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center dark:bg-violet-700 dark:hover:bg-violet-700 dark:focus:ring-violet-800"
               >
                 Accedi
               </button>
@@ -115,7 +115,7 @@
                 <button
                   type="button"
                   @click="openRegisterModal()"
-                  class="text-blue-700 hover:underline dark:text-blue-500"
+                  class="text-violet-700 hover:underline dark:text-violet-600"
                 >
                   Crea un account
                 </button>
