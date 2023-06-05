@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-blue-500 max-w-screen dark:bg-blue-800 h-16 shadow-lg shadow-indigo-300 dark:shadow-indigo-900 top-0 w-screen" style="position: absolute; z-index: 20;">
+  <header class="bg-blue-500 max-w-screen dark:bg-blue-800 h-16 shadow-lg shadow-indigo-300 dark:shadow-blue-950 top-0 w-screen" style="position: absolute; z-index: 20;">
     <nav class="mx-4 py-3">
       <div class="flex flex-wrap justify-between items-center">
         <div class="flex justify-start items-center">
@@ -26,7 +26,7 @@
             class="p-1.5 mr-2 text-gray-600 rounded-full cursor-pointer"
           >
             <MagnifyingGlassIcon
-              class="h-6 w-6 text-gray-100 dark:text-gray-700"
+              class="h-6 w-6 text-gray-100 dark:text-gray-800"
             />
             <span class="sr-only">Attiva sidebar</span>
           </button>
@@ -41,7 +41,7 @@
               <UserCircleIcon v-if="profilePicture === ''" class="h-8 w-8 my-auto text-gray-100 dark:text-gray-700" />
               <img
                 v-else
-                class="w-8 h-8 rounded-full overflow-x-hidden"
+                class="w-8 h-8 my-auto rounded-full overflow-x-hidden"
                 :src="profilePicture"
                 alt="Immagine Utente"
               />
@@ -119,7 +119,7 @@ export default {
   components: {
     UserCircleIcon,
     MagnifyingGlassIcon
-},
+  },
   methods: {
     logOut() {
       const { clearSession, clearLocal } = useStorage();

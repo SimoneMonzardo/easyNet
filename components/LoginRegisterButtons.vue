@@ -20,7 +20,7 @@
         </li>
         <li class="hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
           <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal" class="block px-4 py-2">
-            Register
+            Registrati
           </button>
         </li>
       </ul>

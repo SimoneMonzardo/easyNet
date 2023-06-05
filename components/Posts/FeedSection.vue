@@ -24,7 +24,7 @@
       @saveToggled="toggleSave()" />
 
     <div
-      class="row-start-[9] col-span-2 lg:col-span-1 lg:col-start-4 lg:row-start-2 row-end-[13] shadow-inner shadow-gray-400 dark:shadow-gray-800 rounded-xl bg-gray-100 dark:bg-gray-600 flex flex-col justify-between h-full max-h-full">
+      class="row-start-[9] sm:col-span-2 lg:col-span-1 lg:col-start-4 lg:row-start-2 row-end-[13] shadow-inner shadow-gray-400 dark:shadow-gray-800 rounded-xl bg-gray-100 dark:bg-gray-600 flex flex-col justify-between h-full max-h-full">
       <ul class="tracking-tight text-gray-900 dark:text-gray-50 overflow-y-scroll max-h-full my-4">
         <li v-for="comment in post.comments" class="w-full px-4 py-2">
           <h6 class="text-md font-semibold">{{ comment.username }}</h6>

@@ -215,6 +215,14 @@ const user = reactive({
   profilePicture: '',
 });
 
+useHead({
+  title: 'Impostazioni • easyNet',
+  meta: [{
+    name:'description',
+    content: 'Entra nel nostro social network professionale: connessioni globali con aziende di successo. Benvenuto!'
+  }]
+});
+
 const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Auth/GetUserData', {
   lazy: true,
   server: false,
@@ -228,7 +236,6 @@ const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Auth/Get
   },
   onResponse({ request, response, options }) {
     if (response.ok) {
-
       user.username = response._data.userName;
       user.name = response._data.name;
       user.surname = response._data.surname;
@@ -369,12 +376,4 @@ async function deleteImage() {
 
   user.profilePicture = '';
 }
-</script>
-
-<script>
-  export default {
-    head: {
-      title: 'Impostazioni • easyNet'
-    }
-  }
 </script>

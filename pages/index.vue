@@ -51,20 +51,46 @@
     tabindex="-1">
     <div class="flex flex-col items-center my-5">
       <h3 class="mb-3 text-lg font-medium text-gray-900 dark:text-white">Cosa stai cercando?</h3>
-      <ul class="grid w-full md:w-1/3 gap-6 md:grid-cols-2">
+      <ul class="grid w-full md:w-1/2 lg:w-1/3 gap-6 sm:grid-cols-2">
         <li class="px-10 md:px-0">
           <input type="radio" id="feed-explore" name="feed" value="explore" class="hidden peer" required :checked="!data.getFollowedPosts" @click="feedChangeRequested()">
-          <label for="feed-explore" class="inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-blue-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+          <label for="feed-explore" class="inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-blue-200 rounded-xl cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="w-full text-lg font-semibold">Esplora</div>
             <GlobeEuropeAfricaIcon class="h-6 w-6 text-blue-500" />
           </label>
         </li>
         <li class="px-10 md:px-0">
           <input type="radio" id="feed-following" name="feed" value="following" class="hidden peer" :checked="data.getFollowedPosts" @click="feedChangeRequested()">
-          <label for="feed-following" class="inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-blue-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+          <label for="feed-following" class="inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-blue-200 rounded-xl cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="w-full text-lg font-semibold">Seguiti</div>
             <AtSymbolIcon class="h-6 w-6 text-blue-500" />
           </label>
+        </li>
+      </ul>
+    </div>
+    <div class="w-full sm:w-1/2 lg:w-1/3 px-10 sm:px-0 sm:mx-auto mb-5">
+      <label for="search-company" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Cerca</label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <MagnifyingGlassIcon class="w-5 h-5 text-gray-500 dark:text-gray-400" />
+        </div>
+        <input
+          @input="findCompanies($event.target.value)"
+          type="search"
+          id="search-company"
+          class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-xl bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Trova aziende ..."
+          required>
+      </div>
+      <ul class="min-h-[15vh] max-h-[15vh] mt-4 overflow-y-auto bg-gray-50 rounded-xl bg-opacity-50 dark:bg-gray-700">
+        <li class="flex items-center justify-center my-1" v-for="company in data.companies" v-if="!data.loadingCompanies">
+          <UserCircleIcon v-if="company.image === ''" class="w-1/3 h-10 text-gray-900 dark:text-gray-50" />
+          <img v-else class="w-1/2 lg:w-1/3 h-10" :src="company.image" />
+          <span class="py-auto w-1/2 lg:w-1/3 text-gray-900 dark:text-gray-50 align-middle">{{ company.name }}</span>
+        </li>
+        <li class="flex items-center justify-center my-1 animate-pulse" role="status" v-else>
+          <svg class="w-1/2 lg:w-1/3 h-10 text-gray-200 dark:text-gray-700" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
+          <div class="w-1/2 lg:w-1/3 h-2.5 bg-gray-200 rounded-full dark:bg-gray-700"></div>
         </li>
       </ul>
     </div>
@@ -74,20 +100,8 @@
   </div>
 </template>
 
-<script>
-import { ChevronDoubleLeftIcon, AtSymbolIcon, GlobeEuropeAfricaIcon } from "@heroicons/vue/24/outline";
-
-export default {
-  head: {
-    title: 'Home • easyNet',
-  },
-  components: {
-    ChevronDoubleLeftIcon
-  }
-}
-</script>
-
 <script setup>
+import { ChevronDoubleLeftIcon, AtSymbolIcon, GlobeEuropeAfricaIcon, MagnifyingGlassIcon, UserCircleIcon } from "@heroicons/vue/24/outline";
 import useModal from '~/composables/useModal';
 import useStorage from '~/composables/useStorage';
 
@@ -107,10 +121,20 @@ const data = reactive({
   activePost: 0,
   lastFetchedPost: -1,
   status: 401,
-  getFollowedPosts: false
+  getFollowedPosts: false,
+  companies: [],
+  loadingCompanies: true
 });
 
 const savedPostsIds = [];
+
+useHead({
+  title: 'Home • easyNet',
+  meta: [{
+    name:'description',
+    content: 'Entra nel nostro social network professionale: connessioni globali con aziende di successo. Benvenuto!'
+  }]
+});
 
 const { pending } = useFetch(`https://progettoeasynet.azurewebsites.net/Post/GetPostsOfRandom?numeroDiPost=${INITIAL_POST_FETCH_COUNT}`, {
   lazy: true,
@@ -242,6 +266,37 @@ async function validateToken(token) {
   });
 
   return data._value !== null;
+}
+
+async function findCompanies(query) {
+  const token = sessionStorage.getItem('token');
+  console.log(query);
+
+  await useFetch(`https://progettoeasynet.azurewebsites.net/PATH?QUERY=${query}`, {
+    lazy: true,
+    server: false,
+    method: 'GET',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': ''
+    },
+    onRequest({ options }) {
+      options.headers['Authorization'] = `Bearer ${token}`;
+    },
+    onResponse({ response }) {
+      if (response.ok) {
+        data.loadingCompanies = true;
+        data.companies.splice(0, data.companies.length);
+        for (comany in response._data) {
+          data.companies.push(company);
+        }
+      } else {
+        const { requireLogin } = useModal();
+        requireLogin(true);
+        data.loadingCompanies = true;
+      }
+    }
+  });
 }
 
 onMounted(() => {
