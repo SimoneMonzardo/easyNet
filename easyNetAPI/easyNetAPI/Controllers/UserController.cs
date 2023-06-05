@@ -598,21 +598,54 @@ namespace easyNetAPI.Controllers
         }
         [HttpGet("GetUserData")]
         [AllowAnonymous]
-        public async Task<UserBehavior> GetUserDataAsync(string username)
+        public async Task<IActionResult> GetUserDataAsync(string username)
         {
             try
             {
                 var id = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
                 if (id == null)
                 {
-                    return null;
+                    return BadRequest("User id is null");
                 }
-                var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(id);
-                return user;
+                var profilepic = _db.Users.FirstOrDefault(u => u.Id == id).ProfilePicture;
+                var userData = await _unitOfWork.UserBehavior.GetFirstOrDefault(id);
+                var followersList = new List<string>();
+                var followedUser = new List<string>();
+                foreach (var item in userData.FollowersList)
+                {
+                    var username_of_id = await _db.Users.FindAsync(item);
+                    if (username_of_id == null)
+                        continue;
+                    string nomeUtente = username_of_id.UserName;
+                    followersList.Add(nomeUtente);    
+                }
+                foreach (var item in userData.FollowedUsers)
+                {
+                    var username_of_id = await _db.Users.FindAsync(item);
+                    if (username_of_id == null)
+                        continue;
+                    string nomeUtente = username_of_id.UserName;
+                    followedUser.Add(nomeUtente);
+                }
+                var user = new UserBehavior
+                {
+                    _id = userData._id,
+                    UserId = userData.UserId,
+                    Administrator = userData.Administrator,
+                    Company = userData.Company,
+                    Posts = userData.Posts,
+                    FollowedUsers = followedUser,
+                    FollowersList = followersList,
+                    LikedPost = userData.LikedPost,
+                    SavedPost = userData.SavedPost,
+                    MentionedPost = userData.MentionedPost,
+                    ReportedPost = userData.ReportedPost,
+                };
+                return Ok(new { user, profilepic });
             }
             catch (Exception ex)
             {
-                return null;
+                return BadRequest("Something went wrong: " + ex.Message);
             }
         }
     }
