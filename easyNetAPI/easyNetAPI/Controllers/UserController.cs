@@ -609,7 +609,39 @@ namespace easyNetAPI.Controllers
                 }
                 var profilepic = _db.Users.FirstOrDefault(u => u.Id == id).ProfilePicture;
                 var userData = await _unitOfWork.UserBehavior.GetFirstOrDefault(id);
-                return Ok(new { userData, profilepic });
+                var followersList = new List<string>();
+                var followedUser = new List<string>();
+                foreach (var item in userData.FollowersList)
+                {
+                    var username_of_id = await _db.Users.FindAsync(item);
+                    if (username_of_id == null)
+                        continue;
+                    string nomeUtente = username_of_id.UserName;
+                    followersList.Add(nomeUtente);    
+                }
+                foreach (var item in userData.FollowedUsers)
+                {
+                    var username_of_id = await _db.Users.FindAsync(item);
+                    if (username_of_id == null)
+                        continue;
+                    string nomeUtente = username_of_id.UserName;
+                    followedUser.Add(nomeUtente);
+                }
+                var user = new UserBehavior
+                {
+                    _id = userData._id,
+                    UserId = userData.UserId,
+                    Administrator = userData.Administrator,
+                    Company = userData.Company,
+                    Posts = userData.Posts,
+                    FollowedUsers = followedUser,
+                    FollowersList = followersList,
+                    LikedPost = userData.LikedPost,
+                    SavedPost = userData.SavedPost,
+                    MentionedPost = userData.MentionedPost,
+                    ReportedPost = userData.ReportedPost,
+                };
+                return Ok(new { user, profilepic });
             }
             catch (Exception ex)
             {
