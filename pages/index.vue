@@ -83,10 +83,13 @@
           required>
       </div>
       <ul class="min-h-[15vh] max-h-[15vh] mt-4 overflow-y-auto bg-gray-50 rounded-xl bg-opacity-50 dark:bg-gray-700">
-        <li class="flex items-center justify-center my-1" v-for="company in data.companies" v-if="!data.loadingCompanies">
-          <UserCircleIcon v-if="company.image === ''" class="w-1/3 h-10 text-gray-900 dark:text-gray-50" />
-          <img v-else class="w-1/2 lg:w-1/3 h-10" :src="company.image" />
-          <span class="py-auto w-1/2 lg:w-1/3 text-gray-900 dark:text-gray-50 align-middle">{{ company.name }}</span>
+        <li v-for="company in data.companies" v-if="!data.loadingCompanies">
+          <!-- TODO: Use the right link -->
+          <a class="flex items-center justify-center my-1" href="./">
+            <UserCircleIcon v-if="company.profilePicture === null || company.profilePicture === ''" class="w-1/3 h-10 text-gray-900 dark:text-gray-50" />
+            <img v-else class="w-1/2 lg:w-1/3 h-10" :src="company.profilePicture" />
+            <span class="py-auto w-1/2 lg:w-1/3 text-gray-900 dark:text-gray-50 align-middle">{{ company.companyName }}</span>
+          </a>
         </li>
         <li class="flex items-center justify-center my-1 animate-pulse" role="status" v-else>
           <svg class="w-1/2 lg:w-1/3 h-10 text-gray-200 dark:text-gray-700" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
@@ -269,10 +272,10 @@ async function validateToken(token) {
 }
 
 async function findCompanies(query) {
+  data.loadingCompanies = true;
   const token = sessionStorage.getItem('token');
-  console.log(query);
 
-  await useFetch(`https://progettoeasynet.azurewebsites.net/PATH?QUERY=${query}`, {
+  await useFetch(`https://progettoeasynet.azurewebsites.net/Azienda/GetNamePicture?pattern=${query}`, {
     lazy: true,
     server: false,
     method: 'GET',
@@ -285,11 +288,11 @@ async function findCompanies(query) {
     },
     onResponse({ response }) {
       if (response.ok) {
-        data.loadingCompanies = true;
         data.companies.splice(0, data.companies.length);
-        for (comany in response._data) {
+        for (const company of response._data) {
           data.companies.push(company);
         }
+        data.loadingCompanies = false;
       } else {
         const { requireLogin } = useModal();
         requireLogin(true);
