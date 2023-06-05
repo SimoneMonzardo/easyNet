@@ -6,10 +6,10 @@
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
                 <div class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex">
-                    <h4 class="text-2xl font-semibold mx-auto text-blue-500">Bentornato</h4>
-                    <h6 class="mx-auto text-4xl font-semibold text-blue-500">easyNet</h6>
-                    <img src="https://flowbite.s3.amazonaws.com/logo.svg" class="mt-3 h-15 rounded-full"
-                        alt="FlowBite Logo" />
+                    <h4 class="text-2xl font-semibold mx-auto text-violet-600">Bentornato</h4>
+                    <h6 class="mx-auto text-4xl font-semibold text-violet-600">easyNet</h6>
+                    <img src="~/public/logo-easynet-group.svg" class="mt-3 h-15 rounded-full"
+                        alt="EasyNet Logo" />
                 </div>
                 <div class="w-full">
                     <button
@@ -30,35 +30,35 @@
                         <form class="space-y-6" @submit.prevent="submit" method="post">
                             <div class="relative">
                                 <input type="text" id="username" name="userName"
-                                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
                                     placeholder=" " required />
                                 <label for="username"
-                                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Username</label>
+                                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Username</label>
                             </div>
                             <div class="relative">
                                 <input type="password" id="password" name="password"
-                                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
                                     placeholder=" " required />
                                 <label for="password"
-                                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Password</label>
+                                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Password</label>
                             </div>
                             <div class="flex justify-between">
                                 <div class="flex items-start">
                                     <div class="flex items-center h-5">
                                         <input id="remember" type="checkbox" value=""
-                                            class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800">
+                                            class="w-4 h-4 text-violet-600 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-violet-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-violet-700 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 checked:bg-violet-600">
                                     </div>
                                     <label for="remember"
                                         class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Ricordami</label>
                                 </div>
                                     <button type="button" @click="openForgetModal()"
-                                        class="text-blue-700 hover:underline dark:text-blue-500">Password dimenticata?</button>
+                                        class="text-violet-700 hover:underline dark:text-violet-600">Password dimenticata?</button>
                             </div>
                             <button type="submit" @click="executeLogin()"
-                                class="w-full text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Accedi</button>
+                                class="w-full text-white bg-violet-600 hover:bg-violet-700 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center dark:bg-violet-700 dark:hover:bg-violet-700 dark:focus:ring-violet-800">Accedi</button>
                             <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
                                 Non sei registrato? <button type="button" @click="openRegisterModal()"
-                                    class="text-blue-700 hover:underline dark:text-blue-500">Crea un account</button>
+                                    class="text-violet-700 hover:underline dark:text-violet-600">Crea un account</button>
                             </div>
                         </form>
                     </div>

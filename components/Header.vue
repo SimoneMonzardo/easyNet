@@ -1,16 +1,16 @@
 <template>
-  <header class="bg-blue-500 max-w-screen dark:bg-blue-800 h-16 shadow-lg shadow-indigo-300 dark:shadow-blue-950 top-0 w-screen" style="position: absolute; z-index: 20;">
+  <header class="bg-violet-600 max-w-screen dark:bg-violet-800 h-16 shadow-lg shadow-[rgba(0,0,0,0.3)] dark:shadow-violet-950 top-0 w-screen" style="position: absolute; z-index: 20;">
     <nav class="mx-4 py-3">
       <div class="flex flex-wrap justify-between items-center">
         <div class="flex justify-start items-center">
           <a href="/" class="flex mr-4">
             <img
-              src="https://flowbite.s3.amazonaws.com/logo.svg"
+              src="~/public/logo-easynet-group.svg"
               class="mr-3 h-8"
-              alt="FlowBite Logo"
+              alt="EasyNet Logo"
             />
             <span
-              class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
+              class="self-center text-2xl font-semibold whitespace-nowrap text-white"
               >easyNet</span
             >
           </a>

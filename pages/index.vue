@@ -8,7 +8,7 @@
   <div class="max-h-[calc(100vh-4rem)] w-screen grid grid-cols-[repeat(12,_minmax(0,_1fr))] grid-rows-[repeat(12,_minmax(0,_1fr))]">
     <button class="relative" @click="previousPost">
       <div class="block triangle drop-shadow-lg"></div>
-      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-blue-500 rotate-45 bg-transparent" />
+      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-violet-600 rotate-45 bg-transparent" />
     </button>
 
     <div v-if="pending || data.status !== 200" class="col-start-2 col-end-12 row-start-2 row-end-[12] h-full flex flex-col justify-center">
@@ -39,7 +39,7 @@
 
     <button class="col-start-12 col-end-[13] row-start-[12] row-end-[13] rotate-180" @click="nextPost">
       <div class="block triangle drop-shadow-lg"></div>
-      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-blue-500 rotate-45 bg-transparent" />
+      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-violet-600 rotate-45 bg-transparent" />
     </button>
   </div>
 
@@ -54,16 +54,16 @@
       <ul class="grid w-full md:w-1/2 lg:w-1/3 gap-6 sm:grid-cols-2">
         <li class="px-10 md:px-0">
           <input type="radio" id="feed-explore" name="feed" value="explore" class="hidden peer" required :checked="!data.getFollowedPosts" @click="feedChangeRequested()">
-          <label for="feed-explore" class="inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-blue-200 rounded-xl cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+          <label for="feed-explore" class="inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-violet-200 rounded-xl cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-violet-600 peer-checked:border-violet-600 peer-checked:text-violet-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="w-full text-lg font-semibold">Esplora</div>
-            <GlobeEuropeAfricaIcon class="h-6 w-6 text-blue-500" />
+            <GlobeEuropeAfricaIcon class="h-6 w-6 text-violet-600" />
           </label>
         </li>
         <li class="px-10 md:px-0">
           <input type="radio" id="feed-following" name="feed" value="following" class="hidden peer" :checked="data.getFollowedPosts" @click="feedChangeRequested()">
-          <label for="feed-following" class="inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-blue-200 rounded-xl cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+          <label for="feed-following" class="inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-violet-200 rounded-xl cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-violet-600 peer-checked:border-violet-600 peer-checked:text-violet-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="w-full text-lg font-semibold">Seguiti</div>
-            <AtSymbolIcon class="h-6 w-6 text-blue-500" />
+            <AtSymbolIcon class="h-6 w-6 text-violet-600" />
           </label>
         </li>
       </ul>
@@ -78,7 +78,7 @@
           @input="findCompanies($event.target.value)"
           type="search"
           id="search-company"
-          class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-xl bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-xl bg-gray-50 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600"
           placeholder="Trova aziende ..."
           required>
       </div>

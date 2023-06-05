@@ -35,10 +35,10 @@
         <label for="addAComment" class="sr-only">Commenta...</label>
         <div class="flex items-center px-2 bg-gray-300 bg-opacity-80 rounded-xl dark:bg-gray-700">
           <textarea v-model="additionalData.userComment" id="addAComment" rows="1"
-            class="block py-1 px-1.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-50 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            class="block py-1 px-1.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-50 dark:focus:ring-violet-600 dark:focus:border-violet-600"
             placeholder="Commenta..." style="resize: none"></textarea>
           <button @click="postComment()" type="submit"
-            class="inline-flex justify-center p-2 rounded-full cursor-pointer text-blue-500 dark:text-blue-800">
+            class="inline-flex justify-center p-2 rounded-full cursor-pointer text-violet-600">
             <PaperAirplaneIcon class="w-6 h-6" />
             <span class="sr-only">Invia</span>
           </button>
@@ -180,6 +180,7 @@ async function toggleLike() {
       options.headers['Authorization'] = `Bearer ${token}`;
     },
     onResponse({ response }) {
+      console.log(response);
       if (!response.ok) {
         props.post.hasUserLike = !props.post.hasUserLike;
         if (props.post.hasUserLike) {

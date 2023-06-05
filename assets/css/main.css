@@ -7,15 +7,15 @@
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #dbeafe;
+  background-color: #c4b5fd;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #3f83f8;
+  background-color: #6d28d9;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #2563eb;
+  background-color: #5b21b6;
 }
 
 html {

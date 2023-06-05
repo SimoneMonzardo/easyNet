@@ -35,7 +35,7 @@
           <button
             type="button"
             style="width: 120px"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-violet-700 rounded-lg hover:bg-violet-800 focus:ring-4 focus:outline-none focus:ring-violet-300 dark:bg-violet-700 dark:hover:bg-violet-700 dark:focus:ring-violet-800"
           >
             <a href="#" style="margin: auto">Follow</a>
           </button>
