@@ -95,7 +95,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
 })
-    .AddEntityFrameworkStores<AppDbContext>();
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services
     .AddAuthentication(options =>

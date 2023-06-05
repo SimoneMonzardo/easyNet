@@ -14,6 +14,8 @@ using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Data.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Security.Cryptography;
 
 namespace easyNetAPI.Controllers
 {
@@ -27,9 +29,10 @@ namespace easyNetAPI.Controllers
         private readonly TokenService _tokenService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IEmailSender _emailSender;
 
         public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext db, TokenService tokenService, 
-            IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
+            IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment, IEmailSender emailSender)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -37,6 +40,7 @@ namespace easyNetAPI.Controllers
             _tokenService = tokenService;
             _unitOfWork = unitOfWork;
             _hostEnvironment = hostEnvironment;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -449,7 +453,33 @@ namespace easyNetAPI.Controllers
                 return "User not found";
             return Ok(user.Id);
         }
-        
+        [HttpGet]
+        [Route("ForgotPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgottenPasswordAsync(string email)
+        {
+            try
+            {
+                var user = _db.Users.First(u => u.Email == email);
+                if (user == null)
+                    throw new Exception($"Can't find user with this email: {email}");
+                var password = "";
+                using (RNGCryptoServiceProvider cryptRNG = new RNGCryptoServiceProvider())
+                {
+                    byte[] tokenBuffer = new byte[8];
+                    cryptRNG.GetBytes(tokenBuffer);
+                    password =  Convert.ToBase64String(tokenBuffer);
+                }
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var result = await _userManager.ResetPasswordAsync(user, token, password);
+                await _emailSender.SendEmailAsync(email, $"Recupero della password per {user.UserName}", $"Ciao {user.UserName}, <br> la nuova password del tuo account è {password} per modificarla vai nelle impostazioni del tuo account");
+                return Ok($"Email inviata correttamente alla mail {email}");
+            }   
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong: " + ex.Message);
+            }
+        }
     }
 
     public static class AuthControllerUtility
