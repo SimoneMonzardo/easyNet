@@ -28,43 +28,7 @@ export default () => {
   //   return data;
   // }
 
-  const login = async (credentials, remindMe) => {
-    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/login', {
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
-      method: 'POST',
-      body: JSON.stringify(credentials),
-      onRequest({ request, options }) {
-        // Set the request headers
-      },
-      onRequestError({ request, options, error }) {
-        // Handle the request errors
-      },
-      onResponse({ response }) {
-        if (response.ok) {
-          sessionStorage.setItem('logged', true);
-          sessionStorage.setItem('username', response._data.username);
-          sessionStorage.setItem('email', response._data.email);
-          sessionStorage.setItem('profilePicture', response._data.profilePicture);
-          sessionStorage.setItem('token', response._data.token);
-
-          if (remindMe) {
-            localStorage.setItem('logged', true);
-            localStorage.setItem('username', response._data.username);
-            localStorage.setItem('email', response._data.email);
-            localStorage.setItem('profilePicture', response._data.profilePicture);
-            localStorage.setItem('token', response._data.token);
-          }
-        }
-        return response;
-      },
-      onResponseError({ request, response, options }) {
-        // Handle the response errors
-      }
-    })
-  }
-
+  
   const changePassword = async (changePasswordData) => {
     const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/changePassword', {
       headers: {
@@ -166,7 +130,6 @@ export default () => {
   }
 
   return {
-    login,
     changePassword,
     deleteUser,
     editUserData,

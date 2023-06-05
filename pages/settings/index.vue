@@ -50,7 +50,6 @@
   </section>
 
   <section class="bg-white dark:bg-gray-900 h-full">
-    <SettingSelector />
 
     <div class="justify-center flex flex-col sm:flex-row gap-4 mx-10 md:mx-auto mt-12">
       <div class="w-40 lg:w-48 flex flex-col items-center gap-2 lg:pt-4 mx-auto sm:mx-0">
