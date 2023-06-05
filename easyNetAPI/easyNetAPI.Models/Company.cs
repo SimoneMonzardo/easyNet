@@ -17,4 +17,6 @@ public class Company
     public Bot? Bot { get; set; }
     [BsonElement("profile_picture")]
     public string? ProfilePicture { get; set; }
+    [BsonElement("documents")]
+    public List<string>? Documents { get; set; }
 }

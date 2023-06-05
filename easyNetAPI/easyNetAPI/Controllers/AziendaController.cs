@@ -6,10 +6,12 @@ using easyNetAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Drawing;
+using System.IO;
 
 namespace easyNetAPI.Controllers
 {
@@ -30,6 +32,125 @@ namespace easyNetAPI.Controllers
             _db = db;
             _userManager = userManager;
             _hostEnvironment = hostEnvironment;
+        }
+
+        [HttpDelete("deleteDocuments")]
+        [Authorize(Roles = $"{SD.ROLE_USER}")]
+        public async Task<ActionResult<string>> RemoveCompanyDocuments()
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString();
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                var user = _db.Users.FirstOrDefault(u => u.Id == userId);
+                if (user is null)
+                {
+                    return BadRequest("User not found");
+                }
+                var managedUser = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                if (managedUser is null)
+                {
+                    return BadRequest("User not found");
+                }
+                if (managedUser.Company.CompanyName.IsNullOrEmpty())
+                {
+                    return BadRequest("Company not found");
+                }
+                foreach (var item in managedUser.Company.Documents)
+                {
+                    if (item is null)
+                    {
+                        return BadRequest("Documents not found");
+                    }
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    string location = (new Uri(item)).PathAndQuery;
+                    var path = wwwRootPath + location;
+                    System.IO.File.Delete(path);
+                }
+                managedUser.Company.Documents.Clear();
+                var result = await _unitOfWork.UserBehavior.UpdateOneAsync(userId, managedUser);
+                if (result)
+                {
+                    return Ok("Documents deletes successfully");
+                }
+                return BadRequest("Something went wrong");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong");
+            }
+        }
+
+        [HttpPost("postDocuments")]
+        [Authorize(Roles = $"{SD.ROLE_USER}")]
+        public async Task<ActionResult<string>> PostCompanyDocuments(IFormFile? document1, IFormFile? document2)
+        {
+            try
+            {
+                if (document1 is null || document2 is null)
+                {
+                    return BadRequest("Provide two documents");
+                }
+                if (!Path.GetExtension(document1.FileName).Equals(".pdf") || !Path.GetExtension(document2.FileName).Equals(".pdf"))
+                {
+                    return BadRequest("Provide two pdf documents");
+                }
+                var token = Request.Headers["Authorization"].ToString();
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                var user = _db.Users.FirstOrDefault(u => u.Id == userId);
+                if (user is null)
+                {
+                    return BadRequest("User not found");
+                }
+                var managedUser = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                if (managedUser is null)
+                {
+                    return BadRequest("User not found");
+                }
+                if (managedUser.Company.CompanyName.IsNullOrEmpty())
+                {
+                    return BadRequest("Company not found");
+                }
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+
+                if (managedUser.Company.Documents.Count() != 0)
+                {
+                    //cancella i documenti già presenti
+                }
+
+                string fileName1 = Guid.NewGuid().ToString();
+                string fileName2 = Guid.NewGuid().ToString();
+                var uploads = Path.Combine(wwwRootPath, @"documents");
+                var extension = Path.GetExtension(document1.FileName);
+                var link1 = Path.Combine(uploads, fileName1 + extension);
+                var link2 = Path.Combine(uploads, fileName2 + extension);
+                string url1 = "https://progettoeasynet.azurewebsites.net/documents/" + fileName1 + extension;
+                string url2 = "https://progettoeasynet.azurewebsites.net/documents/" + fileName2 + extension;
+                using (var fileStreams = new FileStream(link1, FileMode.Create))
+                {
+                    document1.CopyTo(fileStreams);
+                }
+                using (var fileStreams = new FileStream(link2, FileMode.Create))
+                {
+                    document2.CopyTo(fileStreams);
+                }
+                managedUser.Company.Documents.Add(url1);
+                managedUser.Company.Documents.Add(url2);
+                var result = await _unitOfWork.UserBehavior.UpdateOneAsync(userId,managedUser);
+                if (result)
+                {
+                    return Ok(new
+                    {
+                        url1,
+                        url2
+                    });
+                }
+                return BadRequest("Something went wrong");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong");
+            }
         }
 
         [HttpGet("GetNamePicture")]
@@ -158,7 +279,7 @@ namespace easyNetAPI.Controllers
                     }
                     return BadRequest("Something went wrong");
                 }
-                return BadRequest("File is null"); 
+                return BadRequest("File is null");
             }
             catch (Exception ex)
             {
@@ -179,7 +300,7 @@ namespace easyNetAPI.Controllers
                 var aziende = await _unitOfWork.Company.GetAllAsync();
                 var companies = new List<Company>();
                 var companiesId = new List<int>();
-                foreach ( var company in aziende)
+                foreach (var company in aziende)
                 {
                     if (company.CompanyId != 0 && !companiesId.Contains(company.CompanyId))
                     {
@@ -205,7 +326,7 @@ namespace easyNetAPI.Controllers
                 if (userId is null)
                     return BadRequest("UserId is null");
                 if (id == null)
-                    return BadRequest("id of company is null"); 
+                    return BadRequest("id of company is null");
                 var azienda = await _unitOfWork.Company.GetFirstOrDefault(id);
                 return Json(azienda);
             }
@@ -238,7 +359,7 @@ namespace easyNetAPI.Controllers
                     return BadRequest("Could not add user to role company admin");
                 company.CompanyId = await IdAutoincrementService.GetCompanyAutoincrementId(_unitOfWork);
                 var risultato = await _unitOfWork.Company.AddAsync(company, userIdOfCompanyAdmin);
-                if(risultato)
+                if (risultato)
                     return Ok("Company created succesfully");
                 return BadRequest("Company cannot be created");
             }
@@ -261,7 +382,7 @@ namespace easyNetAPI.Controllers
                     return BadRequest("UserId is null");
                 var user = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
                 var risultato = false;
-                if(user.Company.CompanyId == company.CompanyId)
+                if (user.Company.CompanyId == company.CompanyId)
                     risultato = await _unitOfWork.Company.UpdateOneAsync(company);
                 return Ok(risultato);
             }
@@ -333,7 +454,7 @@ namespace easyNetAPI.Controllers
                 if (user is null)
                     return BadRequest("User not found");
                 var oldcompany = user.Company;
-                if (oldcompany is not null && oldcompany.CompanyId !=0)
+                if (oldcompany is not null && oldcompany.CompanyId != 0)
                     return BadRequest("User already has a company");
                 company.CompanyId = 0;
                 var risultato = await _unitOfWork.Company.AddAsync(company, userId);
@@ -371,7 +492,8 @@ namespace easyNetAPI.Controllers
                         try
                         {
                             userOfCompanyId = _unitOfWork.UserBehavior.GetAllAsync().Result.ToList().Where(u => u.Company.CompanyName == company.CompanyName).First().UserId;
-                        }catch(Exception ex)
+                        }
+                        catch (Exception ex)
                         {
                             return BadRequest("Couldn't get user who made a request: " + ex.Message);
                         }
@@ -560,7 +682,7 @@ namespace easyNetAPI.Controllers
                         return BadRequest("Couldn't remove a company");
                     var dbUser = _db.Users.Find(userId);
                     if (await _userManager.IsInRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN))
-                    await _userManager.RemoveFromRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN);
+                        await _userManager.RemoveFromRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN);
                     if (await _userManager.IsInRoleAsync(dbUser, SD.ROLE_EMPLOYEE))
                         await _userManager.RemoveFromRoleAsync(dbUser, SD.ROLE_EMPLOYEE);
                 }
