@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Security.Cryptography;
+using System.Collections.Immutable;
 
 namespace easyNetAPI.Controllers
 {
@@ -30,6 +31,10 @@ namespace easyNetAPI.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly IEmailSender _emailSender;
+        private readonly IImmutableSet<string> _forbiddenNames = new HashSet<string>()
+        {
+            "index","create","settings","saved"
+        }.ToImmutableHashSet();
 
         public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext db, TokenService tokenService, 
             IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment, IEmailSender emailSender)
@@ -76,6 +81,10 @@ namespace easyNetAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest("Model state invalid");
+            }
+            if (_forbiddenNames.Contains(applicationUser.UserName))
+            {
+                return BadRequest("Username is not valid");
             }
             if (_db.Users.Where(u => u.NormalizedEmail == applicationUser.NormalizedEmail).Count() > 0)
                 return BadRequest("Mail already used");
@@ -138,6 +147,10 @@ namespace easyNetAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest("Model state invalid");
+            }
+            if (_forbiddenNames.Contains(applicationUser.UserName))
+            {
+                return BadRequest("Username is not valid");
             }
             if (_db.Users.Where(u => u.NormalizedEmail == applicationUser.NormalizedEmail).Count() > 0)
                 return BadRequest("Mail already used");
