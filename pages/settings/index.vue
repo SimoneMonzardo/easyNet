@@ -73,7 +73,7 @@
           :disabled="pending ? true : false"
           class="w-[calc(100%-2rem)] text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-violet-300 font-semibold rounded-xl text-lg py-2 text-center mb-2 dark:text-white dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-violet-800 disabled:bg-gray-100 disabled:cursor-not-allowed">Modifica</button>
       </div>
-      <div class="w-full md:w  py-3">
+      <div class="w-full py-3">
         <!-- Loading -->
         <div v-if="pending">
           <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
