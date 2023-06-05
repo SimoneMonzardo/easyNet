@@ -115,7 +115,7 @@ namespace easyNetAPI.Controllers
 
                 if (managedUser.Company.Documents.Count() != 0)
                 {
-                    //cancella i documenti già presenti
+                    await RemoveCompanyDocuments();
                 }
 
                 string fileName1 = Guid.NewGuid().ToString();
@@ -408,6 +408,7 @@ namespace easyNetAPI.Controllers
                     return BadRequest("User not found");
                 var users = await _unitOfWork.UserBehavior.GetAllAsync();
                 var result = await _unitOfWork.Company.RemoveAsync(id);
+                await RemoveCompanyDocuments();
                 if (!result)
                     return BadRequest("Could not remove company");
                 foreach (var u in users)
@@ -677,6 +678,7 @@ namespace easyNetAPI.Controllers
                 List<UserBehavior> users = _unitOfWork.UserBehavior.GetAllAsync().Result.ToList().Where(user => user.Company.CompanyId == company.CompanyId).ToList();
                 foreach (var u in users)
                 {
+                    await RemoveCompanyDocuments();
                     var risultato = await _unitOfWork.Company.AddAsync(new Company() { CompanyId = 0, CompanyName = "" }, u.UserId);
                     if (!risultato)
                         return BadRequest("Couldn't remove a company");
