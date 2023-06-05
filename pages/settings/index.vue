@@ -185,7 +185,7 @@
               @click="resetModal()" 
               data-modal-target="confirm-delete-modal"
               data-modal-toggle="confirm-delete-modal"
-              class="bg-red-500 hover:bg-red-600 text-gray-1000 font-bold py-2 rounded-xl disabled:bg-red-400 disabled:cursor-not-allowed">
+              class="bg-red-500 hover:bg-red-600 text-gray-1000 font-bold py-2 px-2 rounded-xl disabled:bg-red-400 disabled:cursor-not-allowed">
               Elimina profilo
             </button>
         </div>
