@@ -32,8 +32,46 @@ namespace easyNetAPI.Controllers
             _hostEnvironment = hostEnvironment;
         }
 
+        [HttpGet("GetNamePicture")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
+        public async Task<ActionResult<List<CompanyGetVM>>> GetCompanyNameProfilePicture(string? pattern)
+        {
+            try
+            {
+                var companyIdsList = _unitOfWork.Company.GetAllAsync().Result.Where(c => c.CompanyId != 0).Select(c => c.CompanyId).Distinct().ToList();
+                if (companyIdsList.Count() == 0)
+                {
+                    return BadRequest("There are no companies");
+                }
+                var companyList = new List<Company>();
+                foreach (var item in companyIdsList)
+                {
+                    companyList.Add(await _unitOfWork.Company.GetFirstOrDefault(item));
+                }
+                var returnList = new List<CompanyGetVM>();
+                if (pattern != "" || pattern is not null)
+                {
+                    companyList = companyList.Where(c => c.CompanyName.Contains(pattern)).ToList();
+                }
+                foreach (var item in companyList)
+                {
+                    returnList.Add(new CompanyGetVM
+                    {
+                        CompanyId = item.CompanyId,
+                        CompanyName = item.CompanyName,
+                        ProfilePicture = item.ProfilePicture
+                    });
+                }
+                return Ok(returnList);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong");
+            }
+        }
+
         [HttpDelete("DeleteProfilePicture")]
-        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+        [Authorize(Roles = $"{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<ActionResult<string>> DeleteProfilePicture()
         {
             try
@@ -77,7 +115,7 @@ namespace easyNetAPI.Controllers
         }
 
         [HttpPost("PostProfilePicture")]
-        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+        [Authorize(Roles = $"{SD.ROLE_COMPANY_ADMIN}")]
         public async Task<ActionResult<string>> PostProfilePicture(IFormFile? file)
         {
             try
