@@ -238,52 +238,50 @@ export default {
           // Handle the request errors
         },
         onResponse({ request, response, options }) {
-            console.log(response._data);
-            if(response._data == "User created successfully") {
-                const options = {};
-                console.log("success")
+          console.log(response._data);
+          if (response._data == "User created successfully") {
+            const options = {};
+            console.log("success");
 
-                const registerElement = document.getElementById("register-modal");
-                const registerModal = new Modal(registerElement, options);
-                registerModal.hide();
-                try {
-                    const successElement = document.getElementById('success-modal');
-                    const successModal = new Modal(successElement, options);
-                    successModal.show();
-                } catch (error){
-                    consol.log(error)
-                }
+            const registerElement = document.getElementById("register-modal");
+            const registerModal = new Modal(registerElement, options);
+            registerModal.hide();
+            try {
+              const successElement = document.getElementById("success-modal");
+              const successModal = new Modal(successElement, options);
+              successModal.show();
+            } catch (error) {
+              consol.log(error);
             }
-            if(response._data == "Mail already used"){
-                console.log(document.getElementById("emailText").innerHTML);
-                try {
-                document.getElementById("emailText").innerHTML = "Email già in uso";
-                document.getElementById("email").style.borderColor = "red";
-                document.getElementById("emailText").style.color = "red";
-                } catch (error) {
-                    console.log(error)
-                }
+          }
+          if (response._data == "Mail already used") {
+            console.log(document.getElementById("emailText").innerHTML);
+            try {
+              document.getElementById("emailText").innerHTML = "Email già in uso";
+              document.getElementById("email").style.borderColor = "red";
+              document.getElementById("emailText").style.color = "red";
+            } catch (error) {
+              console.log(error);
             }
-            else if(response._data != "Mail already used"){
-                document.getElementById("emailText").innerHTML = "Email";
-                document.getElementById("email").style.borderColor = "rgba(80,80,80,0.3)";
-                document.getElementById("emailText").style.color = "gray";
+          } else if (response._data != "Mail already used") {
+            document.getElementById("emailText").innerHTML = "Email";
+            document.getElementById("email").style.borderColor = "rgba(80,80,80,0.3)";
+            document.getElementById("emailText").style.color = "gray";
+          }
+          if (response._data == "Username already used") {
+            try {
+              document.getElementById("usernameText").innerHTML = "Username già in uso";
+              document.getElementById("usernameRegister").style.borderColor = "red";
+              document.getElementById("usernameText").style.color = "red";
+            } catch (error) {
+              console.log(error);
             }
-            if(response._data == "Username already used"){
-                try {
-                    document.getElementById("usernameText").innerHTML = "Username già in uso";
-                    document.getElementById("usernameRegister").style.borderColor = "red";
-                    document.getElementById("usernameText").style.color = "red";
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-            else if(response._data != "Username already used"){
-                document.getElementById("usernameText").innerHTML = "Username";
-                document.getElementById("usernameRegister").style.borderColor = "rgba(80,80,80,0.3)";
-                document.getElementById("usernameText").style.color = "gray";
-            }
-
+          } else if (response._data != "Username already used") {
+            document.getElementById("usernameText").innerHTML = "Username";
+            document.getElementById("usernameRegister").style.borderColor =
+              "rgba(80,80,80,0.3)";
+            document.getElementById("usernameText").style.color = "gray";
+          }
         },
         onResponseError({ request, response, options }) {
           // Handle the response errors
@@ -332,7 +330,6 @@ export default {
       confirmPasswordInput.value = "";
 
       await this.api(data);
-
     },
   },
 };
