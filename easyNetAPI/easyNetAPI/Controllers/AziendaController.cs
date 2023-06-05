@@ -6,6 +6,7 @@ using easyNetAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Drawing;
@@ -20,14 +21,113 @@ namespace easyNetAPI.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly AppDbContext _db;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public AziendaController(ILogger<AziendaController> logger, IUnitOfWork unitOfWork, AppDbContext db, UserManager<IdentityUser> userManager)
+        public AziendaController(ILogger<AziendaController> logger, IUnitOfWork unitOfWork, AppDbContext db, UserManager<IdentityUser> userManager, IWebHostEnvironment hostEnvironment)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _db = db;
             _userManager = userManager;
+            _hostEnvironment = hostEnvironment;
         }
+
+        [HttpDelete("DeleteProfilePicture")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+        public async Task<ActionResult<string>> DeleteProfilePicture()
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString();
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                var user = _db.Users.FirstOrDefault(u => u.Id == userId);
+                if (user is null)
+                {
+                    return BadRequest("User not found");
+                }
+                var managedUser = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                if (managedUser is null)
+                {
+                    return BadRequest("User not found");
+                }
+                var managedCompany = await _unitOfWork.Company.GetFirstOrDefault(managedUser.Company.CompanyId);
+                if (managedCompany is null)
+                {
+                    return BadRequest("Company not found");
+                }
+                var link = managedCompany.ProfilePicture;
+                if (link is null)
+                    return BadRequest("There is no profile picture");
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                string location = (new Uri(link)).PathAndQuery;
+                var path = wwwRootPath + location;
+                System.IO.File.Delete(path);
+                managedCompany.ProfilePicture = "";
+                var result = await _unitOfWork.Company.UpdateOneAsync(managedCompany);
+                if (result)
+                {
+                    return Ok("Deleted " + link);
+                }
+                return BadRequest("Something went wrong");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error " + ex.Message);
+            }
+        }
+
+        [HttpPost("PostProfilePicture")]
+        [Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+        public async Task<ActionResult<string>> PostProfilePicture(IFormFile? file)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString();
+                var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+                if (userId is null)
+                    return BadRequest("UserId is null");
+                var managedUser = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
+                if (managedUser is null)
+                {
+                    return BadRequest("User not found");
+                }
+                var managedCompany = await _unitOfWork.Company.GetFirstOrDefault(managedUser.Company.CompanyId);
+                if (managedCompany.CompanyId == 0)
+                {
+                    return BadRequest("Company not found");
+                }
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                if (file != null)
+                {
+                    if (managedCompany.ProfilePicture != "")
+                    {
+                        await DeleteProfilePicture();
+                    }
+                    string fileName = Guid.NewGuid().ToString();
+                    var uploads = Path.Combine(wwwRootPath, @"images");
+                    var extension = Path.GetExtension(file.FileName);
+                    var link = Path.Combine(uploads, fileName + extension);
+                    string url = "https://progettoeasynet.azurewebsites.net/images/" + fileName + extension;
+                    using (var fileStreams = new FileStream(link, FileMode.Create))
+                    {
+                        file.CopyTo(fileStreams);
+                    }
+                    managedCompany.ProfilePicture = url;
+                    var result = await _unitOfWork.Company.UpdateOneAsync(managedCompany);
+                    if (result)
+                    {
+                        return Ok(url);
+                    }
+                    return BadRequest("Something went wrong");
+                }
+                return BadRequest("File is null"); 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong");
+            }
+        }
+
         [HttpGet("GetCompanies")]
         [Authorize(Roles = $"{SD.ROLE_USER},{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_MODERATOR}")]
         public async Task<IActionResult> GetCompanies()

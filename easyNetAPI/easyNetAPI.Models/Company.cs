@@ -15,4 +15,6 @@ public class Company
     public string? CompanyName { get; set; }
     [BsonElement("bot")]
     public Bot? Bot { get; set; }
+    [BsonElement("profile_picture")]
+    public string? ProfilePicture { get; set; }
 }
