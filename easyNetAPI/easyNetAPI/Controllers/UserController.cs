@@ -598,22 +598,22 @@ namespace easyNetAPI.Controllers
         }
         [HttpGet("GetUserData")]
         [AllowAnonymous]
-        public async Task<object> GetUserDataAsync(string username)
+        public async Task<IActionResult> GetUserDataAsync(string username)
         {
             try
             {
                 var id = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
                 if (id == null)
                 {
-                    return null;
+                    return BadRequest("User id is null");
                 }
                 var profilepic = _db.Users.FirstOrDefault(u => u.Id == id).ProfilePicture;
                 var userData = await _unitOfWork.UserBehavior.GetFirstOrDefault(id);
-                return new { userData, profilepic };
+                return Ok(new { userData, profilepic });
             }
             catch (Exception ex)
             {
-                return null;
+                return BadRequest("Something went wrong: " + ex.Message);
             }
         }
     }
