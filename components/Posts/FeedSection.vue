@@ -64,8 +64,7 @@ const additionalData = reactive({
 });
 
 const content = computed(() => {
-  // TODO: Use only props content
-  const data = matter(`---\nimage: https://media-assets.wired.it/photos/615f1a10cae11de32015125c/16:9/w_1280,c_limit/1486735809_Colosseo.jpg\n---\n<h1>${props.post.content}</h1>`);
+  const data = matter(props.post.content);
   return data;
 })
 

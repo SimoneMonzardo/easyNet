@@ -131,7 +131,7 @@ const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Save/Get
     for (const post of response._data) {
       post.hasUserLike = getPostHasUserLike(post, username);
       post.isSavedByUser = true;
-      post.content = matter(`---\nimage: https://media-assets.wired.it/photos/615f1a10cae11de32015125c/16:9/w_1280,c_limit/1486735809_Colosseo.jpg\n---\n<h1>${post.content}</h1>`)
+      post.content = matter(post.content);
       data.posts.push(post);
     }
   }
