@@ -14,7 +14,7 @@
           <h4 class="text-2xl font-semibold mx-auto text-violet-600">Benvenuto</h4>
           <h6 class="mx-auto text-4xl font-semibold text-violet-600">easyNet</h6>
           <img
-            src="~/public/logo-easynet-group.svg"
+            src="~/public/logo.png"
             class="mt-3 h-15 rounded-full"
             alt="EasyNet Logo"
           />

@@ -6,7 +6,7 @@
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
         <div class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex">
           <h6 class="mx-auto text-4xl font-semibold text-violet-600">easyNet</h6>
-          <img src="~/public/logo-easynet-group.svg" class="mt-3 h-15 rounded-full" alt="EasyNet Logo" />
+          <img src="~/public/logo.png" class="mt-3 h-15 rounded-full" alt="EasyNet Logo" />
         </div>
         <div class="w-full">
           <!-- Header -->

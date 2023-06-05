@@ -53,8 +53,7 @@ import { PaperAirplaneIcon } from "@heroicons/vue/24/outline";
 import { reactive } from 'vue';
 import * as matter from 'gray-matter';
 import useModal from '~/composables/useModal';
-
-const suffixes = ['', 'K', 'M'];
+import useFormat from '~/composables/useFormat';
 
 const props = defineProps({
   post: { username: '' }
@@ -71,52 +70,18 @@ const content = computed(() => {
 })
 
 const likes = computed(() => {
-  var suffixIndex = 0;
-  var likesCount = props.post.likes.length;
-  while (likesCount > 999) {
-    likesCount = Math - floor(likesCount / 1000);
-    suffixIndex++;
-  }
-
-  return likesCount + suffixes[suffixIndex];
+  const { formatNumber } = useFormat();
+  return formatNumber(props.post.likes.length);
 });
 
 const comments = computed(() => {
-  var suffixIndex = 0;
-  var commentsCount = props.post.comments.length;
-  while (commentsCount > 999) {
-    commentsCount = Math - floor(commentsCount / 1000);
-    suffixIndex++;
-  }
-
-  return commentsCount + suffixes[suffixIndex];
+  const { formatNumber } = useFormat();
+  return formatNumber(props.post.comments.length);
 });
 
 const elapsed = computed(() => {
-  if (props.post.dataDiCreazione === null) {
-    return "Ora";
-  }
-
-  const postDate = new Date(props.post.dataDiCreazione);
-  const currentDate = new Date();
-
-  const daysDiff = currentDate.getDate() - postDate.getDate();
-  const yearDiff = currentDate.getFullYear() - postDate.getFullYear();
-  const monthDiff = currentDate.getMonth() - postDate.getMonth();
-
-  if (((yearDiff === 0 && monthDiff === 1) || (yearDiff === 1 && monthDiff === -11)) && daysDiff > 0) {
-    return `${daysDiff} giorn${yearDiff > 1 ? 'i' : 'o'} fa`;
-  }
-
-  if ((yearDiff === 0 && monthDiff > 0) || (yearDiff === 1 && monthDiff < 0)) {
-    return `${monthDiff} mes${yearDiff > 1 ? 'i' : 'e'} fa`;
-  }
-
-  if (yearDiff > 0) {
-    return `${yearDiff} ann${yearDiff > 1 ? 'i' : 'o'} fa`;
-  }
-
-  return 'Oggi';
+  const { formatDate } = useFormat();
+  return formatDate(props.post.dataDiCreazione);
 });
 
 async function postComment() {
@@ -180,7 +145,6 @@ async function toggleLike() {
       options.headers['Authorization'] = `Bearer ${token}`;
     },
     onResponse({ response }) {
-      console.log(response);
       if (!response.ok) {
         props.post.hasUserLike = !props.post.hasUserLike;
         if (props.post.hasUserLike) {

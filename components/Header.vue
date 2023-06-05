@@ -5,7 +5,7 @@
         <div class="flex justify-start items-center">
           <a href="/" class="flex mr-4">
             <img
-              src="~/public/logo-easynet-group.svg"
+              src="~/public/logo.png"
               class="mr-3 h-8"
               alt="EasyNet Logo"
             />
@@ -65,6 +65,13 @@
                 class="py-1 font-light text-gray-500 dark:text-gray-400"
                 aria-labelledby="user-menu-button"
               >
+                <li>
+                  <a
+                    href="/saved"
+                    class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                    >Post salvati</a
+                  >
+                </li>
                 <li>
                   <a
                     href="/settings"
