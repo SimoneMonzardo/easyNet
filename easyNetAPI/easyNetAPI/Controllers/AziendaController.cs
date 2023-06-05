@@ -49,7 +49,7 @@ namespace easyNetAPI.Controllers
                     companyList.Add(await _unitOfWork.Company.GetFirstOrDefault(item));
                 }
                 var returnList = new List<CompanyGetVM>();
-                if (pattern != "" || pattern is not null)
+                if (pattern != "" && pattern is not null)
                 {
                     companyList = companyList.Where(c => c.CompanyName.Contains(pattern)).ToList();
                 }
