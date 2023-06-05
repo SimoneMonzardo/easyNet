@@ -73,7 +73,7 @@
           :disabled="pending ? true : false"
           class="w-[calc(100%-2rem)] text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-violet-300 font-semibold rounded-xl text-lg py-2 text-center mb-2 dark:text-white dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-violet-800 disabled:bg-gray-100 disabled:cursor-not-allowed">Modifica</button>
       </div>
-      <div class="w-full md:w-1/2 2xl:w-1/3 py-3">
+      <div class="w-full md:w  py-3">
         <!-- Loading -->
         <div v-if="pending">
           <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
@@ -179,15 +179,15 @@
             <button id="cancel-changes" @click="cancelChanges()" :disabled="pending" class="w-24 lg:w-28 bg-gray-300 hover:bg-gray-400 text-gray-1000 font-bold py-2 rounded-l-xl disabled:bg-gray-100 disabled:cursor-not-allowed">Annulla</button>
             <button id="save-changes" @click="saveChanges()" :disabled="pending" class="w-24 lg:w-28 bg-green-400 hover:bg-green-500 text-gray-1000 font-bold py-2 rounded-r-xl disabled:bg-green-300 disabled:cursor-not-allowed">Salva</button>
           </div>
-          <button
-            id="delete-account"
-            :disabled="pending" 
-            @click="resetModal()" 
-            data-modal-target="confirm-delete-modal"
-            data-modal-toggle="confirm-delete-modal"
-            class="bg-red-500 hover:bg-red-600 text-gray-1000 font-bold py-2 px-4 rounded-xl disabled:bg-red-400 disabled:cursor-not-allowed">
-            Elimina profilo
-          </button>
+            <button
+              id="delete-account"
+              :disabled="pending" 
+              @click="resetModal()" 
+              data-modal-target="confirm-delete-modal"
+              data-modal-toggle="confirm-delete-modal"
+              class="bg-red-500 hover:bg-red-600 text-gray-1000 font-bold py-2 rounded-xl disabled:bg-red-400 disabled:cursor-not-allowed">
+              Elimina profilo
+            </button>
         </div>
       </div>
     </div>
