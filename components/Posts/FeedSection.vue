@@ -11,8 +11,8 @@
     <div
       class="row-start-2 row-end-[8] sm:row-end-[9] lg:row-end-[13] sm:col-span-2 lg:col-span-3 h-full rounded-xl p-6 bg-white border border-violet-400 shadow-xl dark:bg-gray-800 dark:border-violet-700">
       <div id="post-content" class="h-full flex flex-col justify-center gap-1 sm:gap-2 md:gap-3 w-full">
-        <div v-html="content.content" class="mx-auto text-gray-900 dark:text-gray-50" :class="content.data.image === '' ? 'h-full' : ''"></div>
-        <img v-if="content.data.image !== ''" :src="content.data.image" class="h-auto max-h-[calc(100%-2rem)] rounded-lg mx-auto" />
+        <div v-html="content.content" class="mx-auto text-gray-900 dark:text-gray-50 tracking-tight text-sm" :class="content.data.image === '' ? 'h-full' : 'max-h-[25%] overflow-auto'"></div>
+        <img v-if="content.data.image !== ''" :src="content.data.image" class="h-auto rounded-lg mx-auto" :class="content.content === '' ? 'max-h-[calc(100%-2rem)]' : 'max-h-[75%]'" alt="post image" />
       </div>
     </div>
 

@@ -66,8 +66,9 @@
         <!-- Loaded Successfully -->
         <img
           v-else 
-          :src="user.profilePicture" 
-          class="w-32 h-32 lg:h-40 lg:w-40 rounded-full border border-violet-600 dark:border-violet-500" />
+          :src="user.profilePicture"
+          alt="user picture"
+          class="w-32 h-32 lg:h-40 lg:w-40 rounded-full border border-violet-600 dark:border-violet-500 overflow-y-hidden" />
 
         <button
           type="button"

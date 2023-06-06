@@ -6,7 +6,7 @@
   <SuccessPopup />
 
   <div class="max-h-[calc(100vh-4rem)] w-screen grid grid-cols-[repeat(14,_minmax(0,_1fr))] grid-rows-[repeat(14,_minmax(0,_1fr))]">
-    <button class="relative" @click="previousPost">
+    <button class="relative" @click="previousPost" name="previous-post">
       <div class="block triangle drop-shadow-lg"></div>
       <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 hover:w-11 hover:h-11 hover:inset-1.5 text-violet-600 rotate-45 bg-transparent" />
     </button>
@@ -37,7 +37,7 @@
     </div>
     <PostsFeedSection v-else id="post-feed" :post="data.posts[data.activePost]" class="col-start-2 sm:col-start-3 col-end-[14] sm:col-end-[13] row-start-2 sm:row-start-3 row-end-[14] sm:row-end-[13]" />
 
-    <button class="col-start-14 col-end-[15] row-start-[14] row-end-[15] rotate-180" @click="nextPost">
+    <button class="col-start-14 col-end-[15] row-start-[14] row-end-[15] rotate-180" @click="nextPost" name="next-post">
       <div class="block triangle drop-shadow-lg"></div>
       <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 hover:w-11 hover:h-11 hover:inset-1.5 text-violet-600 rotate-45 bg-transparent" />
     </button>
@@ -84,10 +84,9 @@
       </div>
       <ul class="min-h-[15vh] max-h-[15vh] mt-4 overflow-y-auto bg-gray-50 rounded-xl bg-opacity-50 dark:bg-gray-700">
         <li v-for="company in data.companies" v-if="!data.loadingCompanies">
-          <!-- TODO: Use the right link -->
           <a class="flex items-center justify-center my-1" href="./">
             <UserCircleIcon v-if="company.profilePicture === null || company.profilePicture === ''" class="w-1/3 h-10 text-gray-900 dark:text-gray-50" />
-            <img v-else class="w-1/2 lg:w-1/3 h-10" :src="company.profilePicture" />
+            <img v-else class="w-1/2 lg:w-1/3 h-10 overflow-hidden" :src="company.profilePicture" alt="user-profile-picture" />
             <span class="py-auto w-1/2 lg:w-1/3 text-gray-900 dark:text-gray-50 align-middle">{{ company.companyName }}</span>
           </a>
         </li>
@@ -383,7 +382,6 @@ function swapPrevious() {
       likesCount.classList.add('post');
     }, 150);
   }, 150);
-
 
   setTimeout(() => {
     data.activePost--;

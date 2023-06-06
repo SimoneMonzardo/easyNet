@@ -3,6 +3,7 @@
     <button
       @click="$emit('likeToggled')"
       type="button" 
+      name="like"
       class="shadow-inner shadow-gray-400 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-gray-900 bg-gray-100 border-r border-r-gray-400 rounded-l-xl hover:bg-gray-200 dark:bg-gray-600 dark:shadow-gray-800 dark:border-gray-900 dark:text-gray-50 dark:hover:bg-gray-700">
       <HeartIcon 
         v-if="!hasUserLike" 
@@ -22,6 +23,7 @@
     <button
       @click="$emit('saveToggled')"
       type="button" 
+      name="save"
       class="shadow-inner shadow-gray-400 font-semibold gap-1 inline-flex items-center px-3 justify-center py-1.5 text-sm text-gray-900 bg-gray-100 border-r border-l border-r-gray-400 border-l-gray-400 hover:bg-gray-200 dark:bg-gray-600 dark:shadow-gray-800 dark:border-gray-900 dark:text-gray-50 dark:hover:bg-gray-700">
       <BookmarkIcon
         v-if="!isSavedByUser"
@@ -38,7 +40,8 @@
       </svg>
     </button>
     <button 
-      type="button" 
+      type="button"
+      name="comment" 
       class="shadow-inner shadow-gray-400 font-semibold gap-1 inline-flex items-center w-1/2 justify-center py-1.5 text-sm text-gray-900 bg-gray-100 border-l border-l-gray-400 rounded-r-xl dark:bg-gray-600 dark:shadow-gray-800 dark:border-gray-900 dark:text-gray-50">
       <ChatBubbleBottomCenterTextIcon class="h-6 w-6" />
       <span id="post-comments-count">{{ comments }}</span>
