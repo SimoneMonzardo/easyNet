@@ -127,11 +127,9 @@ namespace easyNetAPI.Controllers
                 await _userManager.AddToRoleAsync(applicationUser, SD.ROLE_USER);
                 request.Password = "";
 
-                var token = await _userManager.GenerateEmailConfirmationTokenAsync(applicationUser);
+                await _emailSender.SendEmailAsync(request.Email, "Email di conferma per Muznet", $"Ciao {request.Username}, <br> <a href=\"https://localhost:3000/mail?userId={applicationUser.Id}\">Clicca qui per confermare la tua mail</a>");
 
-                await _emailSender.SendEmailAsync(request.Email, "Email di conferma per Muznet", $"Ciao {request.Username}, <br> <a href=\"https://localhost:3000/mail?token={token}&userId={applicationUser.Id}\">Clicca qui per confermare la tua mail</a>");
-
-                return Ok(new { Result = "User created successfully", Token = token, UserId = applicationUser.Id});
+                return Ok(new { Result = "User created successfully", UserId = applicationUser.Id});
             }
             foreach (var error in result.Errors)
             {
@@ -141,13 +139,14 @@ namespace easyNetAPI.Controllers
         }
         [HttpGet]
         [Route("confirmEmail")]
-        public async Task<IActionResult> ConfirmEmailAsync(string token, string userId)
+        public async Task<IActionResult> ConfirmEmailAsync(string userId)
         {
             try
             {
                 var user = await _userManager.FindByIdAsync(userId);
                 if (user == null)
                     return BadRequest("Something went wrong can't find your user");
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var result = await _userManager.ConfirmEmailAsync(user, token);
                 if (!result.Succeeded)
                     return BadRequest("Something went wrong confirming your email");
