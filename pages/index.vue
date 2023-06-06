@@ -196,17 +196,17 @@ async function nextPost() {
         },
         onResponse({ response }) {
           if (response.status === 200) {
-            response._data.hasUserLike = getPostHasUserLike(response._data, sessionStorage.getItem('username'));
-            response._data.isSavedByUser = getIsPostSavedByUser(response._data);
+            const post = response._data;
+            post.hasUserLike = getPostHasUserLike(post, sessionStorage.getItem('username'));
+            post.isSavedByUser = getIsPostSavedByUser(post);
             
-            data.posts.push(response._data);
+            data.posts.push(post);
             data.lastFetchedPost++;
           } else if (response.status === 401 && data.activePost >= data.lastFetchedPost) {
             const { clearSession } = useStorage();
             clearSession();
             requireLogin(false);
           }
-          console.log(data.posts);
         }
       });
     }
