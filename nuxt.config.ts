@@ -1,6 +1,13 @@
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
 
 export default defineNuxtConfig({
+  app: {
+    head: {
+        htmlAttrs: {
+            lang: 'it',
+        },
+      }
+    },
   css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {
