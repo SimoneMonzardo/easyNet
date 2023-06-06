@@ -1,4 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
+
 export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
   postcss: {
@@ -10,5 +11,28 @@ export default defineNuxtConfig({
   typescript: {
     strict: true,
   },
-  modules: ["@nuxtjs/tailwindcss"],
+  modules: [
+    "@nuxtjs/tailwindcss", 
+    ["@nuxtjs/google-fonts", {
+      families: {
+        'Roboto': true,
+        download: true,
+        inject: true
+      }
+    }]
+  ],
+  vite: {
+    optimizeDeps: {
+      esbuildOptions: {
+        define: {
+          global: 'globalThis'
+        },
+        plugins: [
+          NodeGlobalsPolyfillPlugin({
+            buffer: true
+          })
+        ]
+      }
+    }
+  },
 });

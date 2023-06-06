@@ -3,62 +3,32 @@ export default () => {
   //to do: mettere gli auth token negli header
   // Bearer `authtoken`
 
-  const register = async (reigsterData) => {
-    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/Register', {
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
-      method: 'POST',
-      body: JSON.stringify(reigsterData),
-      onRequest({ request, options }) {
-        // Set the request headers
-      },
-      onRequestError({ request, options, error }) {
-        // Handle the request errors
-      },
-      onResponse({ request, response, options }) {
-        // Process the response data
+  // const register = async (reigsterData) => {
+  //   const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/Register', {
+  //     headers: {
+  //       'Access-Control-Allow-Origin': '*'
+  //     },
+  //     method: 'POST',
+  //     body: JSON.stringify(reigsterData),
+  //     onRequest({ request, options }) {
+  //       // Set the request headers
+  //     },
+  //     onRequestError({ request, options, error }) {
+  //       // Handle the request errors
+  //     },
+  //     onResponse({ request, response, options }) {
+  //       console.log(response);
         
-      },
-      onResponseError({ request, response, options }) {
-        // Handle the response errors
-      }
-    });
+  //     },
+  //     onResponseError({ request, response, options }) {
+  //       // Handle the response errors
+  //     }
+  //   });
 
-    return data;
-  }
+  //   return data;
+  // }
 
-  const login = async (credentials) => {
-    const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/login', {
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
-      method: 'POST',
-      body: JSON.stringify(credentials),
-      onRequest({ request, options }) {
-        // Set the request headers
-      },
-      onRequestError({ request, options, error }) {
-        // Handle the request errors
-      },
-      onResponse({ request, response, options }) {
-        // Process the response data
-        console.log(response);
-        if (response.ok) {
-          localStorage.setItem('logged', true);
-          localStorage.setItem('username', response._data.username);
-          localStorage.setItem('email', response._data.email);
-          localStorage.setItem('profilePicture', response._data.profilePicture);
-          localStorage.setItem('token', response._data.token);
-        }
-        return response;
-      },
-      onResponseError({ request, response, options }) {
-        // Handle the response errors
-      }
-    })
-  }
-
+  
   const changePassword = async (changePasswordData) => {
     const { data, pending, error, refresh } = await useFetch('https://progettoeasynet.azurewebsites.net/Auth/changePassword', {
       headers: {
@@ -68,7 +38,7 @@ export default () => {
       body: JSON.stringify(changePasswordData),
       onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
       },
       onRequestError({ request, options, error }) {
         // Handle the request errors
@@ -92,7 +62,7 @@ export default () => {
       method: 'DELETE',
       onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
 
       },
       onRequestError({ request, options, error }) {
@@ -117,7 +87,7 @@ export default () => {
       body: JSON.stringify(editUserDataData),
       onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
       },
       onRequestError({ request, options, error }) {
         // Handle the request errors
@@ -142,16 +112,16 @@ export default () => {
         'Authorization': ''
       },
       onRequest({ request, options }) {
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
       },
       onResponse({request, response, options}) {
         username = response._data.userName;
         console.log(response._data);
-        localStorage.setItem('backupName', response._data.name);
-        localStorage.setItem('backupSurname', response._data.surname);
-        localStorage.setItem('backupGender', response._data.gender);
-        localStorage.setItem('backupBirthDate', response._data.birthdate);
-        localStorage.setItem('backupProfilePicture', response._data.profilePicture);
+        sessionStorage.setItem('backupName', response._data.name);
+        sessionStorage.setItem('backupSurname', response._data.surname);
+        sessionStorage.setItem('backupGender', response._data.gender);
+        sessionStorage.setItem('backupBirthDate', response._data.birthdate);
+        sessionStorage.setItem('backupProfilePicture', response._data.profilePicture);
       },
       onResponseError() {
         // TODO: Handle error
@@ -160,8 +130,6 @@ export default () => {
   }
 
   return {
-    register,
-    login,
     changePassword,
     deleteUser,
     editUserData,

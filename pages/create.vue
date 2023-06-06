@@ -36,7 +36,7 @@
               data-modal-target="upload-image-modal"
               data-modal-show="upload-image-modal"
               type="button"
-              class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-md px-3 py-1.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              class="focus:outline-none text-white bg-violet-700 hover:bg-violet-800 focus:ring-4 focus:ring-violet-300 font-semibold rounded-xl text-md px-3 py-1.5 mr-2 mb-2 dark:bg-violet-700 dark:hover:bg-violet-700 dark:focus:ring-violet-800">
               Modifica Immagine
             </button>
             <button 
@@ -107,6 +107,9 @@ import { ListBulletIcon } from "@heroicons/vue/24/outline";
 import { FaceSmileIcon } from "@heroicons/vue/24/outline";
 
 export default {
+  head: {
+    title:"Pubblica • Mouzone"
+  },
   data: () => ({
     postText: '',
     imageUrl: '',
@@ -122,8 +125,8 @@ export default {
       this.onResize();
     });
     window.addEventListener('resize', this.onResize);
-    const token = localStorage.getItem('token');
-    if (token === undefined || token === null || token === '') {
+    const token = sessionStorage.getItem('token');
+    if (token === null || token === '' || token === 'null') {
       this.$router.push ('/');
     }
   },
@@ -155,7 +158,7 @@ export default {
         method: 'POST',
         body: formData,
         onRequest({ request, options }) {
-          options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+          options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
         }
       });
 

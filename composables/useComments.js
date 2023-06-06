@@ -11,7 +11,7 @@ export default () => {
         body: JSON.stringify(getCommentsOfAPostData),
         onRequest({ request, options }) {
             // Set the request headers
-            options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+            options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
         },
         onRequestError({ request, options, error }) {
             // Handle the request errors
@@ -37,7 +37,7 @@ const getComment = async (getCommentData) => {
     body: JSON.stringify(getCommentData),
     onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     },
     onRequestError({ request, options, error }) {
         // Handle the request errors

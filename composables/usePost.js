@@ -11,7 +11,7 @@ export default () => {
         body: JSON.stringify(getPostOfUserData),
         onRequest({ request, options }) {
             // Set the request headers
-            options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+            options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
         },
         onRequestError({ request, options, error }) {
             // Handle the request errors
@@ -36,7 +36,7 @@ const getAllPosts = async () => {
     method: 'GET',
     onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     },
     onRequestError({ request, options, error }) {
         // Handle the request errors
@@ -62,7 +62,7 @@ const getpostById = async (getpostByIdData) => {
     body: JSON.stringify(getpostByIdData),
     onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     },
     onRequestError({ request, options, error }) {
         // Handle the request errors
@@ -88,7 +88,7 @@ const getAllPostsOfFollowed = async (getAllPostsOfFollowedData) => {
     body: JSON.stringify(getAllPostsOfFollowedData),
     onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
     },
     onRequestError({ request, options, error }) {
         // Handle the request errors
@@ -113,7 +113,7 @@ const deletePost = async (deletePostData) => {
       body: JSON.stringify(deletePostData),
       onRequest({ request, options }) {
         // Set the request headers
-        options.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+        options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
 
       },
       onRequestError({ request, options, error }) {
