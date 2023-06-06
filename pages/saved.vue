@@ -107,7 +107,7 @@ const data = reactive({
 });
 
 useHead({
-  title: 'Salvati • easyNet',
+  title: 'Salvati • Mouzone',
   meta: [{
     name:'description',
     content: 'Entra nel nostro social network professionale: connessioni globali con aziende di successo. Benvenuto!'
