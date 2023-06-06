@@ -1,4 +1,8 @@
 <template>
+  <LoginPopup />
+  <RegisterPopup />
+  <ForgetPopup />
+  <SuccessPopup />
   <h3
     class="place-items-center transition-colors mb-3 py-20 text-4xl text-gray-900 dark:text-white"
     id="Risp"
