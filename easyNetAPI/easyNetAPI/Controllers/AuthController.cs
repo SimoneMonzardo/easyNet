@@ -290,6 +290,7 @@ namespace easyNetAPI.Controllers
                 return BadRequest("Could not change password");
             }
             await _db.SaveChangesAsync();
+            await _emailSender.SendEmailAsync(managedUser.Email, "La password è stata modificata" ,$"La password dell'account {managedUser.UserName} è stata cambiata");
             return Ok("Password Changed Successfully");
         }
 
