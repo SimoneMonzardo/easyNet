@@ -7,11 +7,11 @@
             <img
               src="~/public/logo.png"
               class="mr-3 h-8"
-              alt="Mouzone Logo"
+              alt="MuzNet Logo"
             />
             <span
               class="self-center text-2xl font-semibold whitespace-nowrap text-white"
-              >Mouzone</span
+              >MuzNet</span
             >
           </a>
         </div>

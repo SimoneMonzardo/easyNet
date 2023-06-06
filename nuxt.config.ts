@@ -1,6 +1,18 @@
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
 
 export default defineNuxtConfig({
+  app: {
+    head: {
+      link: [{ 
+        rel: 'icon', 
+        type: 'image/x-icon', 
+        href: '/logo.ico' 
+      }],
+        htmlAttrs: {
+            lang: 'it',
+        },
+      }
+    },
   css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {

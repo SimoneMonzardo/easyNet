@@ -132,7 +132,7 @@ const data = reactive({
 const savedPostsIds = [];
 
 useHead({
-  title: 'Home • Mouzone',
+  title: 'Home • MuzNet',
   meta: [{
     name:'description',
     content: 'Entra nel nostro social network professionale: connessioni globali con aziende di successo. Benvenuto!'
@@ -150,10 +150,11 @@ const { pending } = useFetch(`https://progettoeasynet.azurewebsites.net/Post/Get
 
     for (const post of response._data) {
       post.hasUserLike = getPostHasUserLike(post, username);
-      post.isSavedByUser = getIsPostSavedByUser(post);
+      post.isSavedByUser = false;
       data.posts.push(post);
     }
     data.lastFetchedPost += data.posts.length;
+    getSavedPosts();
   }
 });
 
@@ -239,10 +240,11 @@ async function feedChangeRequested() {
           
           for (const post of response._data) {
             post.hasUserLike = getPostHasUserLike(post, username);
-            post.isSavedByUser = getIsPostSavedByUser(post);
+            post.isSavedByUser = false;
             data.posts.push(post);
           }
           data.lastFetchedPost += data.posts.length;
+          getSavedPosts();
         }
       }
     });
@@ -293,20 +295,19 @@ async function findCompanies(query) {
           data.companies.push(company);
         }
         data.loadingCompanies = false;
-      } else {
+      } else if (response.status === 403) {
         const { requireLogin } = useModal();
         requireLogin(true);
-        data.loadingCompanies = true;
       }
     }
   });
 }
 
-onMounted(() => {
+function getSavedPosts() {
   var token = sessionStorage.getItem('token');
   if (token !== null && token !== '') {
     useFetch('https://progettoeasynet.azurewebsites.net/Save/GetSavedPostsIds', {
-      lazy: true,
+      lazy: false,
       server: false,
       method: 'GET',
       headers: {
@@ -318,12 +319,16 @@ onMounted(() => {
       },
       onResponse({ response }) {
         if (response.ok) {
-          for (id in response._data) {
-            savedPostsIds.append(id);
+          for (const id of response._data) {
+            savedPostsIds.push(id);
+          }
+          
+          for (const post of data.posts) {
+            post.isSavedByUser = getIsPostSavedByUser(post)
           }
         }
       }
     });
   }
-});
+}
 </script>
