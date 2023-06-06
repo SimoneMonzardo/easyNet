@@ -16,7 +16,7 @@
           </a>
         </div>
         <div class="flex items-center lg:order-2">
-          <ThemeToggle />
+          <ThemeToggle class="hidden sm:block"/>
           <button
             data-drawer-target="filters-drawer"
             data-drawer-toggle="filters-drawer"

@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-row justify-between align-middle">
     <div class="flex flex-row gap-3">
-      <UserCircleIcon v-if="profilePictureUrl === undefined || profilePictureUrl === null || profilePictureUrl === ''" class="h-12 w-12 my-auto text-gray-300 dark:text-gray-600" />
-      <img v-else class="rounded-full h-12 w-12 my-auto" :src="profilePictureUrl" alt="profile" />
+      <UserCircleIcon v-if="profilePictureUrl === undefined || profilePictureUrl === null || profilePictureUrl === ''" class="h-10 w-10 my-auto text-gray-300 dark:text-gray-600" />
+      <img v-else class="rounded-full h-10 w-10 my-auto" :src="profilePictureUrl" alt="profile" />
       <div class="px-1 flex flex-col text-gray-900 dark:text-gray-50">
         <a :href="`/${username}`">
           <h3 class="text-xl font-semibold md:text-2xl hover:text-violet-600">{{ username }}</h3>
         </a>
-        <small class="text-gray-400 text-xs font-md">
+        <small class="text-gray-400 text-xs font-md -mt-1">
           {{ elapsedTime }}
         </small>
       </div>
