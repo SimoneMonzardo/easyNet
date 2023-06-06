@@ -5,13 +5,13 @@
   <ForgetPopup />
   <SuccessPopup />
 
-  <div class="max-h-[calc(100vh-4rem)] w-screen grid grid-cols-[repeat(12,_minmax(0,_1fr))] grid-rows-[repeat(12,_minmax(0,_1fr))]">
+  <div class="max-h-[calc(100vh-4rem)] w-screen grid grid-cols-[repeat(14,_minmax(0,_1fr))] grid-rows-[repeat(14,_minmax(0,_1fr))]">
     <button class="relative" @click="previousPost">
       <div class="block triangle drop-shadow-lg"></div>
-      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-violet-600 rotate-45 bg-transparent" />
+      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 hover:w-11 hover:h-11 hover:inset-1.5 text-violet-600 rotate-45 bg-transparent" />
     </button>
 
-    <div v-if="pending || data.status !== 200" class="col-start-2 col-end-12 row-start-2 row-end-[12] h-full flex flex-col justify-center">
+    <div v-if="pending || data.status !== 200" class="col-start-3 col-end-13 row-start-3 row-end-[13] h-full flex flex-col justify-center">
       <div role="status" class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
         <div class="flex items-center justify-center w-full h-96 bg-gray-300 rounded dark:bg-gray-700">
           <svg class="w-96 h-96 text-gray-200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512">
@@ -35,11 +35,11 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <PostsFeedSection :post="data.posts[data.activePost]" v-else class="col-start-2 col-end-12 row-start-2 row-end-[12]" />
+    <PostsFeedSection v-else id="post-feed" :post="data.posts[data.activePost]" class="col-start-2 sm:col-start-3 col-end-[14] sm:col-end-[13] row-start-2 sm:row-start-3 row-end-[14] sm:row-end-[13]" />
 
-    <button class="col-start-12 col-end-[13] row-start-[12] row-end-[13] rotate-180" @click="nextPost">
+    <button class="col-start-14 col-end-[15] row-start-[14] row-end-[15] rotate-180" @click="nextPost">
       <div class="block triangle drop-shadow-lg"></div>
-      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-violet-600 rotate-45 bg-transparent" />
+      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 hover:w-11 hover:h-11 hover:inset-1.5 text-violet-600 rotate-45 bg-transparent" />
     </button>
   </div>
 
@@ -78,7 +78,7 @@
           @input="findCompanies($event.target.value)"
           type="search"
           id="search-company"
-          class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-xl bg-gray-50 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600"
+          class="block w-full p-4 pl-10 text-sm text-gray-900 border border-violet2-300 rounded-xl bg-gray-50 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600"
           placeholder="Trova aziende ..."
           required>
       </div>
@@ -98,7 +98,7 @@
       </ul>
     </div>
     <div class="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700" data-drawer-hide="filters-drawer">
-      <span class="absolute bottom-3 w-8 h-1 -translate-x-1/2 bg-gray-300 rounded-lg left-1/2 dark:bg-gray-600"></span>
+      <span class="absolute bottom-3 w-8 h-1 -translate-x-1/2 bg-violet-300 rounded-lg left-1/2 dark:bg-violet-600"></span>
     </div>
   </div>
 </template>
@@ -175,7 +175,7 @@ const { pending } = useFetch(`https://progettoeasynet.azurewebsites.net/Post/Get
 
 async function nextPost() {
   if (data.activePost < data.lastFetchedPost) {
-    data.activePost++;
+    swapNext();
   }
 
   const token = sessionStorage.getItem('token');
@@ -216,7 +216,7 @@ async function nextPost() {
 
 function previousPost() {
   if (data.activePost > 0) {
-    data.activePost--;
+    swapPrevious();
   }
 }
 
@@ -310,7 +310,7 @@ async function findCompanies(query) {
           data.companies.push(company);
         }
         data.loadingCompanies = false;
-      } else if (response.status === 403) {
+      } else if (response.status === 401) {
         const { requireLogin } = useModal();
         requireLogin(true);
       }
@@ -346,4 +346,90 @@ function getSavedPosts() {
     });
   }
 }
+
+function swapNext() {
+  const content = document.getElementById('post-content');
+  const comments = document.getElementById('post-comments');
+  const commentsCount = document.getElementById('post-comments-count');
+  const likesCount = document.getElementById('post-likes-count');
+  const header = document.getElementById('post-header');
+  
+  header.classList.add('post');
+  commentsCount.classList.add('post');
+  likesCount.classList.add('post');
+  setTimeout(() => {
+    content.classList.add('post');
+    setTimeout(() => {
+      comments.classList.add('post');
+    }, 150);
+  }, 150);
+
+
+  setTimeout(() => {
+    data.activePost++;
+    
+    setTimeout(() => {
+      header.classList.remove('post');
+      commentsCount.classList.remove('post');
+      likesCount.classList.remove('post');
+      setTimeout(() => {
+        content.classList.remove('post');
+        setTimeout(() => {
+          comments.classList.remove('post');
+        }, 150);
+      }, 150);
+    }, 400);
+  }, 300); 
+}
+
+function swapPrevious() {
+  const content = document.getElementById('post-content');
+  const comments = document.getElementById('post-comments');
+  const commentsCount = document.getElementById('post-comments-count');
+  const likesCount = document.getElementById('post-likes-count');
+  const header = document.getElementById('post-header');
+  
+  comments.classList.add('post');
+  setTimeout(() => {
+    content.classList.add('post');
+    setTimeout(() => {
+      header.classList.add('post');
+      commentsCount.classList.add('post');
+      likesCount.classList.add('post');
+    }, 150);
+  }, 150);
+
+
+  setTimeout(() => {
+    data.activePost--;
+    
+    setTimeout(() => {
+      comments.classList.remove('post');
+      setTimeout(() => {
+        content.classList.remove('post');
+        setTimeout(() => {
+          header.classList.remove('post');
+          commentsCount.classList.remove('post');
+          likesCount.classList.remove('post');
+        }, 150);
+      }, 150);
+    }, 400);
+  }, 300); 
+}
 </script>
+
+<style>
+.post {
+  zoom: 1;
+  animation: fade-away-in .7s ease-in-out;
+}
+
+@keyframes fade-away-in {
+  0% { opacity: 1; }
+  40% { opacity: 0; }
+  60% { opacity: 0 }
+  80% { opacity: 0.85; }
+  90% { opacity: 0.90; }
+  100% { opacity: 1; } 
+}
+</style>

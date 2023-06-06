@@ -20,7 +20,7 @@
                             </svg>
                         </div>
                         <input v-on:input="filterUsers()" type="text" v-model="input" id="table-search-users-followers"
-                            class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600"
+                            class="block p-2 pl-10 text-sm text-gray-900 border border-violet-300 rounded-lg w-80 bg-gray-50 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600"
                             placeholder="Search for users">
 
                     </div>

@@ -44,7 +44,7 @@
         <div v-if="haveBanner" style="float: left; margin-left: 20%">
           <button
             style="width: 120px"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-violet-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
           >
             <a href="#" style="margin: auto">Messaggio</a>
           </button>
@@ -52,7 +52,7 @@
         <div v-if="haveBanner" style="float: left; margin-left: 20%">
           <button
             style="width: 120px"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-violet-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
           >
             <a href="#" style="margin: auto">Email</a>
           </button>
@@ -60,7 +60,7 @@
         <div v-else="haveBanner" style="float: left">
           <button
             style="width: 120px"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-violet-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
           >
             <a href="#" style="margin: auto">sas</a>
           </button>

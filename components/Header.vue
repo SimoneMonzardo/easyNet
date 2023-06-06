@@ -6,7 +6,7 @@
           <a href="/" class="flex mr-4">
             <img
               src="~/public/logo.png"
-              class="mr-3 h-8"
+              class="logo mr-3 h-8"
               alt="MuzNet Logo"
             />
             <span
@@ -16,7 +16,7 @@
           </a>
         </div>
         <div class="flex items-center lg:order-2">
-          <ThemeToggle />
+          <ThemeToggle class="hidden sm:block"/>
           <button
             data-drawer-target="filters-drawer"
             data-drawer-toggle="filters-drawer"
@@ -86,7 +86,7 @@
               >
                 <li>
                   <button
-                    class="block w-full text-start py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    class="block w-full text-start text-red-600 hover:font-semibold py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500"
                     @click="logOut"
                   >
                     Esci
@@ -136,5 +136,25 @@ export default {
       this.$router.go("/");
     },
   },
+  mounted: function () { 
+    const filterDrawerToggle = document.getElementById('filters-toggle');
+
+    if (this.$nuxt._route.path != '/') {
+      filterDrawerToggle.classList.add('hidden');
+      return;
+    }
+
+    filterDrawerToggle.classList.remove('hidden');
+  }
 };
 </script>
+
+<style>
+.logo:active {
+  animation: spin 6s;
+}
+
+@keyframes spin {
+  50% { transform: rotate(360deg); }
+}
+</style>
