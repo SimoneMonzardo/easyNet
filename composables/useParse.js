@@ -21,16 +21,16 @@ export default() => {
         var key = '';
         var stringIndex = 0;
             
-        while (row[stringIndex] != ':') {
+        while (stringIndex < row.length && row[stringIndex] != ':') {
           key += row[stringIndex++];
         }
             
-        while (row[stringIndex] != '\'' && row[stringIndex] != '"'){
+        while (stringIndex < row.length && row[stringIndex] != '\'' && row[stringIndex] != '"'){
           stringIndex++;
         }
 
         var closingTagIndex = row.length - 1;
-        while (row[closingTagIndex] != '\'' && row[closingTagIndex] != '"') {
+        while (stringIndex < row.length && row[closingTagIndex] != '\'' && row[closingTagIndex] != '"') {
           closingTagIndex--;
         }
 

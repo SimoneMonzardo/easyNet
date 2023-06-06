@@ -15,6 +15,7 @@
     <div>
       <button
         id="actions-trigger"
+        name="post-actions"
         @click="openPopoverMenu()"
         type="button">
         <EllipsisVerticalIcon class="h-8 w-8 text-gray-900 dark:text-white hover:text-violet-600" />
