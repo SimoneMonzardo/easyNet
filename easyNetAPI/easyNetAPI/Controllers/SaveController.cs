@@ -107,7 +107,7 @@ namespace easyNetAPI.Controllers
                         Tags = post.Tags
                     });
                 }
-                return Json(postsList.OrderBy(p => p.DataDiCreazione));
+                return Json(postsList.OrderByDescending(p => p.DataDiCreazione));
             }
             catch (Exception)
             {

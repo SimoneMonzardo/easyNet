@@ -89,8 +89,8 @@ public class PostController : ControllerBase
             }
         }
         if(numeroDiPost == null)
-            return followedPost.OrderBy(p => p.DataDiCreazione).Take(numeroDiPost);
-        return followedPost.OrderBy(p => p.DataDiCreazione);
+            return followedPost.OrderByDescending(p => p.DataDiCreazione).Take(numeroDiPost);
+        return followedPost.OrderByDescending(p => p.DataDiCreazione);
     }
     [HttpGet("GetNextFollowed"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
     public async Task<PostVM?> GetNextFollowedAsync(int index)
@@ -125,7 +125,7 @@ public class PostController : ControllerBase
                 });
             }
         }
-        return followedPost.OrderBy(p => p.DataDiCreazione).Take(index).Last();
+        return followedPost.OrderByDescending(p => p.DataDiCreazione).Take(index).Last();
     }
     [HttpGet("GetPostsOfRandom"), AllowAnonymous]
     public async Task<IEnumerable<PostVM>?> GetRandomAsync(int? numeroDiPost)
@@ -180,7 +180,7 @@ public class PostController : ControllerBase
                 Tags = post.Tags
             });
         }
-        return postsList.OrderBy(p => p.DataDiCreazione).Take((int)numeroDiPost);
+        return postsList.OrderByDescending(p => p.DataDiCreazione).Take((int)numeroDiPost);
     }
     [HttpGet("GetNextRandom"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER}")]
     public async Task<PostVM?> GetNextRandomAsync(int index)
@@ -212,7 +212,7 @@ public class PostController : ControllerBase
                 Tags = post.Tags
             });
         }
-        return postsList.OrderBy(p => p.DataDiCreazione).Skip(index).FirstOrDefault();
+        return postsList.OrderByDescending(p => p.DataDiCreazione).Skip(index).FirstOrDefault();
     }
 
     [HttpDelete("DeletePost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_USER}")]
