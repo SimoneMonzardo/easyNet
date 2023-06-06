@@ -127,7 +127,7 @@ namespace easyNetAPI.Controllers
                 await _userManager.AddToRoleAsync(applicationUser, SD.ROLE_USER);
                 request.Password = "";
 
-                await _emailSender.SendEmailAsync(request.Email, "Email di conferma per Muznet", $"Ciao {request.Username}, <br> <a href=\"https://localhost:3000/mail?userId={applicationUser.Id}\">Clicca qui per confermare la tua mail</a>");
+                await _emailSender.SendEmailAsync(request.Email, "Email di conferma per Muznet", $"Ciao {request.Username}, <br> <a href=\"https://muznet.vercel.app/mail?userId={applicationUser.Id}\">Clicca qui per confermare la tua mail</a>");
 
                 return Ok(new { Result = "User created successfully", UserId = applicationUser.Id});
             }
