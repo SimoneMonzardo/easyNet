@@ -20,6 +20,7 @@
           </button>
           <div class="px-6 py-6 lg:px-8">
             <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Recupero password</h3>
+            <p id="conferma-mail" class="text-gray-900 dark:text-white" style="visibility: hidden;">La mail è stata inviata correttamente</p>
             <div class="relative my-10">
               <input
                 type="email"
@@ -52,6 +53,43 @@ import useAuth from '~/composables/useAuth';
 export default {
   name: "ForgetPopup",
   methods: {
+    async sendForgetRequest(data, router) {
+      console.log("entrato");
+      await useFetch(`https://progettoeasynet.azurewebsites.net/Auth/ForgotPassword?email=${data}`, {
+        lazy: true,
+        server: false,
+        method: 'GET',
+        onRequest({ request, options }) {
+          // Set the request headers
+        },
+        onRequestError({ request, options, error }) {
+          console.log(error.message);
+        },
+        onResponse({ response }) {
+          console.log(response);
+          if (response.ok) {
+             console.log("Request ok");
+             console.log(response.text);
+             document.getElementById("conferma-mail").style="visibility:visible";
+          //   sessionStorage.setItem("logged", true);
+          //   sessionStorage.setItem("username", response._data.username);
+          //   sessionStorage.setItem("email", response._data.email);
+          //   sessionStorage.setItem("profilePicture", response._data.profilePicture);
+          //   sessionStorage.setItem("token", response._data.token);
+          //   console.log("CHIUSURA");
+          //   router.go();
+          //   // const loginElement = document.getElementById("authentication-modal");
+          //   // const loginModal = new Modal(loginElement, options);
+          //   // loginModal.hide();
+          }
+          return response;
+        },
+        onResponseError({ request, response, options }) {
+
+        },
+      });
+      console.log("uscito");
+    },
     closeModal() {
       const options = {};
 
@@ -68,11 +106,10 @@ export default {
       const forgetModal = new Modal(forgetElement, options);
       forgetModal.hide();
 
-      var data = {
-        email: document.getElementById('forget-email').value,
-      };
+      var email =document.getElementById('forget-email').value;
 
       // API Call
+      await this.sendForgetRequest(email, this.$router);
     }
   }
 }

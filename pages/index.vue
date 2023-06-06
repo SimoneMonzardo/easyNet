@@ -129,6 +129,21 @@ const data = reactive({
 });
 
 const savedPostsIds = [];
+onMounted(() => {
+  window.addEventListener('keyup', handleKeyUp);
+});
+
+function handleKeyUp(event) {
+  console.log(event.keyCode)
+  if (event.keyCode == 37) {
+    //prev
+    previousPost();
+  }
+  else if((event.keyCode == 39)){
+    //next
+    nextPost();
+  }
+}
 
 useHead({
   title: 'Home • MuzNet',
