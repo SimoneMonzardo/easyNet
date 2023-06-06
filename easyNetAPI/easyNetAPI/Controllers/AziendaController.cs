@@ -172,7 +172,7 @@ namespace easyNetAPI.Controllers
                 var returnList = new List<CompanyGetVM>();
                 if (pattern != "" && pattern is not null)
                 {
-                    companyList = companyList.Where(c => c.CompanyName.Contains(pattern)).ToList();
+                    companyList = companyList.Where(c => c.CompanyName.Contains(pattern,StringComparison.OrdinalIgnoreCase)).ToList();
                 }
                 foreach (var item in companyList)
                 {
@@ -485,7 +485,7 @@ namespace easyNetAPI.Controllers
                 var companyRequest = new List<CompanyRequest>();
                 foreach (var company in aziende)
                 {
-                    if (company.CompanyId == 0 && !companiesId.Contains(company.CompanyId) && !company.CompanyName.IsNullOrEmpty())
+                    if (company.CompanyId == 0  && !company.CompanyName.IsNullOrEmpty())
                     {
                         companies.Add(company);
                         companiesId.Add(company.CompanyId);
@@ -534,7 +534,11 @@ namespace easyNetAPI.Controllers
                 var risultato = await _unitOfWork.Company.AddAsync(company, userId);
                 var dbUser = _db.Users.Find(userId);
                 if (!await _userManager.IsInRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN))
+                {
                     await _userManager.AddToRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN);
+                    await _userManager.RemoveFromRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN);
+                }
+                   
                 if (risultato)
                     return Ok("Request sent succesfully");
                 return BadRequest("Request couldn't be sent");
