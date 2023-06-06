@@ -99,7 +99,14 @@ namespace easyNetAPI.Controllers
                 {
                     UserId = applicationUser.Id,
                     Administrator = false,
-                    Company = new Company(),
+                    Company = new Company
+                    {
+                        CompanyId = 0,
+                        Bot = new Bot(),
+                        CompanyName = string.Empty,
+                        ProfilePicture = string.Empty,
+                        Documents = new List<string>()
+                    },
                     Posts = new List<Post>(),
                     FollowedUsers = new List<string>(),
                     FollowersList = new List<string>(),
