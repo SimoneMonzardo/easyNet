@@ -59,7 +59,8 @@ namespace easyNetAPI.Controllers
                     _unitOfWork.Post.UpdateOneAsync(post);
                     if (user.LikedPost.Contains(postId))
                         user.LikedPost.Remove(postId);
-                        return Ok("Like removed succesfully");
+                    await _unitOfWork.UserBehavior.UpdateOneAsync(userId, user);
+                    return Ok("Like removed succesfully");
                 }
                 post.Likes.Add(username);
                 var result = await _unitOfWork.Post.UpdateOneAsync(post);
@@ -67,6 +68,7 @@ namespace easyNetAPI.Controllers
                     return BadRequest("couldn't update post");
                 if (!user.LikedPost.Contains(postId))
                     user.LikedPost.Add(postId);
+                await _unitOfWork.UserBehavior.UpdateOneAsync(userId, user);
                 return Ok("Like Added Succesfully");
             }
             catch (Exception ex)
