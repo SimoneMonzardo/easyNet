@@ -108,7 +108,9 @@ import useModal from '~/composables/useModal';
 import useStorage from '~/composables/useStorage';
 
 const INITIAL_POST_FETCH_COUNT = 7;
-const MINIMUM_POST_TRIGGER = 5;
+const MINIMUM_POST_TRIGGER = 7;
+const LEFT_ARROW_KEY_CODE = 37;
+const RIGHT_ARROW_KEY_CODE = 39;
 
 const initialApiRoutes = new Map();
 initialApiRoutes.set(false, 'GetPostsOfRandom');
@@ -134,13 +136,12 @@ onMounted(() => {
 });
 
 function handleKeyUp(event) {
-  console.log(event.keyCode)
-  if (event.keyCode == 37) {
-    //prev
+  // Left arrow
+  if (event.keyCode == LEFT_ARROW_KEY_CODE) {
     previousPost();
   }
-  else if((event.keyCode == 39)){
-    //next
+  // Right arrow
+  else if(event.keyCode == RIGHT_ARROW_KEY_CODE) {
     nextPost();
   }
 }
@@ -195,10 +196,11 @@ async function nextPost() {
         },
         onResponse({ response }) {
           if (response.status === 200) {
-            response._data.hasUserLike = getPostHasUserLike(response._data, sessionStorage.getItem('username'));
+            const post = response._data;
+            post.hasUserLike = getPostHasUserLike(post, sessionStorage.getItem('username'));
             post.isSavedByUser = getIsPostSavedByUser(post);
-
-            data.posts.push(response._data);
+            
+            data.posts.push(post);
             data.lastFetchedPost++;
           } else if (response.status === 401 && data.activePost >= data.lastFetchedPost) {
             const { clearSession } = useStorage();
