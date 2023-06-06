@@ -248,7 +248,7 @@ export default {
         },
         onResponse({ request, response, options }) {
           console.log(response._data);
-          if (response._data == "User created successfully") {
+          if (response._data.result == "User created successfully") {
             const options = {};
             console.log("success");
 
