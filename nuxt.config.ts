@@ -3,6 +3,11 @@ import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfil
 export default defineNuxtConfig({
   app: {
     head: {
+      link: [{ 
+        rel: 'icon', 
+        type: 'image/x-icon', 
+        href: '/logo.ico' 
+      }],
         htmlAttrs: {
             lang: 'it',
         },
