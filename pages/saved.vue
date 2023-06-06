@@ -30,8 +30,8 @@
         <!-- Modal body -->
         <div class="p-6 pt-3 space-y-3 w-full">
           <div class="h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3 p-1 md:p-6 bg-white border border-gray-200 shadow-xl dark:bg-gray-800 dark:border-gray-700">
-            <div v-html="data.selectedPost.content.content" class="mx-auto text-gray-900 dark:text-gray-50"></div>
-            <img v-if="data.selectedPost.content.data.image !== ''" :src="data.selectedPost.content.data.image" class="h-auto max-h-full rounded-lg mx-auto" />
+            <div v-html="data.selectedPost.content.content" class="mx-auto text-gray-900 dark:text-gray-50" :class="data.selectedPost.content.data.image === '' ? 'h-full' : ''"></div>
+            <img v-if="data.selectedPost.content.data.image !== ''" :src="data.selectedPost.content.data.image" class="h-auto max-h-[calc(100%-2rem)] rounded-lg mx-auto" />
           </div>
 
           <div class="w-full sm:w-3/4 md:w-1/2 mx-auto">
@@ -68,8 +68,8 @@
     <ul v-else class="lg:mx-6 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
       <li v-for="post in data.posts">
         <button type="button" @click="openHighlightModal(post)" class="border border-gray-100 rounded-xl p-2">
-          <div v-html="post.content.content" class="mx-auto text-gray-900 dark:text-gray-50" :class="post.content.data.image === '' ? 'h-full' : 'h-9'"></div>
-          <img v-if="post.content.data.image !== ''" :src="post.content.data.image" class="h-auto max-h-full rounded-lg mx-auto" />
+          <div v-if="post.content.data.image === ''" v-html="post.content.content" class="mx-auto text-gray-900 dark:text-gray-50" :class="post.content.data.image === '' ? 'h-full' : ''"></div>
+          <img v-else :src="post.content.data.image" class="h-auto max-h-full rounded-lg mx-auto" />
         </button>
      </li>
     </ul>
@@ -80,7 +80,7 @@
 import { reactive } from 'vue';
 import { useRouter } from "vue-router";
 import useFormat from '~/composables/useFormat';
-import * as matter from 'gray-matter';
+import useParse from '~/composables/useParse';
 
 const router = useRouter();
 const data = reactive({
@@ -107,7 +107,7 @@ const data = reactive({
 });
 
 useHead({
-  title: 'Salvati • Mouzone',
+  title: 'Salvati • MuzNet',
   meta: [{
     name:'description',
     content: 'Entra nel nostro social network professionale: connessioni globali con aziende di successo. Benvenuto!'
@@ -126,12 +126,14 @@ const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Save/Get
     options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
   },
   onResponse({ response }) {
-    data.status = response.status;
+    const { parsePost } = useParse();
     const username = sessionStorage.getItem('username');
+
+    data.status = response.status;
     for (const post of response._data) {
       post.hasUserLike = getPostHasUserLike(post, username);
       post.isSavedByUser = true;
-      post.content = matter(post.content);
+      post.content = parsePost(post.content);
       data.posts.push(post);
     }
   }
