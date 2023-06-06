@@ -136,5 +136,15 @@ export default {
       this.$router.go("/");
     },
   },
+  mounted: function () { 
+    const filterDrawerToggle = document.getElementById('filters-toggle');
+
+    if (this.$nuxt._route.path != '/') {
+      filterDrawerToggle.classList.add('hidden');
+      return;
+    }
+
+    filterDrawerToggle.classList.remove('hidden');
+  }
 };
 </script>

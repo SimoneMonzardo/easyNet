@@ -57,7 +57,7 @@
     <div class="justify-center flex flex-col sm:flex-row gap-4 mx-10 md:mx-auto mt-12 sm:w-[calc(100vw-4rem)] md:w-[calc(100vw-10rem)] lg:w-[80vw] xl:w-[50vw]">
       <div class="w-40 h-auto lg:w-48 flex flex-col items-center gap-2 lg:pt-4 mx-auto">
         <!-- Loading -->
-        <div v-if="pending || user.profilePicture === ''" class="flex items-center justify-center w-32 h-32 lg:h-40 lg:w-40 bg-gray-300 rounded-full dark:bg-gray-700">
+        <div v-if="pending || user.profilePicture === null || user.profilePicture === ''" class="flex items-center justify-center w-32 h-32 lg:h-40 lg:w-40 bg-gray-300 rounded-full dark:bg-gray-700">
           <svg class="w-12 h-12 text-gray-200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512">
             <path d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z" />
           </svg>
@@ -72,9 +72,9 @@
         <button
           type="button"
           data-modal-target="upload-image-modal"
-          data-modal-toggle="upload-image-modal"
+          data-modal-show="upload-image-modal"
           :disabled="pending ? true : false"
-          class="w-[calc(100%-2rem)] text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-violet-300 font-semibold rounded-xl text-lg py-2 text-center mb-2 dark:text-white dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-violet-800 disabled:bg-gray-100 disabled:cursor-not-allowed">Modifica</button>
+          class="w-[calc(100%-2rem)] text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-4 focus:ring-violet-300 font-semibold rounded-xl text-lg py-2 text-center mb-2 dark:bg-violet-700 dark:hover:bg-violet-800 dark:focus:ring-violet-800 disabled:bg-gray-100 disabled:cursor-not-allowed">Modifica</button>
       </div>
       <div class="w-full py-3">
         <!-- Loading -->
@@ -179,8 +179,8 @@
         </div>
         <div class="w-full flex flex-wrap gap-4 justify-between mt-5">
           <div class="inline-flex">
-            <button id="cancel-changes" @click="cancelChanges()" :disabled="pending" class="w-24 lg:w-28 bg-gray-300 hover:bg-gray-400 text-gray-1000 font-bold py-2 rounded-l-xl disabled:bg-gray-100 disabled:cursor-not-allowed">Annulla</button>
-            <button id="save-changes" @click="saveChanges()" :disabled="pending" class="w-24 lg:w-28 bg-green-400 hover:bg-green-500 text-gray-1000 font-bold py-2 rounded-r-xl disabled:bg-green-300 disabled:cursor-not-allowed">Salva</button>
+            <button id="cancel-changes" @click="cancelChanges()" :disabled="pending" class="w-24 lg:w-28 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-900 text-gray-950 dark:text-white font-bold py-2 rounded-l-xl disabled:bg-gray-100 disabled:cursor-not-allowed">Annulla</button>
+            <button id="save-changes" @click="saveChanges()" :disabled="pending" class="w-24 lg:w-28 bg-violet-600 hover:bg-violet-700 text-white font-bold py-2 rounded-r-xl disabled:bg-violet-300 disabled:cursor-not-allowed">Salva</button>
           </div>
             <button
               id="delete-account"
@@ -188,7 +188,7 @@
               @click="resetModal()" 
               data-modal-target="confirm-delete-modal"
               data-modal-toggle="confirm-delete-modal"
-              class="bg-red-500 hover:bg-red-600 text-gray-1000 font-bold py-2 px-2 rounded-xl disabled:bg-red-400 disabled:cursor-not-allowed">
+              class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-xl disabled:bg-red-300 disabled:cursor-not-allowed">
               Elimina profilo
             </button>
         </div>
@@ -280,8 +280,8 @@ async function saveChanges() {
   };
 
   const oldPicture = sessionStorage.getItem('backupProfilePicture');
+  sessionStorage.setItem('profilePicture', user.profilePicture);
   if (oldPicture !== null && oldPicture !== '' && (user.profilePicture === '' || user.profilePicture !== oldPicture)) {
-    sessionStorage.setItem('profilePicture', user.profilePicture);
 
     await useFetch('https://progettoeasynet.azurewebsites.net/Auth/DeleteProfilePicture', {
       method: 'DELETE',
@@ -291,9 +291,6 @@ async function saveChanges() {
       },
       onRequest({ request, options }) {
         options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
-      },
-      onResponseError({response}) {
-        console.log(response);
       }
     });
   }  
@@ -307,7 +304,7 @@ async function saveChanges() {
     body: JSON.stringify(newUserInfo),
     onRequest({ request, options }) {
       options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
-    }
+    },
   });
 
   router.go();
@@ -366,7 +363,6 @@ async function updateImage(images) {
 
   if (data._value !== null) {
     user.profilePicture = data._value;
-    sessionStorage.setItem('profilePicture', data._value);
   }
 }
 

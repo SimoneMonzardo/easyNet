@@ -295,7 +295,7 @@ async function findCompanies(query) {
           data.companies.push(company);
         }
         data.loadingCompanies = false;
-      } else if (response.status === 403) {
+      } else if (response.status === 401) {
         const { requireLogin } = useModal();
         requireLogin(true);
       }
