@@ -160,7 +160,7 @@ const { pending } = useFetch(`https://progettoeasynet.azurewebsites.net/Post/Get
 
 async function nextPost() {
   if (data.activePost < data.lastFetchedPost) {
-    swapAndAnimate();
+    swapNext();
   }
 
   const token = sessionStorage.getItem('token');
@@ -201,7 +201,7 @@ async function nextPost() {
 
 function previousPost() {
   if (data.activePost > 0) {
-    swapAndAnimate(false);
+    swapPrevious();
   }
 }
 
@@ -332,28 +332,73 @@ function getSavedPosts() {
   }
 }
 
-function swapAndAnimate(increment = true) {
+function swapNext() {
   const content = document.getElementById('post-content');
   const comments = document.getElementById('post-comments');
   const commentsCount = document.getElementById('post-comments-count');
   const likesCount = document.getElementById('post-likes-count');
   const header = document.getElementById('post-header');
-  content.classList.add('post');
-  comments.classList.add('post');
+  
+  header.classList.add('post');
   commentsCount.classList.add('post');
   likesCount.classList.add('post');
-  header.classList.add('post');
-  
   setTimeout(() => {
-    data.activePost += increment ? 1 : -1;
+    content.classList.add('post');
+    setTimeout(() => {
+      comments.classList.add('post');
+    }, 150);
+  }, 150);
+
+
+  setTimeout(() => {
+    data.activePost++;
     
     setTimeout(() => {
-      content.classList.remove('post');
-      comments.classList.remove('post');
+      header.classList.remove('post');
       commentsCount.classList.remove('post');
       likesCount.classList.remove('post');
-      header.classList.remove('post');
-    }, 300);
+      setTimeout(() => {
+        content.classList.remove('post');
+        setTimeout(() => {
+          comments.classList.remove('post');
+        }, 150);
+      }, 150);
+    }, 400);
+  }, 300); 
+}
+
+function swapPrevious() {
+  const content = document.getElementById('post-content');
+  const comments = document.getElementById('post-comments');
+  const commentsCount = document.getElementById('post-comments-count');
+  const likesCount = document.getElementById('post-likes-count');
+  const header = document.getElementById('post-header');
+  
+  comments.classList.add('post');
+  setTimeout(() => {
+    content.classList.add('post');
+    setTimeout(() => {
+      header.classList.add('post');
+      commentsCount.classList.add('post');
+      likesCount.classList.add('post');
+    }, 150);
+  }, 150);
+
+
+  setTimeout(() => {
+    data.activePost--;
+    
+    setTimeout(() => {
+      comments.classList.remove('post');
+      setTimeout(() => {
+        content.classList.remove('post');
+        setTimeout(() => {
+          header.classList.remove('post');
+          commentsCount.classList.remove('post');
+          likesCount.classList.remove('post');
+        }, 150);
+      }, 150);
+    }, 400);
   }, 300); 
 }
 </script>
@@ -361,7 +406,7 @@ function swapAndAnimate(increment = true) {
 <style>
 .post {
   zoom: 1;
-  animation: fade-away-in .6s ease-in-out;
+  animation: fade-away-in .7s ease-in-out;
 }
 
 @keyframes fade-away-in {
