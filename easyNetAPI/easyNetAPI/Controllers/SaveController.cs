@@ -1,5 +1,7 @@
-﻿using easyNetAPI.Data.Repository.IRepository;
+﻿using easyNetAPI.Data;
+using easyNetAPI.Data.Repository.IRepository;
 using easyNetAPI.Models;
+using easyNetAPI.Models.ModelVM;
 using easyNetAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +18,13 @@ namespace easyNetAPI.Controllers
     {
         private readonly ILogger<LikeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly AppDbContext _db;
 
-        public SaveController(ILogger<LikeController> logger, IUnitOfWork unitOfWork)
+        public SaveController(ILogger<LikeController> logger, IUnitOfWork unitOfWork, AppDbContext db)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _db = db;
         }
 
         [HttpPost("PostSave")]
@@ -86,7 +90,24 @@ namespace easyNetAPI.Controllers
                     if (post is not null)
                         posts.Add(post);
                 }
-                return Json(posts);
+                var postsList = new List<PostVM>();
+                foreach (var post in posts)
+                {
+                    var profilepic = _db.Users.Where(u => u.Id == post.UserId).FirstOrDefault().ProfilePicture;
+                    postsList.Add(new PostVM
+                    {
+                        Username = post.Username,
+                        PostId = post.PostId,
+                        Comments = post.Comments,
+                        Content = post.Content,
+                        DataDiCreazione = post.DataDiCreazione,
+                        Hashtags = post.Hashtags,
+                        ImgUrl = profilepic,
+                        Likes = post.Likes,
+                        Tags = post.Tags
+                    });
+                }
+                return Json(postsList.OrderBy(p => p.DataDiCreazione));
             }
             catch (Exception)
             {
