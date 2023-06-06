@@ -208,7 +208,7 @@ const data = reactive({
 });
 
 useHead({
-  title: "Salvati • MuzNet",
+  title: `${username} • MuzNet`,
   meta: [
     {
       name: "description",

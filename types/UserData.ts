@@ -12,11 +12,11 @@ export default class UserData {
     this.profilepic = userBehavior.profilepic;
   }
   isCurrentUser() {
-    const currentUserName = localStorage.getItem("username");
+    const currentUserName = sessionStorage.getItem("username");
     return this.username === currentUserName;
   }
   isCurrentUserFollowing(user: User) {
-    const currentUserName = localStorage.getItem("username");
+    const currentUserName = sessionStorage.getItem("username");
     if (currentUserName === null) {
       return false;
     }
