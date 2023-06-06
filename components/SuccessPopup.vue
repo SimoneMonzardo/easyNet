@@ -13,11 +13,11 @@
           class="bg-gray-300 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex"
         >
           <h4 class="text-2xl font-semibold mx-auto"></h4>
-          <h6 class="mx-auto text-4xl font-semibold">Mouzone</h6>
+          <h6 class="mx-auto text-4xl font-semibold">MuzNet</h6>
           <img
             src="~/public/logo.png"
             class="mt-3 h-15 rounded-full"
-            alt="Mouzone Logo"
+            alt="MuzNet Logo"
           />
         </div>
         <div class="w-full">

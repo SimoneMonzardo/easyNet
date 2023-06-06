@@ -50,9 +50,9 @@
 <script setup>
 import { PaperAirplaneIcon } from "@heroicons/vue/24/outline";
 import { reactive } from 'vue';
-import * as matter from 'gray-matter';
 import useModal from '~/composables/useModal';
 import useFormat from '~/composables/useFormat';
+import useParse from '~/composables/useParse';
 
 const props = defineProps({
   post: { username: '' }
@@ -63,8 +63,8 @@ const additionalData = reactive({
 });
 
 const content = computed(() => {
-  const data = matter(props.post.content);
-  return data;
+  const { parsePost } = useParse();
+  return parsePost(props.post.content);
 })
 
 const likes = computed(() => {

@@ -44,15 +44,18 @@
       @delete="deleteImage" 
       :showDelete="user.profilePicture !== ''" />
 
-    <!-- Login & Register Modals -->
-    <RegisterPopup />
-    <LoginPopup />
+    <!-- Declare items with modals' ids to avoid errors -->
+    <div hidden id="authentication-modal"></div>
+    <div hidden id="register-modal"></div>
+    <div hidden id="forget-modal"></div>
+    <div hidden id="success-modal"></div>
+    <div hidden id="filters-drawer"></div>
   </section>
 
   <section class="bg-white dark:bg-gray-900 h-full">
 
-    <div class="justify-center flex flex-col sm:flex-row gap-4 mx-10 md:mx-auto mt-12">
-      <div class="w-40 lg:w-48 flex flex-col items-center gap-2 lg:pt-4 mx-auto sm:mx-0">
+    <div class="justify-center flex flex-col sm:flex-row gap-4 mx-10 md:mx-auto mt-12 sm:w-[calc(100vw-4rem)] md:w-[calc(100vw-10rem)] lg:w-[80vw] xl:w-[50vw]">
+      <div class="w-40 h-auto lg:w-48 flex flex-col items-center gap-2 lg:pt-4 mx-auto">
         <!-- Loading -->
         <div v-if="pending || user.profilePicture === ''" class="flex items-center justify-center w-32 h-32 lg:h-40 lg:w-40 bg-gray-300 rounded-full dark:bg-gray-700">
           <svg class="w-12 h-12 text-gray-200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512">
@@ -215,7 +218,7 @@ const user = reactive({
 });
 
 useHead({
-  title: 'Impostazioni • Mouzone',
+  title: 'Impostazioni • MuzNet',
   meta: [{
     name:'description',
     content: 'Entra nel nostro social network professionale: connessioni globali con aziende di successo. Benvenuto!'
