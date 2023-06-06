@@ -53,6 +53,7 @@
               <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
                 <div class="relative">
                   <input
+                    autocomplete="off"
                     type="text"
                     id="name"
                     name="name"
@@ -69,6 +70,7 @@
 
                 <div class="relative">
                   <input
+                    autocomplete="off"
                     type="text"
                     id="surname"
                     name="surname"
@@ -85,6 +87,7 @@
 
                 <div class="relative">
                   <input
+                    autocomplete="off"
                     type="tel"
                     id="phoneNumber"
                     name="phoneNumber"
@@ -101,6 +104,7 @@
 
                 <div class="relative">
                   <input
+                  autocomplete="off"
                     type="date"
                     id="birthDate"
                     name="dateOfBirth"
@@ -136,6 +140,7 @@
 
                 <div class="relative">
                   <input
+                  autocomplete="off"
                     type="email"
                     id="email"
                     name="email"
@@ -153,6 +158,7 @@
 
                 <div class="relative">
                   <input
+                  autocomplete="off"
                     type="password"
                     id="passwordRegister"
                     name="password"
@@ -171,6 +177,7 @@
 
                 <div class="relative">
                   <input
+                  autocomplete="off"
                     type="password"
                     id="confirmPassword"
                     v-on:keyup="check()"
@@ -188,6 +195,7 @@
 
                 <div class="relative">
                   <input
+                  autocomplete="off"
                     type="text"
                     id="usernameRegister"
                     name="username"

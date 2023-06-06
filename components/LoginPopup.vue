@@ -49,6 +49,7 @@
             <form class="space-y-6" @submit.prevent="submit" method="post">
               <div class="relative">
                 <input
+                autocomplete="off"
                   type="text"
                   id="username"
                   name="userName"
@@ -65,6 +66,7 @@
               </div>
               <div class="relative">
                 <input
+                autocomplete="off"
                   type="password"
                   id="password"
                   name="password"
