@@ -150,10 +150,11 @@ const { pending } = useFetch(`https://progettoeasynet.azurewebsites.net/Post/Get
 
     for (const post of response._data) {
       post.hasUserLike = getPostHasUserLike(post, username);
-      post.isSavedByUser = getIsPostSavedByUser(post);
+      post.isSavedByUser = false;
       data.posts.push(post);
     }
     data.lastFetchedPost += data.posts.length;
+    getSavedPosts();
   }
 });
 
@@ -208,10 +209,7 @@ function getPostHasUserLike(post, username) {
   return username !== null && username !== '' && post.likes.includes(username);
 }
 
-async function getIsPostSavedByUser(post) {
-  if (savedPostsIds.length === 0) {
-    await getSavedPosts();
-  }
+function getIsPostSavedByUser(post) {
   return savedPostsIds.length !== 0 && savedPostsIds.includes(post.postId);
 }
 
@@ -242,10 +240,11 @@ async function feedChangeRequested() {
           
           for (const post of response._data) {
             post.hasUserLike = getPostHasUserLike(post, username);
-            post.isSavedByUser = getIsPostSavedByUser(post);
+            post.isSavedByUser = false;
             data.posts.push(post);
           }
           data.lastFetchedPost += data.posts.length;
+          getSavedPosts();
         }
       }
     });
@@ -304,11 +303,11 @@ async function findCompanies(query) {
   });
 }
 
-async function getSavedPosts() {
+function getSavedPosts() {
   var token = sessionStorage.getItem('token');
   if (token !== null && token !== '') {
-    await useFetch('https://progettoeasynet.azurewebsites.net/Save/GetSavedPostsIds', {
-      lazy: true,
+    useFetch('https://progettoeasynet.azurewebsites.net/Save/GetSavedPostsIds', {
+      lazy: false,
       server: false,
       method: 'GET',
       headers: {
@@ -320,16 +319,16 @@ async function getSavedPosts() {
       },
       onResponse({ response }) {
         if (response.ok) {
-          for (id in response._data) {
-            savedPostsIds.append(id);
+          for (const id of response._data) {
+            savedPostsIds.push(id);
+          }
+          
+          for (const post of data.posts) {
+            post.isSavedByUser = getIsPostSavedByUser(post)
           }
         }
       }
     });
   }
 }
-
-onMounted(() => {
-  getSavedPosts();
-});
 </script>
