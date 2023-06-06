@@ -1,11 +1,19 @@
 export default() => {
   const parsePost = (postContent) => {
     const components = postContent.split('---\n');
-   
+    if (components.length != 3) {
+      return {
+        content: postContent,
+        data: {
+          image: ''
+        }
+      }
+    }
+
     // Message should be in the format ---\nimaage: 'URL'\n---\nHTML_CONTENT
     const parsedObj = {
       content: components[2],
-       data: { }
+      data: { }
     };
     
     for (const row of components[1].split('\n')) {
