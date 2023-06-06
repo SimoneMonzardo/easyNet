@@ -444,9 +444,9 @@ namespace easyNetAPI.Controllers
                     {
                         file.CopyTo(fileStreams);
                     }
-                    user.ProfilePicture = url;
-                    _db.Users.Update(user);
-                    _db.SaveChanges();
+                    //user.ProfilePicture = url;
+                    //_db.Users.Update(user);
+                    //_db.SaveChanges();
                     return Ok(url);
                 }
                 return BadRequest("File is null");
