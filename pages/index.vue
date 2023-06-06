@@ -132,7 +132,7 @@ const data = reactive({
 const savedPostsIds = [];
 
 useHead({
-  title: 'Home • Mouzone',
+  title: 'Home • MuzNet',
   meta: [{
     name:'description',
     content: 'Entra nel nostro social network professionale: connessioni globali con aziende di successo. Benvenuto!'
@@ -208,7 +208,10 @@ function getPostHasUserLike(post, username) {
   return username !== null && username !== '' && post.likes.includes(username);
 }
 
-function getIsPostSavedByUser(post) {
+async function getIsPostSavedByUser(post) {
+  if (savedPostsIds.length === 0) {
+    await getSavedPosts();
+  }
   return savedPostsIds.length !== 0 && savedPostsIds.includes(post.postId);
 }
 
@@ -293,19 +296,18 @@ async function findCompanies(query) {
           data.companies.push(company);
         }
         data.loadingCompanies = false;
-      } else {
+      } else if (response.status === 403) {
         const { requireLogin } = useModal();
         requireLogin(true);
-        data.loadingCompanies = true;
       }
     }
   });
 }
 
-onMounted(() => {
+async function getSavedPosts() {
   var token = sessionStorage.getItem('token');
   if (token !== null && token !== '') {
-    useFetch('https://progettoeasynet.azurewebsites.net/Save/GetSavedPostsIds', {
+    await useFetch('https://progettoeasynet.azurewebsites.net/Save/GetSavedPostsIds', {
       lazy: true,
       server: false,
       method: 'GET',
@@ -325,5 +327,9 @@ onMounted(() => {
       }
     });
   }
+}
+
+onMounted(() => {
+  getSavedPosts();
 });
 </script>
