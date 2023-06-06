@@ -4,8 +4,8 @@
     <div class="relative w-full max-w-3xl max-h-full">
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
         <div class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex">
-          <h6 class="mx-auto text-4xl font-semibold text-violet-600">Mouzone</h6>
-          <img src="~/public/logo.png" class="mt-3 h-15 rounded-full" alt="Mouzone Logo" />
+          <h6 class="mx-auto text-4xl font-semibold text-violet-600">MuzNet</h6>
+          <img src="~/public/logo.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
         </div>
         <!-- Content -->
         <div class="w-full bg-white rounded-lg shadow dark:bg-gray-700">
@@ -27,8 +27,8 @@
             <p> 
               Questa politica sulla privacy descrive come raccogliamo, utilizziamo, divulgiamo e proteggiamo
               le informazioni
-              personali che ci fornisci quando utilizzi il nostro social Mouzone. <br>
-              Si prega di leggere attentamente questa politica sulla privacy prima di utilizzare il Mouzone o
+              personali che ci fornisci quando utilizzi il nostro social MuzNet. <br>
+              Si prega di leggere attentamente questa politica sulla privacy prima di utilizzare il MuzNet o
               fornirci qualsiasi informazione personale. <br>
               Per qualunque altra informazione ti preghiamo di contattare l'azienda tramite questo link: <a href="https://www.enet.it/contatti" target="_blank"> www.enet.it/contatti.</a>
             </p>
