@@ -8,7 +8,7 @@
   <div class="max-h-[calc(100vh-4rem)] w-screen grid grid-cols-[repeat(12,_minmax(0,_1fr))] grid-rows-[repeat(12,_minmax(0,_1fr))]">
     <button class="relative" @click="previousPost">
       <div class="block triangle drop-shadow-lg"></div>
-      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-violet-600 rotate-45 bg-transparent" />
+      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 hover:w-11 hover:h-11 hover:inset-1.5 text-violet-600 rotate-45 bg-transparent" />
     </button>
 
     <div v-if="pending || data.status !== 200" class="col-start-2 col-end-12 row-start-2 row-end-[12] h-full flex flex-col justify-center">
@@ -39,7 +39,7 @@
 
     <button class="col-start-12 col-end-[13] row-start-[12] row-end-[13] rotate-180" @click="nextPost">
       <div class="block triangle drop-shadow-lg"></div>
-      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-violet-600 rotate-45 bg-transparent" />
+      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 hover:w-11 hover:h-11 hover:inset-1.5 text-violet-600 rotate-45 bg-transparent" />
     </button>
   </div>
 
@@ -78,7 +78,7 @@
           @input="findCompanies($event.target.value)"
           type="search"
           id="search-company"
-          class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-xl bg-gray-50 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600"
+          class="block w-full p-4 pl-10 text-sm text-gray-900 border border-violet-300 rounded-xl bg-gray-50 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600"
           placeholder="Trova aziende ..."
           required>
       </div>
@@ -98,7 +98,7 @@
       </ul>
     </div>
     <div class="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700" data-drawer-hide="filters-drawer">
-      <span class="absolute bottom-3 w-8 h-1 -translate-x-1/2 bg-gray-300 rounded-lg left-1/2 dark:bg-gray-600"></span>
+      <span class="absolute bottom-3 w-8 h-1 -translate-x-1/2 bg-violet-300 rounded-lg left-1/2 dark:bg-violet-600"></span>
     </div>
   </div>
 </template>

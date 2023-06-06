@@ -52,7 +52,7 @@
                   type="text"
                   id="username"
                   name="userName"
-                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
                   placeholder=" "
                   required
                 />
@@ -68,7 +68,7 @@
                   type="password"
                   id="password"
                   name="password"
-                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
                   placeholder=" "
                   required
                 />
@@ -86,7 +86,7 @@
                       id="remember"
                       type="checkbox"
                       value=""
-                      class="w-4 h-4 text-violet-600 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-violet-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-violet-700 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                      class="w-4 h-4 text-violet-600 border border-violet-300 rounded bg-gray-50 focus:ring-3 focus:ring-violet-300 dark:bg-gray-600 dark:border-violet-500 dark:focus:ring-violet-700 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
                     />
                   </div>
                   <label

@@ -8,7 +8,7 @@
       class="lg:col-span-3" />
 
     <div
-      class="row-start-2 row-end-[8] sm:row-end-[9] lg:row-end-[13] sm:col-span-2 lg:col-span-3 h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3 p-6 bg-white border border-gray-200 shadow-xl dark:bg-gray-800 dark:border-gray-700">
+      class="row-start-2 row-end-[8] sm:row-end-[9] lg:row-end-[13] sm:col-span-2 lg:col-span-3 h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3 p-6 bg-white border border-violet-400 shadow-xl dark:bg-gray-800 dark:border-violet-700">
       <div v-html="content.content" class="mx-auto text-gray-900 dark:text-gray-50" :class="content.data.image === '' ? 'h-full' : ''"></div>
       <img v-if="content.data.image !== ''" :src="content.data.image" class="h-auto max-h-[calc(100%-2rem)] rounded-lg mx-auto" />
     </div>
@@ -23,8 +23,8 @@
       @saveToggled="toggleSave()" />
 
     <div
-      class="row-start-[9] sm:col-span-2 lg:col-span-1 lg:col-start-4 lg:row-start-2 row-end-[13] shadow-inner shadow-gray-400 dark:shadow-gray-800 rounded-xl bg-gray-100 dark:bg-gray-600 flex flex-col justify-between h-full max-h-full">
-      <ul class="tracking-tight text-gray-900 dark:text-gray-50 overflow-y-scroll max-h-full my-4">
+      class="row-start-[9] sm:col-span-2 lg:col-span-1 lg:col-start-4 lg:row-start-2 row-end-[13] shadow-inner shadow-gray-400 dark:shadow-gray-800 rounded-xl bg-gray-100 dark:bg-gray-600 flex flex-col justify-between h-full max-h-full border border-violet-400 dark:border-violet-700">
+      <ul class="tracking-tight text-gray-900 dark:text-gray-50 overflow-y-scroll h-full max-h-full my-4">
         <li v-for="comment in post.comments" class="w-full px-4 py-2">
           <h6 class="text-md font-semibold">{{ comment.username }}</h6>
           <p class="text-xs leading-tight">{{ comment.content }}</p>
@@ -34,11 +34,11 @@
         <label for="addAComment" class="sr-only">Commenta...</label>
         <div class="flex items-center px-2 bg-gray-300 bg-opacity-80 rounded-xl dark:bg-gray-700">
           <textarea v-model="additionalData.userComment" id="addAComment" rows="1"
-            class="block py-1 px-1.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-50 dark:focus:ring-violet-600 dark:focus:border-violet-600"
+            class="block py-1 px-1.5 w-[calc(100%-4rem)] text-sm text-gray-900 bg-white rounded-lg border border-violet-300 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-50 dark:focus:ring-violet-600 dark:focus:border-violet-600"
             placeholder="Commenta..." style="resize: none"></textarea>
-          <button @click="postComment()" type="submit"
-            class="inline-flex justify-center p-2 rounded-full cursor-pointer text-violet-600">
-            <PaperAirplaneIcon class="w-6 h-6" />
+          <button @click="postComment()" type="button"
+            class="inline-flex justify-center p-2 rounded-full cursor-pointer text-violet-600 mx-auto">
+            <PaperAirplaneIcon class="airplane w-6 h-6" />
             <span class="sr-only">Invia</span>
           </button>
         </div>
@@ -183,3 +183,18 @@ async function toggleSave() {
   });
 }
 </script>
+
+<style>
+.airplane:hover {
+  transform: scale(1.1);
+}
+
+.airplane:active {
+  animation: fly 0.75s;
+}
+
+@keyframes fly {
+  40% { transform: translate((50px, 0px)); }
+  100% { transform: translate(80px, -20px) rotate(-20deg); }
+}
+</style>

@@ -5,7 +5,7 @@
       <img v-else class="rounded-full h-12 w-12 my-auto" :src="profilePictureUrl" alt="profile" />
       <div class="px-1 flex flex-col text-gray-900 dark:text-gray-50">
         <a :href="`/${username}`">
-          <h3 class="text-xl font-semibold md:text-2xl">{{ username }}</h3>
+          <h3 class="text-xl font-semibold md:text-2xl hover:text-violet-600">{{ username }}</h3>
         </a>
         <small class="text-gray-400 text-xs font-md">
           {{ elapsedTime }}
@@ -17,7 +17,7 @@
         id="actions-trigger"
         @click="openPopoverMenu()"
         type="button">
-        <EllipsisVerticalIcon class="h-8 w-8 text-gray-900 dark:text-white" />
+        <EllipsisVerticalIcon class="h-8 w-8 text-gray-900 dark:text-white hover:text-violet-600" />
       </button>
       <div 
         data-popover 

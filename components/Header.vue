@@ -6,7 +6,7 @@
           <a href="/" class="flex mr-4">
             <img
               src="~/public/logo.png"
-              class="mr-3 h-8"
+              class="logo mr-3 h-8"
               alt="MuzNet Logo"
             />
             <span
@@ -86,7 +86,7 @@
               >
                 <li>
                   <button
-                    class="block w-full text-start py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    class="block w-full text-start text-red-600 hover:font-semibold py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500"
                     @click="logOut"
                   >
                     Esci
@@ -148,3 +148,13 @@ export default {
   }
 };
 </script>
+
+<style>
+.logo:active {
+  animation: spin 6s;
+}
+
+@keyframes spin {
+  50% { transform: rotate(360deg); }
+}
+</style>
