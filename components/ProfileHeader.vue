@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center my-10">
+  <div class="flex flex-col justify-center my-10">
     <div class="flex flex-row gap-20">
       <div class="flex flex-col">
         <img
@@ -61,7 +61,7 @@
             >
               {{ userData.followers }} followers
             </button>
-            <FollowersListPopup :followedBy="'filippoferrario'" />
+            <FollowersListPopup :followedBy="username" />
           </li>
 
           <li>
@@ -73,13 +73,68 @@
             >
               {{ userData.following }} following
             </button>
-            <FollowingListPopup :following="'filippoferrario'" />
+            <FollowingListPopup :following="username" />
           </li>
         </div>
         <!-- <p>{{ full_name }}</p>
         <span class="text-sm dark:text-gray-400">{{ description }}</span> -->
       </div>
     </div>
+    <div class="mt-6">
+      <div class="sm:hidden">
+        <label for="tabs" class="sr-only">Select your country</label>
+        <select
+          id="tabs"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          <option>Posts</option>
+          <option>Saved</option>
+          <option>Mentions</option>
+          <option>Liked</option>
+        </select>
+      </div>
+    </div>
+
+    <ul
+      class="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400"
+    >
+      <li class="w-full">
+        <a
+          :href="getRouteUrl('')"
+          class="inline-flex justify-center w-full px-4 py-3.5 bg-white hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+        >
+          <NewspaperIcon class="h-6 w-6 text-gray-500" />
+          <p class="mx-3">Posts</p></a
+        >
+      </li>
+      <li v-if="userData.isCurrentUser()" class="w-full">
+        <a
+          :href="getRouteUrl('/saved')"
+          class="inline-flex justify-center w-full px-4 py-3.5 bg-white hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+        >
+          <BookmarkSquareIcon class="h-6 w-6 text-gray-500" />
+          <p class="mx-3">Saved</p></a
+        >
+      </li>
+      <li class="w-full">
+        <a
+          :href="getRouteUrl('/mentions')"
+          class="inline-flex justify-center w-full px-4 py-3.5 bg-white hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+        >
+          <AtSymbolIcon class="h-6 w-6 text-gray-500" />
+          <p class="mx-3">Mentions</p></a
+        >
+      </li>
+      <li class="w-full">
+        <a
+          :href="getRouteUrl('/liked')"
+          class="inline-flex justify-center w-full px-4 py-3.5 bg-white hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+        >
+          <HeartIcon class="h-6 w-6 text-gray-500" />
+          <p class="mx-3">Liked</p></a
+        >
+      </li>
+    </ul>
   </div>
 </template>
 

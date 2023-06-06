@@ -67,16 +67,16 @@
                 class="py-1 font-light text-gray-500 dark:text-gray-400"
                 aria-labelledby="user-menu-button"
               >
-                <li>
+                <!-- <li>
                   <a
                     :href="savedPostsLink"
                     class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
                     >Post salvati</a
                   >
-                </li>
+                </li> -->
                 <li>
                   <a
-                    href="/settings"
+                    :href="profileUrl"
                     class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
                     >Profilo</a
                   >
@@ -141,6 +141,7 @@ export default {
     const user = localStorage.getItem("username");
     return {
       savedPostsLink: `/${user}/saved`,
+      profileUrl: `/${user}`,
     };
   },
 };
