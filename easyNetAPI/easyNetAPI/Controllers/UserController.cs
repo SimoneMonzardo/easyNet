@@ -47,13 +47,7 @@ namespace easyNetAPI.Controllers
             {
                 return BadRequest("User not found");
             }
-            var roleId = _db.UserRoles.Where(ur => ur.UserId == userId).FirstOrDefault().RoleId;
-            if (roleId is null)
-            {
-                return BadRequest("Something went wrong");
-            }
-            var roleName = _db.Roles.Where(r => r.Id == roleId).FirstOrDefault().Name;
-            if (roleName.Equals(SD.ROLE_COMPANY_ADMIN) || roleName.Equals(SD.ROLE_EMPLOYEE))
+            if (await _userManager.IsInRoleAsync(managedUser, SD.ROLE_COMPANY_ADMIN)|| await _userManager.IsInRoleAsync(managedUser, SD.ROLE_EMPLOYEE))
             {
                 return Ok(true);
             }
@@ -424,9 +418,10 @@ namespace easyNetAPI.Controllers
             return BadRequest("Could not make user moderator see exception: " + result.Errors);
         }
 
-        [HttpPost("ConvertToEmployee_AuthCompanyAdmin"), Authorize(Roles = SD.ROLE_COMPANY_ADMIN)]
+        [HttpPost("ConvertToEmployee_AuthCompanyAdmin"), Authorize(Roles = $"{SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_USER}")]
         public async Task<ActionResult<string>> ConvertToEmployee(string username)
         {
+            
             if (username.IsNullOrEmpty())
                 return BadRequest("Insert username");
 
@@ -434,6 +429,9 @@ namespace easyNetAPI.Controllers
             var adminId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (adminId.IsNullOrEmpty())
                 return BadRequest("AdminId not found");
+            var admin = _db.Users.Find(adminId);
+            if(!await _userManager.IsInRoleAsync(admin, SD.ROLE_COMPANY_ADMIN))
+                return Forbid();
             var userId = await AuthControllerUtility.GetUserIdFromUsername(username, _db);
             if (userId.IsNullOrEmpty())
                 return BadRequest("UserId not found");
@@ -525,14 +523,16 @@ namespace easyNetAPI.Controllers
             return BadRequest("Could not add user to role user see exception: " + result.Errors);
         }
 
-        [HttpPost("RemoveFromEmployee_AuthCompanyAdmin"), Authorize(Roles = SD.ROLE_COMPANY_ADMIN)]
+        [HttpPost("RemoveFromEmployee_AuthCompanyAdmin"), Authorize(Roles = $"{SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_USER}")]
         public async Task<ActionResult<string>> RemoveFromEmployee(string username)
         {
             var token = Request.Headers["Authorization"].ToString();
             var adminId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (adminId.IsNullOrEmpty())
                 return BadRequest("AdminId not found");
-
+            var admin = _db.Users.Find(adminId);
+            if (!await _userManager.IsInRoleAsync(admin, SD.ROLE_COMPANY_ADMIN))
+                return Forbid();
             if (username.IsNullOrEmpty())
                 return BadRequest("Insert username");
             var userId = await AuthControllerUtility.GetUserIdFromUsername(username, _db);

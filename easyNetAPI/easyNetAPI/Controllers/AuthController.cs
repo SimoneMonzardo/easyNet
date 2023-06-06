@@ -488,9 +488,14 @@ namespace easyNetAPI.Controllers
 
         [HttpGet]
         [Route("GetUserIdFromUsernameModeratorCompanyAdmin")]
-        [Authorize(Roles = $"{SD.ROLE_MODERATOR},{SD.ROLE_COMPANY_ADMIN}")]
+        [Authorize(Roles = $"{SD.ROLE_MODERATOR},{SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_USER}")]
         public async Task<ActionResult<string>> GetUserIdFromUsername_AuthModerator(string userName)
         {
+            var token = Request.Headers["Authorization"].ToString();
+            var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+            var admin = _db.Users.FirstOrDefault(u => u.Id == userId);
+            if (!await _userManager.IsInRoleAsync(admin, SD.ROLE_MODERATOR) && !await _userManager.IsInRoleAsync(admin, SD.ROLE_MODERATOR))
+                return Forbid();
             var user = _db.Users.First(u => u.UserName.Equals(userName));
             if (user == null)
                 return "User not found";

@@ -10,6 +10,7 @@ using easyNetAPI.Models.UpsertModels;
 using Microsoft.Extensions.Hosting;
 using System.Configuration;
 using easyNetAPI.Models.ModelVM;
+using Microsoft.AspNetCore.Identity;
 
 namespace easyNetAPI.Controllers;
 
@@ -23,13 +24,15 @@ public class PostController : ControllerBase
     private readonly IWebHostEnvironment _hostEnvironment;
     public IUnitOfWork _unitOfWork;
     private readonly AppDbContext _db;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public PostController(ILogger<PostController> logger, IUnitOfWork unitOfWork, AppDbContext db, IWebHostEnvironment hostEnvironment)
+    public PostController(ILogger<PostController> logger, IUnitOfWork unitOfWork, AppDbContext db, IWebHostEnvironment hostEnvironment, UserManager<IdentityUser> userManager)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _db = db;
         _hostEnvironment = hostEnvironment;
+        _userManager = userManager;
     }
 
     [HttpGet("GetPostsOfUser"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN},{SD.ROLE_USER},{SD.ROLE_MODERATOR}")]
@@ -212,7 +215,7 @@ public class PostController : ControllerBase
         return postsList.OrderBy(p => p.DataDiCreazione).Skip(index).FirstOrDefault();
     }
 
-    [HttpDelete("DeletePost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+    [HttpDelete("DeletePost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_USER}")]
     public async Task<ActionResult<string>> Delete(int postId)
     {
         try
@@ -221,6 +224,9 @@ public class PostController : ControllerBase
             var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
             if (userId is null)
                 return BadRequest("User not found");
+            var admin = _db.Users.Find(userId);
+            if (!await _userManager.IsInRoleAsync(admin, SD.ROLE_COMPANY_ADMIN) && !await _userManager.IsInRoleAsync(admin, SD.ROLE_EMPLOYEE))
+                return Forbid();
             var post = await _unitOfWork.Post.GetFirstOrDefault(postId);
             if (post == null)
                 return BadRequest("Post not found");
@@ -247,13 +253,16 @@ public class PostController : ControllerBase
         }
     }
 
-    [HttpPost("UploadImage"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+    [HttpPost("UploadImage"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_USER}")]
     public async Task<object> PostImage(IFormFile? file)
     {
         try
         {
             var token = Request.Headers["Authorization"].ToString();
             var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+            var admin = _db.Users.Find(userId);
+            if (!await _userManager.IsInRoleAsync(admin, SD.ROLE_COMPANY_ADMIN) && !await _userManager.IsInRoleAsync(admin, SD.ROLE_EMPLOYEE))
+                return Forbid();
             string wwwRootPath = _hostEnvironment.WebRootPath;
             if (file != null)
             {
@@ -275,13 +284,16 @@ public class PostController : ControllerBase
             return BadRequest("Error " + ex.Message);
         }
     }
-    [HttpDelete("DeleteImage"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+    [HttpDelete("DeleteImage"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_USER}")]
     public async Task<object> DeleteImage(string link)
     {
         try
         {
             var token = Request.Headers["Authorization"].ToString();
             var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+            var admin = _db.Users.Find(userId);
+            if (!await _userManager.IsInRoleAsync(admin, SD.ROLE_COMPANY_ADMIN) && !await _userManager.IsInRoleAsync(admin, SD.ROLE_EMPLOYEE))
+                return Forbid();
             string wwwRootPath = _hostEnvironment.WebRootPath;
             string location = (new Uri(link)).PathAndQuery;
             System.IO.File.Delete(Path.Combine(wwwRootPath, location));
@@ -293,7 +305,7 @@ public class PostController : ControllerBase
         }
     }
 
-    [HttpPost("UpsertPost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}")]
+    [HttpPost("UpsertPost"), Authorize(Roles = $"{SD.ROLE_EMPLOYEE},{SD.ROLE_COMPANY_ADMIN}, {SD.ROLE_USER}")]
     public async Task<ActionResult<string>> UpsertAsync([FromBody]UpsertPost post)
     {
         if (!ModelState.IsValid)
@@ -305,6 +317,9 @@ public class PostController : ControllerBase
         {
             var token = Request.Headers["Authorization"].ToString();
             var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
+            var admin = _db.Users.Find(userId);
+            if (!await _userManager.IsInRoleAsync(admin, SD.ROLE_COMPANY_ADMIN) && !await _userManager.IsInRoleAsync(admin, SD.ROLE_EMPLOYEE))
+                return Forbid();
             if (post.PostId == 0)
             {
                 var newPost = new Post()

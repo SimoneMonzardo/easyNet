@@ -536,7 +536,6 @@ namespace easyNetAPI.Controllers
                 if (!await _userManager.IsInRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN))
                 {
                     await _userManager.AddToRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN);
-                    await _userManager.RemoveFromRoleAsync(dbUser, SD.ROLE_COMPANY_ADMIN);
                 }
                    
                 if (risultato)
