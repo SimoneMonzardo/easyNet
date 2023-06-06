@@ -176,7 +176,6 @@ async function toggleSave() {
       options.headers['Authorization'] = `Bearer ${token}`;
     },
     onResponse({ response }) {
-      console.log(response);
       if (!response.ok) {
         props.post.isSavedByUser = !props.post.isSavedByUser;
       }
