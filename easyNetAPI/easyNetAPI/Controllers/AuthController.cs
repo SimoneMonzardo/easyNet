@@ -65,7 +65,7 @@ namespace easyNetAPI.Controllers
         }
         [HttpPost]
         [Route("Register"), AllowAnonymous]
-        public async Task<ActionResult<string>> Register(RegistrationRequest request)
+        public async Task<IActionResult> Register(RegistrationRequest request)
         {
             User applicationUser = new()
             {
@@ -99,7 +99,14 @@ namespace easyNetAPI.Controllers
                 {
                     UserId = applicationUser.Id,
                     Administrator = false,
-                    Company = new Company(),
+                    Company = new Company
+                    {
+                        CompanyId = 0,
+                        Bot = new Bot(),
+                        CompanyName = string.Empty,
+                        ProfilePicture = string.Empty,
+                        Documents = new List<string>()
+                    },
                     Posts = new List<Post>(),
                     FollowedUsers = new List<string>(),
                     FollowersList = new List<string>(),
@@ -119,7 +126,12 @@ namespace easyNetAPI.Controllers
 
                 await _userManager.AddToRoleAsync(applicationUser, SD.ROLE_USER);
                 request.Password = "";
-                return Ok("User created successfully");
+
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(applicationUser);
+
+                await _emailSender.SendEmailAsync(request.Email, "Email di conferma per Muznet", $"Ciao {request.Username}, <br> <a href=\"https://localhost:3000/mail?token={token}&userId={applicationUser.Id}\">Clicca qui per confermare la tua mail</a>");
+
+                return Ok(new { Result = "User created successfully", Token = token, UserId = applicationUser.Id});
             }
             foreach (var error in result.Errors)
             {
@@ -127,7 +139,25 @@ namespace easyNetAPI.Controllers
             }
             return BadRequest();
         }
-
+        [HttpGet]
+        [Route("confirmEmail")]
+        public async Task<IActionResult> ConfirmEmailAsync(string token, string userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                    return BadRequest("Something went wrong can't find your user");
+                var result = await _userManager.ConfirmEmailAsync(user, token);
+                if (!result.Succeeded)
+                    return BadRequest("Something went wrong confirming your email");
+                return Ok("Email confirmed succesfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong: " + ex.Message);
+            }
+        } 
         [HttpPost]
         [Route("RegisterFromModerator")]
         [Authorize(Roles = SD.ROLE_MODERATOR)]
