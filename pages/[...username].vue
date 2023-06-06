@@ -19,7 +19,7 @@
 //   throw createerror({
 //     statuscode: 404,
 //     statusmessage:
-//       "The link you followed may be broken, or the page may have been removed. Go back to EasyNet.",
+//       "The link you followed may be broken, or the page may have been removed. Go back to Mouzone.",
 //     fatal: true,
 //   });
 // }

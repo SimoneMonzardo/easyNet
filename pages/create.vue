@@ -108,7 +108,7 @@ import { FaceSmileIcon } from "@heroicons/vue/24/outline";
 
 export default {
   head: {
-    title:"Pubblica • easyNet"
+    title:"Pubblica • Mouzone"
   },
   data: () => ({
     postText: '',

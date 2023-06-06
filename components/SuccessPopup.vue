@@ -13,11 +13,11 @@
           class="bg-gray-300 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex"
         >
           <h4 class="text-2xl font-semibold mx-auto"></h4>
-          <h6 class="mx-auto text-4xl font-semibold">easyNet</h6>
+          <h6 class="mx-auto text-4xl font-semibold">Mouzone</h6>
           <img
             src="~/public/logo.png"
             class="mt-3 h-15 rounded-full"
-            alt="EasyNet Logo"
+            alt="Mouzone Logo"
           />
         </div>
         <div class="w-full">
@@ -42,10 +42,18 @@
 
             <span class="sr-only">Chiudi</span>
           </button>
-          <div class="px-6 py-6 lg:px-8">
-            <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+          <div class="px-6 py-6 lg:px-8 h-full">
+            <h3 class="text-3xl font-semibold text-gray-900 dark:text-white">
               Inviata mail di conferma
             </h3>
+            <div class="p-4 pb-8 h-full flex flex-col justify-between">
+              <p>
+                Controlla la tua mail e clicca sul link che hai ricevuto per completare la registrazione.
+              </p>
+              <button data-modal-hide="success-modal" type="button" class="text-white bg-violet-600 hover:bg-violet-700 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-violet-700 dark:hover:bg-violet-700 dark:focus:ring-violet-800">
+                Chiudi
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
     id="register-modal"
     tabindex="-1"
     aria-hidden="true"
-    class="bg-gray-900 bg-opacity-50 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+    class="bg-gray-900 bg-opacity-50 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full"
   >
     <div class="relative w-full max-w-3xl max-h-full">
       <!-- Modal content -->
@@ -12,11 +12,11 @@
           class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex"
         >
           <h4 class="text-2xl font-semibold mx-auto text-violet-600">Benvenuto</h4>
-          <h6 class="mx-auto text-4xl font-semibold text-violet-600">easyNet</h6>
+          <h6 class="mx-auto text-4xl font-semibold text-violet-600">Mouzone</h6>
           <img
             src="~/public/logo.png"
             class="mt-3 h-15 rounded-full"
-            alt="EasyNet Logo"
+            alt="Mouzone Logo"
           />
         </div>
         <div class="w-full">
@@ -42,7 +42,7 @@
           </button>
           <div class="px-6 py-6 lg:px-8">
             <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-              Registrati a easyNet
+              Registrati a Mouzone
             </h3>
             <form
               class="space-y-6"

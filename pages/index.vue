@@ -132,7 +132,7 @@ const data = reactive({
 const savedPostsIds = [];
 
 useHead({
-  title: 'Home • easyNet',
+  title: 'Home • Mouzone',
   meta: [{
     name:'description',
     content: 'Entra nel nostro social network professionale: connessioni globali con aziende di successo. Benvenuto!'

@@ -7,11 +7,11 @@
             <img
               src="~/public/logo.png"
               class="mr-3 h-8"
-              alt="EasyNet Logo"
+              alt="Mouzone Logo"
             />
             <span
               class="self-center text-2xl font-semibold whitespace-nowrap text-white"
-              >easyNet</span
+              >Mouzone</span
             >
           </a>
         </div>
@@ -38,7 +38,7 @@
               data-dropdown-toggle="userDropdown"
             >
               <span class="sr-only">Apri menù utente</span>
-              <UserCircleIcon v-if="profilePicture === ''" class="h-8 w-8 my-auto text-gray-100 dark:text-gray-700" />
+              <UserCircleIcon v-if="profilePicture === '' || profilePicture === 'null'" class="h-8 w-8 my-auto text-gray-100 dark:text-gray-800" />
               <img
                 v-else
                 class="w-8 h-8 my-auto rounded-full overflow-x-hidden"
