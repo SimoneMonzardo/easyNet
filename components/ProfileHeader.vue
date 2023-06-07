@@ -1,19 +1,19 @@
 <template>
-  <div class="flex flex-col justify-center my-10">
-    <div class="flex flex-row gap-20">
-      <div class="flex flex-col">
+  <div class="flex flex-col justify-center mt-10">
+    <div class="flex flex-col sm:flex-row gap-5 sm:gap-10 lg:gap-20 mx-auto">
+      <div class="flex flex-col w-40 mx-auto">
         <img
           v-if="userData.data.profilepic != null"
-          class="w-40 h-40 mb-3 rounded-full shadow-lg"
+          class="w-40 h-40 mb-3 rounded-full shadow-lg mx-auto sm:mx-0"
           :src="userData.data.profilepic"
           alt="user image"
         />
         <UserCircleIcon v-else class="w-40 h-40 text-gray-500 mb-5" />
         <ProfileHeaderButtons />
       </div>
-      <div class="flex flex-col">
-        <div class="flex flex-row gap-4 items-center">
-          <span class="inline-block text-xl align-middle">
+      <div class="flex flex-col gap-y-2 my-auto w-[60vw]">
+        <div class="flex flex-row sm:gap-y-4 justify-between">
+          <span class="inline-block text-2xl font-semibold">
             {{ userData.data.username }}
           </span>
           <div
@@ -121,10 +121,10 @@
                 </a>
               </div>
             </div>
-            <EllipsisHorizontalIcon class="h-6 w-6 text-gray-500" />
+            <EllipsisHorizontalIcon hidden class="h-6 w-6 text-gray-500" />
           </div>
         </div>
-        <div class="flex flex-row gap-8">
+        <div class="flex flex-col sm:flex-row sm:gap-8">
           <h2 class="font-regular">{{ userData.data.posts }} posts</h2>
 
           <li>

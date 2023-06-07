@@ -1,9 +1,9 @@
 <template>
   <NuxtLayout name="default">
-    <div class="flex justify-center w-full h-screen">
+    <div class="flex justify-center w-[75vw] max-h-[calc(100vh-4rem)]">
       <div v-if="userBehavior">
         <ProfileHeader :userBehavior="userBehavior" :username="username" />
-        <div class="flex xl:max-w-xl"><slot :username="username" /></div>
+        <div class="flex xl:max-w-full max-h-[calc(100%-25rem)] sm:max-h-[calc(100%-15rem)] overflow-y-auto"><slot :username="username" /></div>
       </div>
       <div v-else-if="pending">
         <div class="flex text-center h-full content-center">

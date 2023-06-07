@@ -13,9 +13,9 @@
       tabindex="-1"
       class="bg-gray-900 bg-opacity-50 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full"
     >
-      <div class="relative w-full max-w-4xl max-h-[50vh]">
+      <div class="relative w-full max-w-4xl max-h-full">
         <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 max-h-[80vh]">
           <!-- Modal header -->
           <div
             class="flex items-center justify-between p-6 pb-0 rounded-t dark:border-gray-600"
@@ -49,7 +49,7 @@
             </button>
           </div>
           <!-- Modal body -->
-          <div class="p-6 pt-3 space-y-3 w-full max-h-[80%]">
+          <div class="p-6 pt-3 space-y-3 w-full max-h-full">
             <div
               class="h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3 p-1 md:p-6 bg-white border border-gray-200 shadow-xl dark:bg-gray-800 dark:border-gray-700"
             >
@@ -99,7 +99,7 @@
       </h1> -->
       <ul
         v-if="pending || data.status !== 200"
-        class="grid grid-cols-2 gap-2 overflow-y-auto max-h-full"
+        class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 overflow-y-auto max-h-full"
       >
         <li
           class="flex items-center justify-center w-full h-64 bg-gray-300 rounded-xl dark:bg-gray-700 px-2"
@@ -162,7 +162,7 @@
           </svg>
         </li>
       </ul>
-      <ul v-else class="grid grid-cols-2 gap-2">
+      <ul v-else class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-full">
         <li v-for="post in data.posts">
           <button
             type="button"
