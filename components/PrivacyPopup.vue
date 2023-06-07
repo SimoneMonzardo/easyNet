@@ -5,7 +5,8 @@
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
         <div class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex">
           <h6 class="mx-auto text-4xl font-semibold text-violet-600">MuzNet</h6>
-          <img src="~/public/logo.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
+          <img v-if="isDark" src="~/public/muznet-white.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
+          <img v-else-if="!isDark" src="~/public/muznet-black.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
         </div>
         <!-- Content -->
         <div class="w-full bg-white rounded-lg shadow dark:bg-gray-700">
@@ -116,7 +117,7 @@
             <button
               data-modal-hide="privacy-modal"
               type="button"
-              class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-violet-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+              class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-violet-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-violet-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
               Rifiuta
             </button>
           </div>
@@ -125,3 +126,9 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { useDark } from "@vueuse/core";
+
+const isDark = useDark();
+</script>

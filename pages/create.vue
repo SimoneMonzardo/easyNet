@@ -9,29 +9,32 @@
       title="Attenzione" 
       description="Sei certo di voler cancellare l'immagine?" />
 
-    <!-- Login & Register Modals -->
-    <LoginPopup />
-    <RegisterPopup />
+     <!-- Declare items with modals' ids to avoid errors -->
+    <div hidden id="authentication-modal"></div>
+    <div hidden id="register-modal"></div>
+    <div hidden id="forget-modal"></div>
+    <div hidden id="success-modal"></div>
+    <div hidden id="filters-drawer"></div>
   </section>
 
   <div class="my-20 w-screen">
-    <div class="grid gap-4 px-8 lg:px-0 lg:mx-auto w-full" :class="imageUrl === '' ? 'grid-cols-1 lg:w-1/2' : 'grid-cols-1 md:grid-cols-2 lg:w-3/4'">
+    <div class="grid gap-4 px-8 lg:px-0 lg:mx-auto w-full" :class="pageData.imageUrl === '' ? 'grid-cols-1 lg:w-1/2' : 'grid-cols-1 md:grid-cols-2 lg:w-3/4'">
       <div class="order-0 md:col-span-2 items-center flex flex-col sm:flex-row sm:justify-between">
         <!-- Title -->
         <h1 class="text-xl font-semibold tracking-tight leading-none text-gray-900 md:text-2xl lg:text-3xl dark:text-white">Crea un Post</h1>
 
         <!-- Images Buttons -->
-        <div class="mt-5 sm:mt-0 flex flex-row" :class="imageUrl === '' ? 'justify-end' : 'w-3/4 md:w-1/2 block'">
+        <div class="mt-5 sm:mt-0 flex flex-row" :class="pageData.imageUrl === '' ? 'justify-end' : 'w-3/4 md:w-1/2 block'">
           <button
-            :class="imageUrl === '' ? 'block' : 'hidden'"
+            :class="pageData.imageUrl === '' ? 'block' : 'hidden'"
             data-modal-target="upload-image-modal"
             data-modal-show="upload-image-modal"
             type="button"
-            class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-semibold rounded-xl text-md px-3 py-1.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+            class="focus:outline-none text-white bg-violet-700 hover:bg-violet-800 focus:ring-4 focus:ring-violet-300 font-semibold rounded-xl text-md px-3 py-1.5 mr-2 mb-2 dark:bg-violet-600 dark:hover:bg-violet-700 dark:focus:ring-violet-800">
             Aggiungi Immagine
           </button>
           
-          <div class="flex-row flex-wrap justify-center sm:flex-nowrap sm:justify-between w-full ml-2 -mr-2" :class="imageUrl === '' ? 'hidden' : 'flex'">
+          <div class="flex-row flex-wrap justify-center sm:flex-nowrap sm:justify-between w-full ml-2 -mr-2" :class="pageData.imageUrl === '' ? 'hidden' : 'flex'">
             <button
               data-modal-target="upload-image-modal"
               data-modal-show="upload-image-modal"
@@ -76,24 +79,25 @@
           </div>
         </div>
         <div class="px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
-          <textarea id="editor" :rows="rows"
+          <textarea id="editor" :rows="pageData.rows"
             class="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
-            placeholder="Scrivi il testo qui..." v-model="postText" required></textarea>
+            placeholder="Scrivi il testo qui..." v-model="pageData.postText" required></textarea>
         </div>
       </div>
 
       <!-- Post Image -->
-      <div v-if="imageUrl !== ''" class="mb-0 md:mb-4 order-1 md:order-2 h-48 sm:w-full sm:h-64 lg:h-full flex items-center justify-center">        
-        <img :src="imageUrl" class="w-full h-48 sm:h-64 lg:h-96 rounded-lg" />
+      <div v-if="pageData.imageUrl !== ''" class="mb-0 md:mb-4 order-1 md:order-2 h-48 sm:w-full sm:h-64 lg:h-full flex items-center justify-center">        
+        <img :src="pageData.imageUrl" class="w-full h-48 sm:h-64 lg:h-96 rounded-lg" />
         <input hidden type="file" name="image" id="image-input" />
       </div>
 
       <!-- Post Button -->
       <div class="px-4 md:px-40 md:col-span-2 order-3">
         <button 
+          v-on:click="createPost()"
           type="button"
-          :disabled="postText === ''"
-          class="w-full focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-semibold rounded-xl text-md px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 disabled:bg-green-300 disabled:cursor-not-allowed disabled:dark:bg-green-400">
+          :disabled="pageData.postText === ''"
+          class="w-full focus:outline-none text-white bg-violet-700 hover:bg-violet-800 focus:ring-4 focus:ring-violet-300 font-semibold rounded-xl text-md px-5 py-2.5 mr-2 mb-2 dark:bg-violet-600 dark:hover:bg-violet-700 dark:focus:ring-violet-800 disabled:bg-violet-300 disabled:cursor-not-allowed disabled:dark:bg-violet-400">
           Pubblica
         </button> 
       </div>
@@ -101,75 +105,104 @@
   </div>
 </template>
   
-<script>
+<script setup>
 import { CodeBracketIcon } from "@heroicons/vue/24/outline"
 import { ListBulletIcon } from "@heroicons/vue/24/outline";
 import { FaceSmileIcon } from "@heroicons/vue/24/outline";
+import { useRouter } from "vue-router";
+import { reactive } from "vue";
 
-export default {
-  head: {
-    title:"Pubblica • MuzNet"
-  },
-  data: () => ({
-    postText: '',
-    imageUrl: '',
-    rows: 14
-  }),
-  components: {
-    CodeBracketIcon,
-    ListBulletIcon,
-    FaceSmileIcon
-  },
-  mounted: function () {
-    this?.$nextTick(function () {
-      this.onResize();
-    });
-    window.addEventListener('resize', this.onResize);
-    const token = sessionStorage.getItem('token');
-    if (token === null || token === '' || token === 'null') {
-      this.$router.push ('/');
-    }
-  },
-  methods: {
-    onResize() {
-      if (window.innerWidth >= 1024) {
-        this.rows = 15;
-      } else if (window.innerWidth >= 640) {
-        this.rows = 8;
-      } else {
-        this.rows = 3;
-      }
-    },
-    async setImage(images) {
-      const options = {};
+const router = useRouter();
 
-      const uploadFileElement = document.getElementById('upload-image-modal');
-      const uploadFileModal = new Modal(uploadFileElement, options);
-      uploadFileModal.hide();
+const pageData = reactive({
+  postText: '',
+  imageUrl: '',
+  rows: 8
+})
 
-      const formData = new FormData();
-      formData.append('file', images[0]);
+useHead({
+  title: 'Crea • MuzNet',
+  meta: [{
+    name:'description',
+    content: 'Entra nel nostro social network professionale: connessioni globali con aziende di successo. Benvenuto!'
+  }]
+});
 
-      const { data } = await useFetch('https://progettoeasynet.azurewebsites.net/Post/UploadImage', {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Authorization': ''
-        },
-        method: 'POST',
-        body: formData,
-        onRequest({ request, options }) {
-          options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
-        }
-      });
-
-      if (data._value !== null) {
-        this.imageUrl = data._value;
-      }
-    },
-    removeImage() {
-      this.imageUrl = '';
-    }
+onMounted(() => {
+  this?.$nextTick(function () {
+    this.onResize();
+  });
+  window.addEventListener('resize', onResize);
+  const token = sessionStorage.getItem('token');
+  if (token === null || token === '' || token === 'null') {
+    this.$router.push ('/');
   }
+});
+
+function onResize() {
+  if (window.innerWidth >= 1024) {
+    pageData.rows = 15;
+  } else if (window.innerWidth >= 640) {
+    pageData.rows = 8;
+  } else {
+    pageData.rows = 3;
+  }
+}
+
+async function setImage(images) {
+  const options = {};
+
+  const uploadFileElement = document.getElementById('upload-image-modal');
+  const uploadFileModal = new Modal(uploadFileElement, options);
+  uploadFileModal.hide();
+
+  const formData = new FormData();
+  formData.append('file', images[0]);
+
+  const { data } = await useFetch(`https://progettoeasynet.azurewebsites.net/Post/UploadImage`, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': ''
+    },
+    method: 'POST',
+    body: formData,
+    onRequest({ request, options }) {
+      options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
+    }
+  });
+
+  if (data._value !== null) {
+    pageData.imageUrl = data._value;
+  }
+}
+
+async function createPost(){
+  const content = `---\nimage: '${pageData.imageUrl}'\n---\n${pageData.postText}`;
+  const postData = {
+    postId:0,
+    content: content
+  };
+  
+  const { data } = await useFetch(`https://progettoeasynet.azurewebsites.net/Post/UpsertPost`, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': ''
+    },
+    method: 'POST',
+    body: JSON.stringify(postData),
+    onRequest({ request, options }) {
+      options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
+    },
+    onResponse({ request, response, options }) {
+      if(response.ok){
+        router.push('/');
+      }
+    }
+  });
+}
+
+function removeImage() {
+  pageData.imageUrl = '';
 }
 </script>
   

@@ -5,13 +5,13 @@
   <ForgetPopup />
   <SuccessPopup />
 
-  <div class="max-h-[calc(100vh-4rem)] w-screen grid grid-cols-[repeat(12,_minmax(0,_1fr))] grid-rows-[repeat(12,_minmax(0,_1fr))]">
-    <button class="relative" @click="previousPost">
+  <div class="max-h-[calc(100vh-4rem)] w-screen grid grid-cols-[repeat(14,_minmax(0,_1fr))] grid-rows-[repeat(14,_minmax(0,_1fr))]">
+    <button class="relative" @click="previousPost" name="previous-post">
       <div class="block triangle drop-shadow-lg"></div>
-      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-violet-600 rotate-45 bg-transparent" />
+      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 hover:w-11 hover:h-11 hover:inset-1.5 text-violet-600 rotate-45 bg-transparent" />
     </button>
 
-    <div v-if="pending || data.status !== 200" class="col-start-2 col-end-12 row-start-2 row-end-[12] h-full flex flex-col justify-center">
+    <div v-if="pending || data.status !== 200" class="post-base col-start-3 col-end-13 row-start-3 row-end-[13] h-full flex flex-col justify-center">
       <div role="status" class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
         <div class="flex items-center justify-center w-full h-96 bg-gray-300 rounded dark:bg-gray-700">
           <svg class="w-96 h-96 text-gray-200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512">
@@ -35,11 +35,16 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <PostsFeedSection :post="data.posts[data.activePost]" v-else class="col-start-2 col-end-12 row-start-2 row-end-[12]" />
+    <PostsFeedSection v-else id="post-feed" :post="data.posts[data.activePost]" class="col-start-2 sm:col-start-3 col-end-[14] sm:col-end-[13] row-start-2 sm:row-start-3 row-end-[14] sm:row-end-[13]" />
+    <!-- <div v-else class="diagonal-scrolling col-start-3 col-end-13 row-start-3 row-end-[13] h-full flex flex-col justify-center">
+      <PostsFeedSection id="post-feed" :post="data.posts[data.activePost]" class="col-start-2 sm:col-start-3 col-end-[14] sm:col-end-[13] row-start-2 sm:row-start-3 row-end-[14] sm:row-end-[13] post-top " />
+      <PostsFeedSection id="post-feed" :post="data.posts[data.activePost]" class="col-start-2 sm:col-start-3 col-end-[14] sm:col-end-[13] row-start-2 sm:row-start-3 row-end-[14] sm:row-end-[13] post-active " />
+      <PostsFeedSection id="post-feed" :post="data.posts[data.activePost]" class="col-start-2 sm:col-start-3 col-end-[14] sm:col-end-[13] row-start-2 sm:row-start-3 row-end-[14] sm:row-end-[13] post-bottom " />
+    </div> -->
 
-    <button class="col-start-12 col-end-[13] row-start-[12] row-end-[13] rotate-180" @click="nextPost">
+    <button class="col-start-14 col-end-[15] row-start-[14] row-end-[15] rotate-180" @click="nextPost" name="next-post">
       <div class="block triangle drop-shadow-lg"></div>
-      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 text-violet-600 rotate-45 bg-transparent" />
+      <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 hover:w-11 hover:h-11 hover:inset-1.5 text-violet-600 rotate-45 bg-transparent" />
     </button>
   </div>
 
@@ -78,16 +83,15 @@
           @input="findCompanies($event.target.value)"
           type="search"
           id="search-company"
-          class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-xl bg-gray-50 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600"
+          class="block w-full p-4 pl-10 text-sm text-gray-900 border border-violet2-300 rounded-xl bg-gray-50 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600"
           placeholder="Trova aziende ..."
           required>
       </div>
       <ul class="min-h-[15vh] max-h-[15vh] mt-4 overflow-y-auto bg-gray-50 rounded-xl bg-opacity-50 dark:bg-gray-700">
         <li v-for="company in data.companies" v-if="!data.loadingCompanies">
-          <!-- TODO: Use the right link -->
           <a class="flex items-center justify-center my-1" href="./">
             <UserCircleIcon v-if="company.profilePicture === null || company.profilePicture === ''" class="w-1/3 h-10 text-gray-900 dark:text-gray-50" />
-            <img v-else class="w-1/2 lg:w-1/3 h-10" :src="company.profilePicture" />
+            <img v-else class="w-1/2 lg:w-1/3 h-10 overflow-hidden" :src="company.profilePicture" alt="user-profile-picture" />
             <span class="py-auto w-1/2 lg:w-1/3 text-gray-900 dark:text-gray-50 align-middle">{{ company.companyName }}</span>
           </a>
         </li>
@@ -98,7 +102,7 @@
       </ul>
     </div>
     <div class="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700" data-drawer-hide="filters-drawer">
-      <span class="absolute bottom-3 w-8 h-1 -translate-x-1/2 bg-gray-300 rounded-lg left-1/2 dark:bg-gray-600"></span>
+      <span class="absolute bottom-3 w-8 h-1 -translate-x-1/2 bg-violet-300 rounded-lg left-1/2 dark:bg-violet-600"></span>
     </div>
   </div>
 </template>
@@ -109,7 +113,9 @@ import useModal from '~/composables/useModal';
 import useStorage from '~/composables/useStorage';
 
 const INITIAL_POST_FETCH_COUNT = 7;
-const MINIMUM_POST_TRIGGER = 5;
+const MINIMUM_POST_TRIGGER = 7;
+const LEFT_ARROW_KEY_CODE = 37;
+const RIGHT_ARROW_KEY_CODE = 39;
 
 const initialApiRoutes = new Map();
 initialApiRoutes.set(false, 'GetPostsOfRandom');
@@ -130,6 +136,20 @@ const data = reactive({
 });
 
 const savedPostsIds = [];
+onMounted(() => {
+  window.addEventListener('keyup', handleKeyUp);
+});
+
+function handleKeyUp(event) {
+  // Left arrow
+  if (event.keyCode == LEFT_ARROW_KEY_CODE) {
+    previousPost();
+  }
+  // Right arrow
+  else if(event.keyCode == RIGHT_ARROW_KEY_CODE) {
+    nextPost();
+  }
+}
 
 useHead({
   title: 'Home • MuzNet',
@@ -160,7 +180,7 @@ const { pending } = useFetch(`https://progettoeasynet.azurewebsites.net/Post/Get
 
 async function nextPost() {
   if (data.activePost < data.lastFetchedPost) {
-    data.activePost++;
+    swapNext();
   }
 
   const token = sessionStorage.getItem('token');
@@ -181,10 +201,11 @@ async function nextPost() {
         },
         onResponse({ response }) {
           if (response.status === 200) {
-            response._data.hasUserLike = getPostHasUserLike(response._data, sessionStorage.getItem('username'));
+            const post = response._data;
+            post.hasUserLike = getPostHasUserLike(post, sessionStorage.getItem('username'));
             post.isSavedByUser = getIsPostSavedByUser(post);
-
-            data.posts.push(response._data);
+            
+            data.posts.push(post);
             data.lastFetchedPost++;
           } else if (response.status === 401 && data.activePost >= data.lastFetchedPost) {
             const { clearSession } = useStorage();
@@ -201,7 +222,7 @@ async function nextPost() {
 
 function previousPost() {
   if (data.activePost > 0) {
-    data.activePost--;
+    swapPrevious();
   }
 }
 
@@ -295,7 +316,7 @@ async function findCompanies(query) {
           data.companies.push(company);
         }
         data.loadingCompanies = false;
-      } else if (response.status === 403) {
+      } else if (response.status === 401) {
         const { requireLogin } = useModal();
         requireLogin(true);
       }
@@ -331,4 +352,164 @@ function getSavedPosts() {
     });
   }
 }
+
+function swapNext() {
+  //const divTop = document.querySelector('.post-top');
+  //divTop.classList.add('translate-up');
+  //divTop.classList.remove('translate-up');
+  //const divActive = document.querySelector('.post-active');
+  //divActive.classList.add('translate-up');
+  //divActive.classList.remove('translate-up');
+  //const divBottom = document.querySelector('.post-bottom');
+  //divBottom.classList.add('translate-up');
+  //divBottom.classList.remove('translate-up');
+  const content = document.getElementById('post-content');
+  const comments = document.getElementById('post-comments');
+  const commentsCount = document.getElementById('post-comments-count');
+  const likesCount = document.getElementById('post-likes-count');
+  const header = document.getElementById('post-header');
+  
+  header.classList.add('post');
+  commentsCount.classList.add('post');
+  likesCount.classList.add('post');
+  setTimeout(() => {
+    content.classList.add('post');
+    setTimeout(() => {
+      comments.classList.add('post');
+    }, 150);
+  }, 150);
+
+
+  setTimeout(() => {
+    data.activePost++;
+    
+    setTimeout(() => {
+      header.classList.remove('post');
+      commentsCount.classList.remove('post');
+      likesCount.classList.remove('post');
+      setTimeout(() => {
+        content.classList.remove('post');
+        setTimeout(() => {
+          comments.classList.remove('post');
+        }, 150);
+      }, 150);
+    }, 400);
+  }, 300); 
+}
+
+function swapPrevious() {
+  //const divTop = document.querySelector('.post-top');
+  //divTop.classList.add('translate-down');
+  //divTop.classList.remove('translate-down');
+  //const divActive = document.querySelector('.post-active');
+  //divActive.classList.add('translate-down');
+  //divActive.classList.remove('translate-down');
+  //const divBottom = document.querySelector('.post-bottom');
+  //divBottom.classList.add('translate-down');
+  //divBottom.classList.remove('translate-down');
+  const content = document.getElementById('post-content');
+  const comments = document.getElementById('post-comments');
+  const commentsCount = document.getElementById('post-comments-count');
+  const likesCount = document.getElementById('post-likes-count');
+  const header = document.getElementById('post-header');
+  
+  comments.classList.add('post');
+  setTimeout(() => {
+    content.classList.add('post');
+    setTimeout(() => {
+      header.classList.add('post');
+      commentsCount.classList.add('post');
+      likesCount.classList.add('post');
+    }, 150);
+  }, 150);
+
+  setTimeout(() => {
+    data.activePost--;
+    
+    setTimeout(() => {
+      comments.classList.remove('post');
+      setTimeout(() => {
+        content.classList.remove('post');
+        setTimeout(() => {
+          header.classList.remove('post');
+          commentsCount.classList.remove('post');
+          likesCount.classList.remove('post');
+        }, 150);
+      }, 150);
+    }, 400);
+  }, 300); 
+}
 </script>
+
+<style>
+.post {
+  zoom: 1;
+  animation: fade-away-in 1s ease-in-out;
+}
+/* .diagonal-scrolling{
+  height: 100%;
+  width: 100%;
+}
+.post-top{
+  z-index: -100;
+  top: -150%;
+  left: -150%;
+  height: 60.7%;
+  width: 71.4%;
+  position: absolute;
+  transition: transform 1s ease-in-out;
+}
+.post-top.translate-up {
+  transform: translate(-200%, -200%);
+}
+.post-top.translate-down {
+  transform: translate(200%, 200%);
+}
+
+.post-active{
+  z-index: -100;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  height: 60.7%;
+  width: 71.4%;
+  position: absolute;
+  transition: transform 1s ease-in-out;
+}
+.post-top.translate-up {
+  transform: translate(-200%, -200%);
+}
+.post-top.translate-down {
+  transform: translate(-200%, -200%);
+}
+
+.post-bottom{
+  z-index: -100;
+  top: 150%;
+  left: 150%;
+  height: 60.7%;
+  width: 71.4%;
+  position: absolute;
+  transition: transform 1s ease-in-out;
+}
+.post-bottom.translate-up {
+  transform: translate(-190.1%, -214.7%);
+}
+.post-bottom.translate-down {
+  transform: translate(-190.1%, -214.7%);
+} */
+
+@keyframes fade-away-in {
+  0% { opacity: 1; }
+  20% { opacity: 0; }
+
+  80% { opacity: 0.80; }
+  100% { opacity: 1; } 
+}
+
+@media only screen and (max-width: 640px) {
+  .triangle {
+    
+  }
+}
+</style>

@@ -6,16 +6,33 @@
     <nav class="mx-4 py-3">
       <div class="flex flex-wrap justify-between items-center">
         <div class="flex justify-start items-center">
-          <a href="/" class="flex mr-4">
-            <img src="~/public/logo.png" class="mr-3 h-8" alt="MuzNet Logo" />
+          <a v-if="isDark" href="/" class="flex mr-4">
+            <img 
+              src="~/public/muznet-black.png"
+              class="logo mr-3 h-8"
+              alt="MuzNet Logo"
+            />
             <span
+              style="font-family: 'Bebas Neue'; font-size: 2rem; color: black;"
+              class="self-center text-2xl font-semibold whitespace-nowrap text-white"
+              >MuzNet</span
+            >
+          </a>
+          <a v-else-if="!isDark" href="/" class="flex mr-4">
+            <img
+              src="~/public/muznet-white.png"
+              class="logo mr-3 h-8"
+              alt="MuzNet Logo"
+            />
+            <span
+              style="font-family: 'Bebas Neue'; font-size: 2rem; color: white;"
               class="self-center text-2xl font-semibold whitespace-nowrap text-white"
               >MuzNet</span
             >
           </a>
         </div>
         <div class="flex items-center lg:order-2">
-          <ThemeToggle />
+          <ThemeToggle class="hidden sm:block"/>
           <button
             data-drawer-target="filters-drawer"
             data-drawer-toggle="filters-drawer"
@@ -95,7 +112,7 @@
               >
                 <li>
                   <button
-                    class="block w-full text-start py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    class="block w-full text-start text-red-600 hover:font-semibold py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500"
                     @click="logOut"
                   >
                     Esci
@@ -151,5 +168,34 @@ export default {
       profileUrl: `/${user}`,
     };
   },
+  mounted: function () { 
+    const filterDrawerToggle = document.getElementById('filters-toggle');
+
+    if (this.$nuxt._route.path != '/') {
+      filterDrawerToggle.classList.add('hidden');
+      return;
+    }
+
+    filterDrawerToggle.classList.remove('hidden');
+  }
 };
 </script>
+
+<style>
+.logo:active {
+  animation: spin 6s;
+}
+
+@keyframes spin {
+  50% { transform: rotate(360deg); }
+}
+</style>
+
+<script setup>
+  import { useDark } from "@vueuse/core";
+  const isDark = useDark();
+</script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+</style>
