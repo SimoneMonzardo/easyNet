@@ -1,10 +1,3 @@
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-</style>
-<script setup>
-import { useDark, useToggle } from "@vueuse/core";
-const isDark = useDark();
-</script>
 <template>
   <header class="bg-violet-600 max-w-screen dark:bg-violet-800 h-16 shadow-lg shadow-[rgba(0,0,0,0.3)] dark:shadow-violet-950 top-0 w-screen" style="position: absolute; z-index: 20;">
     <nav class="mx-4 py-3">
@@ -177,4 +170,13 @@ export default {
 @keyframes spin {
   50% { transform: rotate(360deg); }
 }
+</style>
+
+<script setup>
+  import { useDark } from "@vueuse/core";
+  const isDark = useDark();
+</script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 </style>

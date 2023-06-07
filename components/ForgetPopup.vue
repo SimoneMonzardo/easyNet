@@ -6,7 +6,8 @@
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
         <div class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex">
           <h6 class="mx-auto text-4xl font-semibold text-violet-600">MuzNet</h6>
-          <img src="~/public/logo.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
+          <img v-if="isDark" src="~/public/muznet-white.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
+          <img v-else-if="!isDark" src="~/public/muznet-black.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
         </div>
         <div class="w-full">
           <button
@@ -113,4 +114,10 @@ export default {
     }
   }
 }
+</script>
+
+<script setup>
+import { useDark } from "@vueuse/core";
+
+const isDark = useDark();
 </script>

@@ -6,7 +6,7 @@ export default defineNuxtConfig({
       link: [{ 
         rel: 'icon', 
         type: 'image/x-icon', 
-        href: '/logo.ico' 
+        href: '/muznet-white.ico' 
       }],
         htmlAttrs: {
             lang: 'it',
