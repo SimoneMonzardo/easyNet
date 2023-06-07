@@ -76,6 +76,13 @@
                 </li> -->
                 <li>
                   <a
+                    href="/create"
+                    class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                    >Create Post</a
+                  >
+                </li>
+                <li>
+                  <a
                     :href="profileUrl"
                     class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
                     >Profilo</a
@@ -138,7 +145,7 @@ export default {
     },
   },
   data() {
-    const user = localStorage.getItem("username");
+    const user = sessionStorage.getItem("username");
     return {
       savedPostsLink: `/${user}/saved`,
       profileUrl: `/${user}`,

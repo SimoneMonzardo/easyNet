@@ -55,15 +55,23 @@
             >
               <div
                 v-html="data.selectedPost.content.content"
-                class="mx-auto text-gray-900 dark:text-gray-50"
+                class="mx-auto text-gray-900 dark:text-gray-50 text-sm tracking-tight"
                 :class="
-                  data.selectedPost.content.data.image === '' ? 'h-full' : ''
+                  data.selectedPost.content.data.image === ''
+                    ? 'h-full'
+                    : 'max-h-[25%] overflow-auto'
                 "
               ></div>
               <img
                 v-if="data.selectedPost.content.data.image !== ''"
                 :src="data.selectedPost.content.data.image"
-                class="h-auto max-h-[calc(100%-2rem)] rounded-lg mx-auto"
+                class="h-auto rounded-lg mx-auto"
+                :class="
+                  data.selectedPost.content.content.content === ''
+                    ? 'max-h-[calc(100%-2rem)]'
+                    : 'max-h-[75%]'
+                "
+                alt="post image"
               />
             </div>
 
@@ -205,7 +213,7 @@ const data = reactive({
 });
 
 useHead({
-  title: `${username} • MuzNet`,
+  title: `${sessionStorage.getItem("username")} • MuzNet`,
   meta: [
     {
       name: "description",
