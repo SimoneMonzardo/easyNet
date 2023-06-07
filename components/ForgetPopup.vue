@@ -21,7 +21,7 @@
           </button>
           <div class="px-6 py-6 lg:px-8">
             <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Recupero password</h3>
-            <p id="conferma-mail" class="text-gray-900 dark:text-white" style="visibility: hidden;">La mail è stata inviata correttamente</p>
+            <p id="conferma-mail" class="text-gray-900 dark:text-white" style="visibility: hidden;"></p>
             <div class="relative my-10">
               <input
                 type="email"
@@ -55,7 +55,6 @@ export default {
   name: "ForgetPopup",
   methods: {
     async sendForgetRequest(data, router) {
-      console.log("entrato");
       await useFetch(`https://progettoeasynet.azurewebsites.net/Auth/ForgotPassword?email=${data}`, {
         lazy: true,
         server: false,
@@ -67,11 +66,11 @@ export default {
           console.log(error.message);
         },
         onResponse({ response }) {
-          console.log(response);
           if (response.ok) {
-             console.log("Request ok");
              console.log(response.text);
              document.getElementById("conferma-mail").style="visibility:visible";
+             document.getElementById("conferma-mail").innerHTML = "Email inviata con successo"
+              document.getElementById("conferma-mail").style.color = "green"
           //   sessionStorage.setItem("logged", true);
           //   sessionStorage.setItem("username", response._data.username);
           //   sessionStorage.setItem("email", response._data.email);
@@ -82,6 +81,11 @@ export default {
           //   // const loginElement = document.getElementById("authentication-modal");
           //   // const loginModal = new Modal(loginElement, options);
           //   // loginModal.hide();
+          }
+          else{
+            document.getElementById("conferma-mail").style="visibility:visible";
+            document.getElementById("conferma-mail").innerHTML = "Email non presente"
+            document.getElementById("conferma-mail").style.color = "red"
           }
           return response;
         },
