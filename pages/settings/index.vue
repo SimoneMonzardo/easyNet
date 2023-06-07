@@ -287,10 +287,11 @@ async function deleteUserAccount() {
     }
   });
 
-  const { clearSession } = useStorage();
+  const { clearSession, clearLocal } = useStorage();
   clearSession();
+  clearLocal();
 
-  router.push('/');
+  router.go('/');
 }
 
 function cancelChanges() {
