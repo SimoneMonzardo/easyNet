@@ -13,7 +13,7 @@
       tabindex="-1"
       class="bg-gray-900 bg-opacity-50 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full"
     >
-      <div class="relative w-full max-w-4xl max-h-full">
+      <div class="relative w-full max-w-4xl max-h-[50vh]">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <!-- Modal header -->
@@ -49,21 +49,29 @@
             </button>
           </div>
           <!-- Modal body -->
-          <div class="p-6 pt-3 space-y-3 w-full">
+          <div class="p-6 pt-3 space-y-3 w-full max-h-[80%]">
             <div
               class="h-full flex flex-col justify-center rounded-xl gap-1 sm:gap-2 md:gap-3 p-1 md:p-6 bg-white border border-gray-200 shadow-xl dark:bg-gray-800 dark:border-gray-700"
             >
               <div
                 v-html="data.selectedPost.content.content"
-                class="mx-auto text-gray-900 dark:text-gray-50"
+                class="mx-auto text-gray-900 dark:text-gray-50 text-sm tracking-tight"
                 :class="
-                  data.selectedPost.content.data.image === '' ? 'h-full' : ''
+                  data.selectedPost.content.data.image === ''
+                    ? 'h-full'
+                    : 'max-h-[25%] overflow-auto'
                 "
               ></div>
               <img
                 v-if="data.selectedPost.content.data.image !== ''"
                 :src="data.selectedPost.content.data.image"
-                class="h-auto max-h-[calc(100%-2rem)] rounded-lg mx-auto"
+                class="h-auto rounded-lg mx-auto"
+                :class="
+                  data.selectedPost.content.content.content === ''
+                    ? 'max-h-[calc(50%-2rem)]'
+                    : 'max-h-[50%]'
+                "
+                alt="post image"
               />
             </div>
 
@@ -89,7 +97,10 @@
       >
         Post salvati
       </h1> -->
-      <ul v-if="pending || data.status !== 200" class="grid grid-cols-2 gap-2">
+      <ul
+        v-if="pending || data.status !== 200"
+        class="grid grid-cols-2 gap-2 overflow-y-auto max-h-full"
+      >
         <li
           class="flex items-center justify-center w-full h-64 bg-gray-300 rounded-xl dark:bg-gray-700 px-2"
         >
@@ -205,7 +216,7 @@ const data = reactive({
 });
 
 useHead({
-  title: `${username} • MuzNet`,
+  title: `${sessionStorage.getItem("username")} • MuzNet`,
   meta: [
     {
       name: "description",

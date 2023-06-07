@@ -1,16 +1,13 @@
 <template>
-  <div>
+  <div class="flex flex-col h-screen justify-between">
     <Header
       :loggedIn="logged"
       :email="email"
       :userName="username"
       :profilePicture="profilePicture"
     />
-    <div class="min-h-[calc(100vh-4rem)] flex flex-row">
-      <div class="min-h-[calc(100vh-4rem)] flex justify-center mt-16 w-full">
-        <slot />
-      </div>
-      <Sidebar />
+    <div class="min-h-[calc(100vh-4rem)] flex justify-center mt-16">
+      <slot />
     </div>
     <Footer />
   </div>
