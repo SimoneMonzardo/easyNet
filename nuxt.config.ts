@@ -26,7 +26,6 @@ export default defineNuxtConfig({
     public: { apiUrl: process.env.API_BASE_URL },
   },
   typescript: {
-    // typeCheck: true,
     strict: true,
   },
   ssr: false,

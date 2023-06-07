@@ -12,7 +12,6 @@
         <div class="px-6 py-6 lg:px-8">
           <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Scegli un'immagine:</h3>
           <div class="space-y-6">
-
             <div class="flex items-center justify-center w-full">
               <label for="dropzone-file"
                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-violet-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-violet-500 dark:hover:bg-gray-600">
@@ -26,23 +25,15 @@
                       caricare</span> oppure trascina e rilascia</p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG o GIF</p>
                 </div>
-                <input 
-                  id="dropzone-file" 
-                  type="file" 
-                  class="hidden" 
-                  @change="$emit('setImage', $event.target.files)"/>
+                <input id="dropzone-file" type="file" class="hidden" @change="$emit('setImage', $event.target.files)" />
               </label>
             </div>
-
             <div class="flex flex-row justify-between">
               <button data-modal-hide="upload-image-modal" type="button"
                 class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-xl border border-gray-200 text-sm font-semibold px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-violet-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
                 Annulla
               </button>
-              <button
-                v-if="showDelete"
-                type="button" 
-                data-modal-hide="danger-confirm-modal" 
+              <button v-if="showDelete" type="button" data-modal-hide="danger-confirm-modal"
                 class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-semibold rounded-xl text-sm inline-flex items-center px-5 py-2.5 text-center"
                 @click="$emit('delete')">
                 Elimina

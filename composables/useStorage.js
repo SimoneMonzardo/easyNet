@@ -1,4 +1,4 @@
-export default() => {
+export default () => {
   const clearSession = () => {
     sessionStorage.setItem('logged', false);
     sessionStorage.removeItem('token');
@@ -17,6 +17,6 @@ export default() => {
 
   return {
     clearSession,
-    clearLocal 
+    clearLocal
   };
 }

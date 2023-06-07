@@ -59,28 +59,11 @@ export default {
         lazy: true,
         server: false,
         method: 'GET',
-        onRequest({ request, options }) {
-          // Set the request headers
-        },
-        onRequestError({ request, options, error }) {
-          console.log(error.message);
-        },
         onResponse({ response }) {
           if (response.ok) {
-             console.log(response.text);
              document.getElementById("conferma-mail").style="visibility:visible";
              document.getElementById("conferma-mail").innerHTML = "Email inviata con successo"
               document.getElementById("conferma-mail").style.color = "green"
-          //   sessionStorage.setItem("logged", true);
-          //   sessionStorage.setItem("username", response._data.username);
-          //   sessionStorage.setItem("email", response._data.email);
-          //   sessionStorage.setItem("profilePicture", response._data.profilePicture);
-          //   sessionStorage.setItem("token", response._data.token);
-          //   console.log("CHIUSURA");
-          //   router.go();
-          //   // const loginElement = document.getElementById("authentication-modal");
-          //   // const loginModal = new Modal(loginElement, options);
-          //   // loginModal.hide();
           }
           else{
             document.getElementById("conferma-mail").style="visibility:visible";
@@ -89,11 +72,7 @@ export default {
           }
           return response;
         },
-        onResponseError({ request, response, options }) {
-
-        },
       });
-      console.log("uscito");
     },
     closeModal() {
       const options = {};
@@ -102,9 +81,7 @@ export default {
       const forgetModal = new Modal(forgetElement, options);
       forgetModal.hide();
     },
-    // TODO: We don't have an API to handle 'Forget password'
     async executeRequest() {
-      // const { forget } = useAuth();
       const options = {};
 
       const forgetElement = document.getElementById('authentication-modal');
@@ -113,7 +90,6 @@ export default {
 
       var email =document.getElementById('forget-email').value;
 
-      // API Call
       await this.sendForgetRequest(email, this.$router);
     }
   }

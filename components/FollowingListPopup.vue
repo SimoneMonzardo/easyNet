@@ -1,10 +1,8 @@
 <template>
     <div id="following-modal" tabindex="-1" aria-hidden="true"
         class="bg-gray-900 bg-opacity-50 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full">
-
         <div class="relative w-full max-w-lg max-h-full">
             <!-- Modal content -->
-
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 ">
                 <!-- Modal header -->
                 <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
@@ -23,7 +21,6 @@
                         <input v-on:input="filterUsers()" type="text" v-model="input" id="table-search-users-following"
                             class="block p-2 pl-10 text-sm text-gray-900 border border-violet-300 rounded-lg w-80 bg-gray-50 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600"
                             placeholder="Search for users">
-
                     </div>
                     <button type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -40,7 +37,6 @@
                 <!-- Modal body -->
                 <div class="p-6 space-y-6 h-96 overflow-y-auto mb-5">
                     <div v-if="pending">
-
                         <div v-for="index in 4" :key="index" class="animate-pulse flex space-x-4 mb-3">
                             <div class="rounded-full bg-slate-700 h-10 w-10 mt-1"></div>
                             <div class="flex-1 space-y-6 py-1">
@@ -60,9 +56,7 @@
                     </div>
                     <div v-else>
                         <table id="following-table" class="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-
                             <tbody>
-
                                 <tr v-for="user in filteredUsers()"
                                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                     <th scope="row"
@@ -94,7 +88,6 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -114,7 +107,7 @@ export default {
                 'Access-Control-Allow-Origin': '*',
                 'Authorization': ''
             },
-            onRequest({ request, options }) {
+            onRequest({ options }) {
                 options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
             }
         });
@@ -132,7 +125,7 @@ export default {
                     'Access-Control-Allow-Origin': '*',
                     'Authorization': ''
                 },
-                onRequest({ request, options }) {
+                onRequest({ options }) {
                     options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
                 }
             });
@@ -146,53 +139,32 @@ export default {
                     'Access-Control-Allow-Origin': '*',
                     'Authorization': ''
                 },
-                onRequest({ request, options }) {
+                onRequest({ options }) {
                     options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
                 }
             });
             user.followed = true;
         },
-
         filteredUsers() {
 
             var input = document.getElementById("table-search-users-following").value
-
             if (input != "" && input != null) {
-
                 var tempUsers = [];
 
                 for (var item of this.users) {
-
-
-
                     if (item.username.toLowerCase().includes(input.toLowerCase())) {
-
                         tempUsers.push(item);
-
                     }
-
                 }
 
                 return tempUsers;
-
             }
 
-            else {
-
-                return this.users;
-
-            }
-
+            return this.users;
         },
-
         filterUsers() {
             this.$forceUpdate();
-
         }
-
     }
 }
-
-
-
 </script>
