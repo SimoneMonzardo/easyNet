@@ -11,7 +11,7 @@
       <ChevronDoubleLeftIcon class="absolute inset-2 h-10 w-10 hover:w-11 hover:h-11 hover:inset-1.5 text-violet-600 rotate-45 bg-transparent" />
     </button>
 
-    <div v-if="pending || data.status !== 200" class="col-start-3 col-end-13 row-start-3 row-end-[13] h-full flex flex-col justify-center">
+    <div v-if="pending || data.status !== 200" class="post-base col-start-3 col-end-13 row-start-3 row-end-[13] h-full flex flex-col justify-center">
       <div role="status" class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
         <div class="flex items-center justify-center w-full h-96 bg-gray-300 rounded dark:bg-gray-700">
           <svg class="w-96 h-96 text-gray-200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512">
@@ -36,6 +36,11 @@
       </div>
     </div>
     <PostsFeedSection v-else id="post-feed" :post="data.posts[data.activePost]" class="col-start-2 sm:col-start-3 col-end-[14] sm:col-end-[13] row-start-2 sm:row-start-3 row-end-[14] sm:row-end-[13]" />
+    <!-- <div v-else class="diagonal-scrolling col-start-3 col-end-13 row-start-3 row-end-[13] h-full flex flex-col justify-center">
+      <PostsFeedSection id="post-feed" :post="data.posts[data.activePost]" class="col-start-2 sm:col-start-3 col-end-[14] sm:col-end-[13] row-start-2 sm:row-start-3 row-end-[14] sm:row-end-[13] post-top " />
+      <PostsFeedSection id="post-feed" :post="data.posts[data.activePost]" class="col-start-2 sm:col-start-3 col-end-[14] sm:col-end-[13] row-start-2 sm:row-start-3 row-end-[14] sm:row-end-[13] post-active " />
+      <PostsFeedSection id="post-feed" :post="data.posts[data.activePost]" class="col-start-2 sm:col-start-3 col-end-[14] sm:col-end-[13] row-start-2 sm:row-start-3 row-end-[14] sm:row-end-[13] post-bottom " />
+    </div> -->
 
     <button class="col-start-14 col-end-[15] row-start-[14] row-end-[15] rotate-180" @click="nextPost" name="next-post">
       <div class="block triangle drop-shadow-lg"></div>
@@ -349,6 +354,15 @@ function getSavedPosts() {
 }
 
 function swapNext() {
+  //const divTop = document.querySelector('.post-top');
+  //divTop.classList.add('translate-up');
+  //divTop.classList.remove('translate-up');
+  //const divActive = document.querySelector('.post-active');
+  //divActive.classList.add('translate-up');
+  //divActive.classList.remove('translate-up');
+  //const divBottom = document.querySelector('.post-bottom');
+  //divBottom.classList.add('translate-up');
+  //divBottom.classList.remove('translate-up');
   const content = document.getElementById('post-content');
   const comments = document.getElementById('post-comments');
   const commentsCount = document.getElementById('post-comments-count');
@@ -384,6 +398,15 @@ function swapNext() {
 }
 
 function swapPrevious() {
+  //const divTop = document.querySelector('.post-top');
+  //divTop.classList.add('translate-down');
+  //divTop.classList.remove('translate-down');
+  //const divActive = document.querySelector('.post-active');
+  //divActive.classList.add('translate-down');
+  //divActive.classList.remove('translate-down');
+  //const divBottom = document.querySelector('.post-bottom');
+  //divBottom.classList.add('translate-down');
+  //divBottom.classList.remove('translate-down');
   const content = document.getElementById('post-content');
   const comments = document.getElementById('post-comments');
   const commentsCount = document.getElementById('post-comments-count');
@@ -421,15 +444,72 @@ function swapPrevious() {
 <style>
 .post {
   zoom: 1;
-  animation: fade-away-in .7s ease-in-out;
+  animation: fade-away-in 1s ease-in-out;
 }
+/* .diagonal-scrolling{
+  height: 100%;
+  width: 100%;
+}
+.post-top{
+  z-index: -100;
+  top: -150%;
+  left: -150%;
+  height: 60.7%;
+  width: 71.4%;
+  position: absolute;
+  transition: transform 1s ease-in-out;
+}
+.post-top.translate-up {
+  transform: translate(-200%, -200%);
+}
+.post-top.translate-down {
+  transform: translate(200%, 200%);
+}
+
+.post-active{
+  z-index: -100;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  height: 60.7%;
+  width: 71.4%;
+  position: absolute;
+  transition: transform 1s ease-in-out;
+}
+.post-top.translate-up {
+  transform: translate(-200%, -200%);
+}
+.post-top.translate-down {
+  transform: translate(-200%, -200%);
+}
+
+.post-bottom{
+  z-index: -100;
+  top: 150%;
+  left: 150%;
+  height: 60.7%;
+  width: 71.4%;
+  position: absolute;
+  transition: transform 1s ease-in-out;
+}
+.post-bottom.translate-up {
+  transform: translate(-190.1%, -214.7%);
+}
+.post-bottom.translate-down {
+  transform: translate(-190.1%, -214.7%);
+} */
 
 @keyframes fade-away-in {
   0% { opacity: 1; }
-  40% { opacity: 0; }
-  60% { opacity: 0 }
-  80% { opacity: 0.85; }
-  90% { opacity: 0.90; }
+  20% { opacity: 0; }
+
+  80% { opacity: 0.80; }
   100% { opacity: 1; } 
+}
+
+@media only screen and (max-width: 640px) {
+  .triangle {
+    
+  }
 }
 </style>

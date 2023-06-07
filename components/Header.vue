@@ -3,13 +3,26 @@
     <nav class="mx-4 py-3">
       <div class="flex flex-wrap justify-between items-center">
         <div class="flex justify-start items-center">
-          <a href="/" class="flex mr-4">
-            <img
-              src="~/public/logo.png"
+          <a v-if="isDark" href="/" class="flex mr-4">
+            <img 
+              src="~/public/muznet-black.png"
               class="logo mr-3 h-8"
               alt="MuzNet Logo"
             />
             <span
+              style="font-family: 'Bebas Neue'; font-size: 2rem; color: black;"
+              class="self-center text-2xl font-semibold whitespace-nowrap text-white"
+              >MuzNet</span
+            >
+          </a>
+          <a v-else-if="!isDark" href="/" class="flex mr-4">
+            <img
+              src="~/public/muznet-white.png"
+              class="logo mr-3 h-8"
+              alt="MuzNet Logo"
+            />
+            <span
+              style="font-family: 'Bebas Neue'; font-size: 2rem; color: white;"
               class="self-center text-2xl font-semibold whitespace-nowrap text-white"
               >MuzNet</span
             >
@@ -157,4 +170,13 @@ export default {
 @keyframes spin {
   50% { transform: rotate(360deg); }
 }
+</style>
+
+<script setup>
+  import { useDark } from "@vueuse/core";
+  const isDark = useDark();
+</script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 </style>

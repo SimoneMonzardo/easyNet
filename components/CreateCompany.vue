@@ -8,7 +8,8 @@
         <div
           class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex">
           <h6 class="mx-auto text-4xl font-semibold text-blue-500">easyNet</h6>
-          <img src="https://flowbite.s3.amazonaws.com/logo.svg" class="mt-3 h-15 rounded-full" alt="FlowBite Logo" />
+          <img v-if="isDark" src="~/public/muznet-white.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
+          <img v-else-if="!isDark" src="~/public/muznet-black.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
         </div>
         <div class="w-full">
           <button type="button"
@@ -91,8 +92,6 @@
 </template>
   
 <script>
-import { data } from 'browserslist';
-
 export default {
   name: "createCompany",
   data: () => ({ formData: new FormData() }, {docsData: new FormData()}),
@@ -159,5 +158,11 @@ export default {
     }
   }
 }
+</script>
+
+<script setup>
+import { useDark } from "@vueuse/core";
+
+const isDark = useDark();
 </script>
   
