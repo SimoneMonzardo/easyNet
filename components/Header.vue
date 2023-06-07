@@ -1,5 +1,8 @@
 <template>
-  <header class="bg-violet-600 max-w-screen dark:bg-violet-800 h-16 shadow-lg shadow-[rgba(0,0,0,0.3)] dark:shadow-violet-950 top-0 w-screen" style="position: absolute; z-index: 20;">
+  <header
+    class="bg-violet-600 max-w-screen dark:bg-violet-800 h-16 shadow-lg shadow-[rgba(0,0,0,0.3)] dark:shadow-violet-950 top-0 w-screen"
+    style="position: absolute; z-index: 20"
+  >
     <nav class="mx-4 py-3">
       <div class="flex flex-wrap justify-between items-center">
         <div class="flex justify-start items-center">
@@ -51,7 +54,10 @@
               data-dropdown-toggle="userDropdown"
             >
               <span class="sr-only">Apri menù utente</span>
-              <UserCircleIcon v-if="profilePicture === '' || profilePicture === 'null'" class="h-8 w-8 my-auto text-gray-100 dark:text-gray-800" />
+              <UserCircleIcon
+                v-if="profilePicture === '' || profilePicture === 'null'"
+                class="h-8 w-8 my-auto text-gray-100 dark:text-gray-800"
+              />
               <img
                 v-else
                 class="w-8 h-8 my-auto rounded-full overflow-x-hidden"
@@ -78,16 +84,16 @@
                 class="py-1 font-light text-gray-500 dark:text-gray-400"
                 aria-labelledby="user-menu-button"
               >
-                <li>
+                <!-- <li>
                   <a
-                    href="/saved"
+                    :href="savedPostsLink"
                     class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
                     >Post salvati</a
                   >
-                </li>
+                </li> -->
                 <li>
                   <a
-                    href="/settings"
+                    :href="profileUrl"
                     class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
                     >Profilo</a
                   >
@@ -113,8 +119,8 @@
           </div>
         </div>
       </div>
-      <button data-modal-target="forget-modal" hidden> </button>
-      <button data-modal-target="success-modal" hidden> </button>
+      <button data-modal-target="forget-modal" hidden></button>
+      <button data-modal-target="success-modal" hidden></button>
     </nav>
   </header>
 </template>
@@ -122,8 +128,7 @@
 <script>
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
 import { UserCircleIcon } from "@heroicons/vue/24/outline";
-import useStorage from '~/composables/useStorage';
-
+import useStorage from "~/composables/useStorage";
 export default {
   props: {
     loggedIn: Boolean,
@@ -138,7 +143,7 @@ export default {
   },
   components: {
     UserCircleIcon,
-    MagnifyingGlassIcon
+    MagnifyingGlassIcon,
   },
   methods: {
     logOut() {
@@ -148,6 +153,13 @@ export default {
 
       this.$router.go("/");
     },
+  },
+  data() {
+    const user = localStorage.getItem("username");
+    return {
+      savedPostsLink: `/${user}/saved`,
+      profileUrl: `/${user}`,
+    };
   },
   mounted: function () { 
     const filterDrawerToggle = document.getElementById('filters-toggle');

@@ -7,11 +7,15 @@
   >
     <div class="relative w-full max-w-3xl max-h-full">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
+      <div
+        class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row"
+      >
         <div
           class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex"
         >
-          <h4 class="text-2xl font-semibold mx-auto text-violet-600">Benvenuto</h4>
+          <h4 class="text-2xl font-semibold mx-auto text-violet-600">
+            Benvenuto
+          </h4>
           <h6 class="mx-auto text-4xl font-semibold text-violet-600">MuzNet</h6>
           <img v-if="isDark" src="~/public/muznet-white.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
           <img v-else-if="!isDark" src="~/public/muznet-black.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
@@ -101,7 +105,7 @@
 
                 <div class="relative">
                   <input
-                  autocomplete="off"
+                    autocomplete="off"
                     type="date"
                     id="birthDate"
                     name="dateOfBirth"
@@ -137,7 +141,7 @@
 
                 <div class="relative">
                   <input
-                  autocomplete="off"
+                    autocomplete="off"
                     type="email"
                     id="email"
                     name="email"
@@ -155,7 +159,7 @@
 
                 <div class="relative">
                   <input
-                  autocomplete="off"
+                    autocomplete="off"
                     type="password"
                     id="passwordRegister"
                     name="password"
@@ -174,7 +178,7 @@
 
                 <div class="relative">
                   <input
-                  autocomplete="off"
+                    autocomplete="off"
                     type="password"
                     id="confirmPassword"
                     v-on:keyup="check()"
@@ -192,7 +196,7 @@
 
                 <div class="relative">
                   <input
-                  autocomplete="off"
+                    autocomplete="off"
                     type="text"
                     id="usernameRegister"
                     name="username"
@@ -229,68 +233,75 @@ export default {
   name: "RegisterPopup",
   methods: {
     async api(data) {
-      await useFetch("https://progettoeasynet.azurewebsites.net/Auth/Register", {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-        method: "POST",
-        body: JSON.stringify(data),
-        onRequest({ request, options }) {
-          // Set the request headers
-        },
-        onRequestError({ request, options, error }) {
-          // Handle the request errors
-        },
-        onResponse({ request, response, options }) {
-          console.log(response._data);
-          if (response._data.result == "User created successfully") {
-            const options = {};
-            console.log("success");
+      await useFetch(
+        "https://progettoeasynet.azurewebsites.net/Auth/Register",
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+          method: "POST",
+          body: JSON.stringify(data),
+          onRequest({ request, options }) {
+            // Set the request headers
+          },
+          onRequestError({ request, options, error }) {
+            // Handle the request errors
+          },
+          onResponse({ request, response, options }) {
+            console.log(response._data);
+            if (response._data.result == "User created successfully") {
+              const options = {};
+              console.log("success");
 
-            const registerElement = document.getElementById("register-modal");
-            const registerModal = new Modal(registerElement, options);
-            registerModal.hide();
-            try {
-              const successElement = document.getElementById("success-modal");
-              const successModal = new Modal(successElement, options);
-              successModal.show();
-            } catch (error) {
-              consol.log(error);
+              const registerElement = document.getElementById("register-modal");
+              const registerModal = new Modal(registerElement, options);
+              registerModal.hide();
+              try {
+                const successElement = document.getElementById("success-modal");
+                const successModal = new Modal(successElement, options);
+                successModal.show();
+              } catch (error) {
+                consol.log(error);
+              }
             }
-          }
-          if (response._data == "Mail already used") {
-            console.log(document.getElementById("emailText").innerHTML);
-            try {
-              document.getElementById("emailText").innerHTML = "Email già in uso";
-              document.getElementById("email").style.borderColor = "red";
-              document.getElementById("emailText").style.color = "red";
-            } catch (error) {
-              console.log(error);
+            if (response._data == "Mail already used") {
+              console.log(document.getElementById("emailText").innerHTML);
+              try {
+                document.getElementById("emailText").innerHTML =
+                  "Email già in uso";
+                document.getElementById("email").style.borderColor = "red";
+                document.getElementById("emailText").style.color = "red";
+              } catch (error) {
+                console.log(error);
+              }
+            } else if (response._data != "Mail already used") {
+              document.getElementById("emailText").innerHTML = "Email";
+              document.getElementById("email").style.borderColor =
+                "rgba(80,80,80,0.3)";
+              document.getElementById("emailText").style.color = "gray";
             }
-          } else if (response._data != "Mail already used") {
-            document.getElementById("emailText").innerHTML = "Email";
-            document.getElementById("email").style.borderColor = "rgba(80,80,80,0.3)";
-            document.getElementById("emailText").style.color = "gray";
-          }
-          if (response._data == "Username already used") {
-            try {
-              document.getElementById("usernameText").innerHTML = "Username già in uso";
-              document.getElementById("usernameRegister").style.borderColor = "red";
-              document.getElementById("usernameText").style.color = "red";
-            } catch (error) {
-              console.log(error);
+            if (response._data == "Username already used") {
+              try {
+                document.getElementById("usernameText").innerHTML =
+                  "Username già in uso";
+                document.getElementById("usernameRegister").style.borderColor =
+                  "red";
+                document.getElementById("usernameText").style.color = "red";
+              } catch (error) {
+                console.log(error);
+              }
+            } else if (response._data != "Username already used") {
+              document.getElementById("usernameText").innerHTML = "Username";
+              document.getElementById("usernameRegister").style.borderColor =
+                "rgba(80,80,80,0.3)";
+              document.getElementById("usernameText").style.color = "gray";
             }
-          } else if (response._data != "Username already used") {
-            document.getElementById("usernameText").innerHTML = "Username";
-            document.getElementById("usernameRegister").style.borderColor =
-              "rgba(80,80,80,0.3)";
-            document.getElementById("usernameText").style.color = "gray";
-          }
-        },
-        onResponseError({ request, response, options }) {
-          // Handle the response errors
-        },
-      });
+          },
+          onResponseError({ request, response, options }) {
+            // Handle the response errors
+          },
+        }
+      );
     },
     check() {
       var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
@@ -305,37 +316,39 @@ export default {
         document.getElementById("passwordRegister").style.borderColor = "green";
         document.getElementById("passwordText").style.color = "green";
       }
-        if (!re.test(password)) {
-        document.getElementById("passwordText").innerHTML = "Password non valida";
+      if (!re.test(password)) {
+        document.getElementById("passwordText").innerHTML =
+          "Password non valida";
         document.getElementById("passwordRegister").style.borderColor = "red";
         document.getElementById("passwordText").style.color = "red";
-          if (password === "") {
-            console.log("entrato");
+        if (password === "") {
+          console.log("entrato");
 
-            document.getElementById("confirmText").innerHTML = "Conferma Password";
-            document.getElementById("confirmPassword").style.borderColor =
-              "rgba(80,80,80,0.3)";
-            document.getElementById("confirmText").style.color = "gray";
+          document.getElementById("confirmText").innerHTML =
+            "Conferma Password";
+          document.getElementById("confirmPassword").style.borderColor =
+            "rgba(80,80,80,0.3)";
+          document.getElementById("confirmText").style.color = "gray";
 
-            document.getElementById("passwordText").innerHTML = "Password";
-            document.getElementById("passwordRegister").style.borderColor =
-              "rgba(80,80,80,0.3)";
-            document.getElementById("passwordText").style.color = "gray";
-          }
+          document.getElementById("passwordText").innerHTML = "Password";
+          document.getElementById("passwordRegister").style.borderColor =
+            "rgba(80,80,80,0.3)";
+          document.getElementById("passwordText").style.color = "gray";
+        }
         document.getElementById("confirmText").innerHTML = "Conferma Password";
         document.getElementById("confirmPassword").style.borderColor =
           "rgba(80,80,80,0.3)";
         document.getElementById("confirmText").style.color = "gray";
-        }
-        else{
+      } else {
         document.getElementById("passwordText").innerHTML = "Password valida";
         document.getElementById("passwordRegister").style.borderColor = "green";
         document.getElementById("passwordText").style.color = "green";
         if (password != confirmPassword) {
-        document.getElementById("confirmText").innerHTML = "Non coincidono";
-        document.getElementById("confirmPassword").style.borderColor = "red";
-        document.getElementById("confirmText").style.color = "red";}
+          document.getElementById("confirmText").innerHTML = "Non coincidono";
+          document.getElementById("confirmPassword").style.borderColor = "red";
+          document.getElementById("confirmText").style.color = "red";
         }
+      }
     },
     async handleRegister() {
       //const { register } = useAuth();

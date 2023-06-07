@@ -8,7 +8,9 @@
   >
     <div class="relative w-full max-w-2xl max-h-full">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
+      <div
+        class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row"
+      >
         <div
           class="bg-gray-300 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex"
         >
@@ -45,9 +47,14 @@
             </h3>
             <div class="p-4 pb-8 h-full flex flex-col justify-between">
               <p>
-                Controlla la tua mail e clicca sul link che hai ricevuto per completare la registrazione.
+                Controlla la tua mail e clicca sul link che hai ricevuto per
+                completare la registrazione.
               </p>
-              <button data-modal-hide="success-modal" type="button" class="text-white bg-violet-600 hover:bg-violet-700 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-violet-700 dark:hover:bg-violet-700 dark:focus:ring-violet-800">
+              <button
+                data-modal-hide="success-modal"
+                type="button"
+                class="text-white bg-violet-600 hover:bg-violet-700 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-violet-700 dark:hover:bg-violet-700 dark:focus:ring-violet-800"
+              >
                 Chiudi
               </button>
             </div>
@@ -60,8 +67,8 @@
 
 <script>
 export default {
-  name: "SuccessPopup"
-  }
+  name: "SuccessPopup",
+};
 </script>
 
 <script setup>
