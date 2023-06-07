@@ -14,12 +14,14 @@
     <div id="signInActions" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl shadow w-28 dark:bg-gray-700">
       <ul class="py-2 text-sm text-gray-900 dark:text-gray-50" aria-labelledby="authDropdown">
         <li class="hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-          <button type="button" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" class="block px-4 py-2">
+          <button type="button" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
+            class="block px-4 py-2">
             Log in
           </button>
         </li>
         <li class="hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-          <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal" class="block px-4 py-2">
+          <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal"
+            class="block px-4 py-2">
             Registrati
           </button>
         </li>

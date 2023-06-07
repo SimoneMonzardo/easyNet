@@ -1,18 +1,11 @@
 <template>
-  <div
-    id="register-modal"
-    tabindex="-1"
-    aria-hidden="true"
-    class="pulseAnim bg-gray-900 bg-opacity-50 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full"
-  >
+  <div id="register-modal" tabindex="-1" aria-hidden="true"
+    class="pulseAnim bg-gray-900 bg-opacity-50 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full">
     <div class="relative w-full max-w-3xl max-h-full">
       <!-- Modal content -->
-      <div
-        class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row"
-      >
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
         <div
-          class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex"
-        >
+          class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex">
           <h4 class="text-2xl font-semibold mx-auto text-violet-600">
             Benvenuto
           </h4>
@@ -21,23 +14,14 @@
           <img v-else-if="!isDark" src="~/public/muznet-black.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
         </div>
         <div class="w-full">
-          <button
-            type="button"
+          <button type="button"
             class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
-            data-modal-hide="register-modal"
-          >
-            <svg
-              aria-hidden="true"
-              class="w-5 h-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
+            data-modal-hide="register-modal">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                clip-rule="evenodd"
-              ></path>
+                clip-rule="evenodd"></path>
             </svg>
             <span class="sr-only">Chiudi</span>
           </button>
@@ -45,178 +29,79 @@
             <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
               Registrati a MuzNet
             </h3>
-            <form
-              class="space-y-6"
-              action="#"
-              method="post"
-              enctype="multipart/form-data"
-            >
+            <form class="space-y-6" action="#" method="post" enctype="multipart/form-data">
               <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
                 <div class="relative">
-                  <input
-                    autocomplete="off"
-                    type="text"
-                    id="name"
-                    name="name"
+                  <input autocomplete="off" type="text" id="name" name="name"
                     class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
-                    placeholder=" "
-                    required
-                  />
-                  <label
-                    for="name"
-                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-                    >Nome</label
-                  >
+                    placeholder=" " required />
+                  <label for="name"
+                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Nome</label>
                 </div>
-
                 <div class="relative">
-                  <input
-                    autocomplete="off"
-                    type="text"
-                    id="surname"
-                    name="surname"
+                  <input autocomplete="off" type="text" id="surname" name="surname"
                     class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
-                    placeholder=" "
-                    required
-                  />
-                  <label
-                    for="surname"
-                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-                    >Cognome</label
-                  >
+                    placeholder=" " required />
+                  <label for="surname"
+                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Cognome</label>
                 </div>
-
                 <div class="relative">
-                  <input
-                    autocomplete="off"
-                    type="tel"
-                    id="phoneNumber"
-                    name="phoneNumber"
+                  <input autocomplete="off" type="tel" id="phoneNumber" name="phoneNumber"
                     class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
-                    placeholder=" "
-                    required
-                  />
-                  <label
-                    for="phoneNumber"
-                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-                    >Numero di telefono</label
-                  >
+                    placeholder=" " required />
+                  <label for="phoneNumber"
+                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Numero
+                    di telefono</label>
                 </div>
-
                 <div class="relative">
-                  <input
-                    autocomplete="off"
-                    type="date"
-                    id="birthDate"
-                    name="dateOfBirth"
+                  <input autocomplete="off" type="date" id="birthDate" name="dateOfBirth"
                     class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
-                    placeholder=" "
-                    required
-                  />
-                  <label
-                    for="birthDate"
-                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-                    >Data di nascita</label
-                  >
+                    placeholder=" " required />
+                  <label for="birthDate"
+                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Data
+                    di nascita</label>
                 </div>
-
                 <div>
-                  <select
-                    id="gender"
-                    required
-                    name="gender"
-                    class="px-2.5 pb-2.5 pt-4 bg-white border border-violet-300 text-gray-900 text-sm rounded-lg focus:ring-violet-600 focus:border-violet-600 block w-full p-2.5 dark:bg-gray-700 dark:border-violet-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600"
-                  >
-                    <option
-                      selected
-                      disabled
-                      class="disabled:text-gray-500 dark:disabled:text-gray-400"
-                    >
+                  <select id="gender" required name="gender"
+                    class="px-2.5 pb-2.5 pt-4 bg-white border border-violet-300 text-gray-900 text-sm rounded-lg focus:ring-violet-600 focus:border-violet-600 block w-full p-2.5 dark:bg-gray-700 dark:border-violet-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-600 dark:focus:border-violet-600">
+                    <option selected disabled class="disabled:text-gray-500 dark:disabled:text-gray-400">
                       Inserisci il genere
                     </option>
                     <option value="male">Maschio</option>
                     <option value="female">Femmina</option>
                   </select>
                 </div>
-
                 <div class="relative">
-                  <input
-                    autocomplete="off"
-                    type="email"
-                    id="email"
-                    name="email"
+                  <input autocomplete="off" type="email" id="email" name="email"
                     class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
-                    placeholder=" "
-                    required
-                  />
-                  <label
-                    for="email"
-                    id="emailText"
-                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-                    >Email</label
-                  >
+                    placeholder=" " required />
+                  <label for="email" id="emailText"
+                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Email</label>
                 </div>
-
                 <div class="relative">
-                  <input
-                    autocomplete="off"
-                    type="password"
-                    id="passwordRegister"
-                    name="password"
-                    v-on:keyup="check()"
+                  <input autocomplete="off" type="password" id="passwordRegister" name="password" v-on:keyup="check()"
                     class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
-                    placeholder=" "
-                    required
-                  />
-                  <label
-                    for="passwordRegister"
-                    id="passwordText"
-                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-                    >Password</label
-                  >
+                    placeholder=" " required />
+                  <label for="passwordRegister" id="passwordText"
+                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Password</label>
                 </div>
-
                 <div class="relative">
-                  <input
-                    autocomplete="off"
-                    type="password"
-                    id="confirmPassword"
-                    v-on:keyup="check()"
+                  <input autocomplete="off" type="password" id="confirmPassword" v-on:keyup="check()"
                     class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
-                    placeholder=" "
-                    required
-                  />
-                  <label
-                    for="confirmPassword"
-                    id="confirmText"
-                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-                    >Conferma Password</label
-                  >
+                    placeholder=" " required />
+                  <label for="confirmPassword" id="confirmText"
+                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Conferma
+                    Password</label>
                 </div>
-
                 <div class="relative">
-                  <input
-                    autocomplete="off"
-                    type="text"
-                    id="usernameRegister"
-                    name="username"
+                  <input autocomplete="off" type="text" id="usernameRegister" name="username"
                     class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
-                    placeholder=" "
-                    required
-                  />
-                  <label
-                    for="usernameRegister"
-                    id="usernameText"
-                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-                    >Username</label
-                  >
+                    placeholder=" " required />
+                  <label for="usernameRegister" id="usernameText"
+                    class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Username</label>
                 </div>
-
-                <button
-                  type="submit"
-                  @click="handleRegister()"
-                  class="w-full text-white bg-violet-600 hover:bg-violet-700 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-violet-700 dark:hover:bg-violet-700 dark:focus:ring-violet-800"
-                >
+                <button type="submit" @click="handleRegister()"
+                  class="w-full text-white bg-violet-600 hover:bg-violet-700 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-violet-700 dark:hover:bg-violet-700 dark:focus:ring-violet-800">
                   Crea Account
                 </button>
               </div>
@@ -241,39 +126,22 @@ export default {
           },
           method: "POST",
           body: JSON.stringify(data),
-          onRequest({ request, options }) {
-            // Set the request headers
-          },
-          onRequestError({ request, options, error }) {
-            // Handle the request errors
-          },
-          onResponse({ request, response, options }) {
-            console.log(response._data);
+          onResponse({ response }) {
             if (response._data.result == "User created successfully") {
               const options = {};
-              console.log("success");
-
               const registerElement = document.getElementById("register-modal");
               const registerModal = new Modal(registerElement, options);
               registerModal.hide();
-              try {
-                const successElement = document.getElementById("success-modal");
-                const successModal = new Modal(successElement, options);
-                successModal.show();
-              } catch (error) {
-                consol.log(error);
-              }
+
+              const successElement = document.getElementById("success-modal");
+              const successModal = new Modal(successElement, options);
+              successModal.show();
             }
             if (response._data == "Mail already used") {
-              console.log(document.getElementById("emailText").innerHTML);
-              try {
-                document.getElementById("emailText").innerHTML =
-                  "Email già in uso";
-                document.getElementById("email").style.borderColor = "red";
-                document.getElementById("emailText").style.color = "red";
-              } catch (error) {
-                console.log(error);
-              }
+              document.getElementById("emailText").innerHTML =
+                "Email già in uso";
+              document.getElementById("email").style.borderColor = "red";
+              document.getElementById("emailText").style.color = "red";
             } else if (response._data != "Mail already used") {
               document.getElementById("emailText").innerHTML = "Email";
               document.getElementById("email").style.borderColor =
@@ -281,24 +149,17 @@ export default {
               document.getElementById("emailText").style.color = "gray";
             }
             if (response._data == "Username already used") {
-              try {
-                document.getElementById("usernameText").innerHTML =
-                  "Username già in uso";
-                document.getElementById("usernameRegister").style.borderColor =
-                  "red";
-                document.getElementById("usernameText").style.color = "red";
-              } catch (error) {
-                console.log(error);
-              }
+              document.getElementById("usernameText").innerHTML =
+                "Username già in uso";
+              document.getElementById("usernameRegister").style.borderColor =
+                "red";
+              document.getElementById("usernameText").style.color = "red";
             } else if (response._data != "Username already used") {
               document.getElementById("usernameText").innerHTML = "Username";
               document.getElementById("usernameRegister").style.borderColor =
                 "rgba(80,80,80,0.3)";
               document.getElementById("usernameText").style.color = "gray";
             }
-          },
-          onResponseError({ request, response, options }) {
-            // Handle the response errors
           },
         }
       );
@@ -322,8 +183,6 @@ export default {
         document.getElementById("passwordRegister").style.borderColor = "red";
         document.getElementById("passwordText").style.color = "red";
         if (password === "") {
-          console.log("entrato");
-
           document.getElementById("confirmText").innerHTML =
             "Conferma Password";
           document.getElementById("confirmPassword").style.borderColor =
@@ -351,7 +210,6 @@ export default {
       }
     },
     async handleRegister() {
-      //const { register } = useAuth();
       const passwordInput = document.getElementById("passwordRegister");
       const confirmPasswordInput = document.getElementById("confirmPassword");
       var data = {
@@ -381,7 +239,10 @@ const isDark = useDark();
 </script>
 
 <style>
-.pulseAnim{animation: pulse 0.1s cubic-bezier(0.4, 0, 0.6, 1);}
+.pulseAnim {
+  animation: pulse 0.1s cubic-bezier(0.4, 0, 0.6, 1);
+}
+
 @keyframes pulse {
   0% {
     opacity: 0;

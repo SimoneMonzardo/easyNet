@@ -1,7 +1,6 @@
 <template>
   <div id="company-modal" tabindex="-1" aria-hidden="true"
     class="bg-gray-900 bg-opacity-50 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full">
-
     <div class="relative w-full max-w-3xl max-h-full py-12">
       <!-- Modal content -->
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
@@ -38,7 +37,6 @@
                   </label>
                 </div>
               </div>
-
               <div class="relative">
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Immagine
                   profilo azienda</label>
@@ -46,12 +44,10 @@
                   class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                   aria-describedby="user_avatar_help" id="input_document1" type="file" name="img" accept="application/pdf"
                   required>
-
                 <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">È necessario inserire un
                   documento
                 </div>
               </div>
-
               <div class="relative">
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Visura
                   camerale (Pdf)</label>
@@ -63,20 +59,15 @@
                   confermare la tua identità come rappresentante dell'azienda
                 </div>
               </div>
-
-
               <fieldset>
                 <legend class="sr-only">Checkbox variants</legend>
-
                 <div class="flex items-center mb-4">
                   <input id="checkbox-1" type="checkbox" value="" required
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                   <label for="checkbox-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Dichiaro di
                     accettare i Termini & Condizioni</label>
                 </div>
-
               </fieldset>
-
               <div class="flex flex-row-reverse">
                 <button type="submit" v-on:click="handleCreation()"
                   class="p-1.5 text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-xl text-sm px-5 py-2.5s p text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -94,25 +85,21 @@
 <script>
 export default {
   name: "createCompany",
-  data: () => ({ formData: new FormData() }, {docsData: new FormData()}),
+  data: () => ({ formData: new FormData() }, { docsData: new FormData() }),
   methods: {
     async api() {
-      console.log(this.formData)
       await useFetch(`https://progettoeasynet.azurewebsites.net/Azienda/RequestToAddCompany`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           'Authorization': ""
         },
-
         method: "POST",
         body: this.formData,
-        onRequest({ request, options }) {
+        onRequest({ options }) {
           options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
         },
-        onResponse({ request, response, options }) {
-          console.log(response);
+        onResponse({ response }) {
           if (response.ok) {
-            console.log("ok");
             const optionsModal = {};
             const createCompanyElement = document.getElementById('company-modal');
             const createCompanyModal = new Modal(createCompanyElement, optionsModal);
@@ -122,7 +109,6 @@ export default {
       });
     },
     async postDocuments() {
-      console.log("padovani morto di colera (documento)")
       const { data } = await useFetch('https://progettoeasynet.azurewebsites.net/Azienda/postDocuments', {
         method: 'POST',
         headers: {
@@ -130,7 +116,7 @@ export default {
           'Authorization': ''
         },
         body: this.docsData,
-        onRequest({ request, options }) {
+        onRequest({ options }) {
           options.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
         }
       });
@@ -151,9 +137,8 @@ export default {
         documents: []
       }
       this.formData = ('data', JSON.stringify(companyData));
-      console.log(JSON.stringify(companyData));
+
       await this.api();
-      
       await this.postDocuments();
     }
   }
