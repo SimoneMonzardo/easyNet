@@ -69,7 +69,7 @@
                 :class="
                   data.selectedPost.content.content.content === ''
                     ? 'max-h-[calc(50%-2rem)]'
-                    : 'max-h-[50%]'
+                    : 'max-h-[20rem]'
                 "
                 alt="post image"
               />

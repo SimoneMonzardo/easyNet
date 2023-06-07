@@ -65,11 +65,11 @@
               <img
                 v-if="data.selectedPost.content.data.image !== ''"
                 :src="data.selectedPost.content.data.image"
-                class="h-auto max-h-[calc(100%-2rem)] rounded-lg mx-auto"
+                class="h-auto rounded-lg mx-auto"
                 :class="
                   data.selectedPost.content.content.content === ''
                     ? 'max-h-[calc(50%-2rem)]'
-                    : 'max-h-[50%]'
+                    : 'max-h-[20rem]'
                 "
               />
             </div>
