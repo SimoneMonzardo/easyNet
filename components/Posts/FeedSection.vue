@@ -39,8 +39,11 @@
           <textarea v-model="additionalData.userComment" id="addAComment" rows="1"
             class="block py-1 px-1.5 w-[calc(100%-4rem)] text-sm text-gray-900 bg-white rounded-lg border border-violet-300 focus:ring-violet-600 focus:border-violet-600 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-50 dark:focus:ring-violet-600 dark:focus:border-violet-600"
             placeholder="Commenta..." style="resize: none"></textarea>
-          <button @click="postComment()" type="button"
-            class="inline-flex justify-center p-2 rounded-full cursor-pointer text-violet-600 mx-auto z-40">
+          <button 
+            :disabled="additionalData.userComment === null || additionalData.userComment.trim().length === 0"
+            @click="postComment()" 
+            type="button"
+            class="inline-flex justify-center p-2 rounded-full cursor-pointer text-violet-600 mx-auto z-40 :disabled disabled:text-violet-300">
             <PaperAirplaneIcon class="airplane w-6 h-6" />
             <span class="sr-only">Invia</span>
           </button>
@@ -86,6 +89,10 @@ const elapsed = computed(() => {
 });
 
 async function postComment() {
+  if (additionalData.userComment === null || additionalData.userComment.trim().length === 0) {
+    return;
+  }
+
   const comment = {
     postId: props.post.postId,
     commentId: 0,
