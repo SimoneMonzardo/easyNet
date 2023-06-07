@@ -14,11 +14,8 @@
         >
           <h4 class="text-2xl font-semibold mx-auto text-violet-500">Bentornato</h4>
           <h6 class="mx-auto text-4xl font-semibold text-violet-500">MuzNet</h6>
-          <img
-            src="~/public/logo.png"
-            class="mt-3 h-15 rounded-full"
-            alt="MuzNet Logo"
-          />
+          <img v-if="isDark" src="~/public/muznet-white.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
+          <img v-else-if="!isDark" src="~/public/muznet-black.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
         </div>
         <div class="w-full">
           <button
@@ -53,7 +50,7 @@
                   type="text"
                   id="username"
                   name="userName"
-                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
                   placeholder=" "
                   required
                 />
@@ -70,7 +67,7 @@
                   type="password"
                   id="password"
                   name="password"
-                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
                   placeholder=" "
                   required
                 />
@@ -88,7 +85,7 @@
                       id="remember"
                       type="checkbox"
                       value=""
-                      class="w-4 h-4 text-violet-600 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-violet-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-violet-700 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                      class="w-4 h-4 text-violet-600 border border-violet-300 rounded bg-gray-50 focus:ring-3 focus:ring-violet-300 dark:bg-gray-600 dark:border-violet-500 dark:focus:ring-violet-700 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
                     />
                   </div>
                   <label
@@ -231,8 +228,13 @@ export default {
 };
 </script>
 
-<style>
+<script setup>
+import { useDark } from "@vueuse/core";
 
+const isDark = useDark();
+</script>
+
+<style>
 .pulseAnim{animation: pulse 0.1s cubic-bezier(0.4, 0, 0.6, 1);}
 @keyframes pulse {
   0% {

@@ -1,11 +1,19 @@
 export default() => {
   const parsePost = (postContent) => {
     const components = postContent.split('---\n');
-   
+    if (components.length != 3) {
+      return {
+        content: postContent,
+        data: {
+          image: ''
+        }
+      }
+    }
+
     // Message should be in the format ---\nimaage: 'URL'\n---\nHTML_CONTENT
     const parsedObj = {
       content: components[2],
-       data: { }
+      data: { }
     };
     
     for (const row of components[1].split('\n')) {
@@ -13,16 +21,16 @@ export default() => {
         var key = '';
         var stringIndex = 0;
             
-        while (row[stringIndex] != ':') {
+        while (stringIndex < row.length && row[stringIndex] != ':') {
           key += row[stringIndex++];
         }
             
-        while (row[stringIndex] != '\'' && row[stringIndex] != '"'){
+        while (stringIndex < row.length && row[stringIndex] != '\'' && row[stringIndex] != '"'){
           stringIndex++;
         }
 
         var closingTagIndex = row.length - 1;
-        while (row[closingTagIndex] != '\'' && row[closingTagIndex] != '"') {
+        while (stringIndex < row.length && row[closingTagIndex] != '\'' && row[closingTagIndex] != '"') {
           closingTagIndex--;
         }
 

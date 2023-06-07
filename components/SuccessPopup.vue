@@ -16,11 +16,8 @@
         >
           <h4 class="text-2xl font-semibold mx-auto"></h4>
           <h6 class="mx-auto text-4xl font-semibold">MuzNet</h6>
-          <img
-            src="~/public/logo.png"
-            class="mt-3 h-15 rounded-full"
-            alt="MuzNet Logo"
-          />
+          <img v-if="isDark" src="~/public/muznet-white.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
+          <img v-else-if="!isDark" src="~/public/muznet-black.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
         </div>
         <div class="w-full">
           <button
@@ -69,10 +66,13 @@
 </template>
 
 <script>
-import { Modal } from "flowbite";
-import useAuth from "~/composables/useAuth";
-
 export default {
   name: "SuccessPopup",
 };
+</script>
+
+<script setup>
+import { useDark } from "@vueuse/core";
+
+const isDark = useDark();
 </script>

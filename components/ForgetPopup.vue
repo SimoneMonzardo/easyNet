@@ -6,7 +6,8 @@
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
         <div class="bg-gray-200 dark:bg-gray-800 flex-col content-center rounded-l-lg w-64 p-5 text-gray-900 justify-evenly hidden sm:flex">
           <h6 class="mx-auto text-4xl font-semibold text-violet-600">MuzNet</h6>
-          <img src="~/public/logo.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
+          <img v-if="isDark" src="~/public/muznet-white.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
+          <img v-else-if="!isDark" src="~/public/muznet-black.png" class="mt-3 h-15 rounded-full" alt="MuzNet Logo" />
         </div>
         <div class="w-full">
           <button
@@ -20,13 +21,13 @@
           </button>
           <div class="px-6 py-6 lg:px-8">
             <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Recupero password</h3>
-            <p id="conferma-mail" class="text-gray-900 dark:text-white" style="visibility: hidden;">La mail è stata inviata correttamente</p>
+            <p id="conferma-mail" class="text-gray-900 dark:text-white" style="visibility: hidden;"></p>
             <div class="relative my-10">
               <input
                 type="email"
                 id="forget-email"
                 name="email"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
+                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-violet-300 appearance-none dark:text-white dark:border-violet-500 dark:focus:border-violet-600 focus:outline-none focus:ring-0 focus:border-violet-700 peer"
                 placeholder=" "
                 required />
               <label for="forget-email" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-violet-700 peer-focus:dark:text-violet-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">
@@ -54,7 +55,6 @@ export default {
   name: "ForgetPopup",
   methods: {
     async sendForgetRequest(data, router) {
-      console.log("entrato");
       await useFetch(`https://progettoeasynet.azurewebsites.net/Auth/ForgotPassword?email=${data}`, {
         lazy: true,
         server: false,
@@ -66,11 +66,11 @@ export default {
           console.log(error.message);
         },
         onResponse({ response }) {
-          console.log(response);
           if (response.ok) {
-             console.log("Request ok");
              console.log(response.text);
              document.getElementById("conferma-mail").style="visibility:visible";
+             document.getElementById("conferma-mail").innerHTML = "Email inviata con successo"
+              document.getElementById("conferma-mail").style.color = "green"
           //   sessionStorage.setItem("logged", true);
           //   sessionStorage.setItem("username", response._data.username);
           //   sessionStorage.setItem("email", response._data.email);
@@ -81,6 +81,11 @@ export default {
           //   // const loginElement = document.getElementById("authentication-modal");
           //   // const loginModal = new Modal(loginElement, options);
           //   // loginModal.hide();
+          }
+          else{
+            document.getElementById("conferma-mail").style="visibility:visible";
+            document.getElementById("conferma-mail").innerHTML = "Email non presente"
+            document.getElementById("conferma-mail").style.color = "red"
           }
           return response;
         },
@@ -113,4 +118,10 @@ export default {
     }
   }
 }
+</script>
+
+<script setup>
+import { useDark } from "@vueuse/core";
+
+const isDark = useDark();
 </script>
