@@ -43,7 +43,7 @@
             :disabled="additionalData.userComment === null || additionalData.userComment.trim().length === 0"
             @click="postComment()" 
             type="button"
-            class="inline-flex justify-center p-2 rounded-full cursor-pointer text-violet-600 mx-auto z-40 :disabled disabled:text-violet-300">
+            class="inline-flex justify-center p-2 rounded-full cursor-pointer text-violet-600 mx-auto z-40 disabled:text-violet-300">
             <PaperAirplaneIcon class="airplane w-6 h-6" />
             <span class="sr-only">Invia</span>
           </button>
