@@ -91,63 +91,51 @@ namespace easyNetAPI.Controllers
                 {
                     return BadRequest("Provide two documents");
                 }
-                if (!Path.GetExtension(document1.FileName).Equals(".pdf") || !Path.GetExtension(document2.FileName).Equals(".pdf"))
+
+                if (!Path.GetExtension(document1.FileName).Equals(".png") || !Path.GetExtension(document2.FileName).Equals(".pdf"))
                 {
-                    return BadRequest("Provide two pdf documents");
+                    return BadRequest("Provide one .png and one .pdf document");
                 }
+
                 var token = Request.Headers["Authorization"].ToString();
                 var userId = await AuthControllerUtility.GetUserIdFromTokenAsync(token);
                 var user = _db.Users.FirstOrDefault(u => u.Id == userId);
                 if (user is null)
                 {
-                    return BadRequest("User not found");
+                    return NotFound("User not found");
                 }
+
                 var managedUser = await _unitOfWork.UserBehavior.GetFirstOrDefault(userId);
                 if (managedUser is null)
                 {
-                    return BadRequest("User not found");
+                    return NotFound("User not found");
                 }
-                if (managedUser.Company.CompanyName.IsNullOrEmpty())
-                {
-                    return BadRequest("Company not found");
-                }
-                string wwwRootPath = _hostEnvironment.WebRootPath;
 
-                if (managedUser.Company.Documents.Count() != 0)
+				if (managedUser.Company?.CompanyName.IsNullOrEmpty() ?? false)
+                {
+                    return NotFound("Company not found");
+                }
+
+                managedUser.Company!.Documents ??= new List<string>();
+
+                if (managedUser.Company!.Documents?.Count() != 0)
                 {
                     await RemoveCompanyDocuments();
                 }
 
-                string fileName1 = Guid.NewGuid().ToString();
-                string fileName2 = Guid.NewGuid().ToString();
-                var uploads = Path.Combine(wwwRootPath, @"documents");
-                var extension = Path.GetExtension(document1.FileName);
-                var link1 = Path.Combine(uploads, fileName1 + extension);
-                var link2 = Path.Combine(uploads, fileName2 + extension);
-                string url1 = "https://progettoeasynet.azurewebsites.net/documents/" + fileName1 + extension;
-                string url2 = "https://progettoeasynet.azurewebsites.net/documents/" + fileName2 + extension;
-                using (var fileStreams = new FileStream(link1, FileMode.Create))
-                {
-                    document1.CopyTo(fileStreams);
-                }
-                using (var fileStreams = new FileStream(link2, FileMode.Create))
-                {
-                    document2.CopyTo(fileStreams);
-                }
-                managedUser.Company.Documents.Add(url1);
-                managedUser.Company.Documents.Add(url2);
-                var result = await _unitOfWork.UserBehavior.UpdateOneAsync(userId,managedUser);
-                if (result)
-                {
-                    return Ok(new
-                    {
-                        url1,
-                        url2
-                    });
-                }
-                return BadRequest("Something went wrong");
+                var wwwRootPath = _hostEnvironment.WebRootPath;
+
+                var imageUrl = SaveFile(wwwRootPath, "images", document1);
+                var docsUrl = SaveFile(wwwRootPath, "documents", document2);
+
+                managedUser.Company.ProfilePicture = imageUrl;
+                managedUser.Company!.Documents!.Add(docsUrl);
+
+                return await _unitOfWork.UserBehavior.UpdateOneAsync(userId, managedUser)
+                    ? Ok(new { imageUrl, docsUrl })
+                    : BadRequest("Something went wrong");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("Something went wrong");
             }
@@ -731,6 +719,21 @@ namespace easyNetAPI.Controllers
             {
                 return BadRequest("Something went wrong: " + ex.Message);
             }
+        }
+
+        private static string SaveFile(string root, string uploadFolder, IFormFile file)
+        {
+            var fileName = Guid.NewGuid().ToString();
+            var extension = Path.GetExtension(file.FileName);
+
+            var localFilePath = Path.Combine(root, uploadFolder, fileName + extension);
+
+            using (var destinationStream = new FileStream(localFilePath, FileMode.Create))
+            {
+                file.CopyTo(destinationStream);
+            }
+
+            return $"https://progettoeasynet.azurewebsites.net/{uploadFolder}/{fileName + extension}";
         }
     }
 }
