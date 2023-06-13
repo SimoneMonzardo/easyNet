@@ -39,6 +39,9 @@
     <!-- Change Image Modal -->
     <UploadImagePopup @setImage="updateImage" @delete="deleteImage" :showDelete="user.profilePicture !== ''" />
 
+    <!-- Create company modal -->
+    <CreateCompany />
+
     <!-- Declare items with modals' ids to avoid errors -->
     <div hidden id="authentication-modal"></div>
     <div hidden id="register-modal"></div>
@@ -53,7 +56,7 @@
       class="justify-center flex flex-col sm:flex-row gap-4 mx-10 md:mx-auto mt-12 sm:w-[calc(100vw-4rem)] md:w-[calc(100vw-10rem)] lg:w-[80vw] xl:w-[60vw]">
       <div class="w-40 h-auto lg:w-48 flex flex-col items-center gap-2 lg:pt-4 mx-auto">
         <!-- Loading -->
-        <div v-if="pending || user.profilePicture === null || user.profilePicture === ''"
+        <div v-if="pending || user.profilePicture === null || user.profilePicture === '' || user.profilePicture === 'null'"
           class="flex items-center justify-center w-32 h-32 lg:h-40 lg:w-40 bg-gray-300 rounded-full dark:bg-gray-700">
           <svg class="w-12 h-12 text-gray-200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor"
             viewBox="0 0 640 512">
@@ -150,11 +153,25 @@
             <button id="save-changes" @click="saveChanges()" :disabled="pending"
               class="w-24 lg:w-28 bg-violet-600 hover:bg-violet-700 text-white font-bold py-2 rounded-r-xl disabled:bg-violet-300 disabled:cursor-not-allowed">Salva</button>
           </div>
-          <button id="delete-account" :disabled="pending" @click="resetModal()" data-modal-target="confirm-delete-modal"
-            data-modal-toggle="confirm-delete-modal"
-            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-xl disabled:bg-red-300 disabled:cursor-not-allowed">
-            Elimina profilo
-          </button>
+          <div class="inline-flex">
+            <button 
+              id="create-company"
+              :disabled="pending || user.isCompany"
+              data-modal-target="company-modal"
+              data-modal-show="company-modal"
+              class="w-32 lg:w-36 bg-violet-600 hover:bg-violet-700 text-white font-bold py-2 rounded-l-xl disabled:bg-violet-300 disabled:cursor-not-allowed">
+              Crea azienda
+            </button>
+            <button 
+              id="delete-account"
+              :disabled="pending"
+              @click="resetModal()"
+              data-modal-target="confirm-delete-modal"
+              data-modal-show="confirm-delete-modal"
+              class="w-32 lg:w-36 bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-r-xl disabled:bg-red-300 disabled:cursor-not-allowed">
+              Elimina profilo
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -179,6 +196,7 @@ const user = reactive({
   phoneNumber: '',
   birthDate: '',
   profilePicture: '',
+  isCompany: false
 });
 
 useHead({
@@ -217,6 +235,8 @@ const { pending } = useFetch('https://progettoeasynet.azurewebsites.net/Auth/Get
       sessionStorage.setItem('backupBirthDate', response._data.dateOfBirth);
       sessionStorage.setItem('backupProfilePicture', response._data.profilePicture);
     }
+
+    user.isCompany = localStorage.getItem('isCompany') === "true";
   }
 });
 

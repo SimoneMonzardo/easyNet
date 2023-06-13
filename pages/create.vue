@@ -127,8 +127,13 @@ onMounted(() => {
   });
   window.addEventListener('resize', onResize);
   const token = sessionStorage.getItem('token');
-  if (token === null || token === '' || token === 'null') {
-    this.$router.push('/');
+  const isCompany = sessionStorage.getItem('isCompany');
+  if (token === null || 
+      token === '' || 
+      token === 'null' || 
+      isCompany === null || 
+      isCompany !== "true") {
+    router.push('/');
   }
 });
 

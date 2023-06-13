@@ -43,7 +43,7 @@
                 <span class="block text-sm font-light text-gray-500 truncate dark:text-gray-400">{{ email }}</span>
               </div>
               <ul class="py-1 font-light text-gray-500 dark:text-gray-400" aria-labelledby="user-menu-button">
-                <li>
+                <li v-if="isCompany">
                   <a href="/create"
                     class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Crea</a>
                 </li>
@@ -91,6 +91,7 @@ export default {
     email: String,
     userName: String,
     profilePicture: String,
+    isCompany: Boolean
   },
   computed: {
     imageUrl() {

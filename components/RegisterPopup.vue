@@ -137,29 +137,36 @@ export default {
               const successModal = new Modal(successElement, options);
               successModal.show();
             }
+
+            const emailTextElement = document.getElementById("emailText");
+            const emailElement = document.getElementById("email");
+            const usernameTextElement = document.getElementById("usernameText");
+            const usernameElement = document.getElementById("usernameRegister");
+            const passwordElement = document.getElementById("passwordRegister");
+            const confirmPasswordElement = document.getElementById("confirmPassword"); 
+
             if (response._data == "Mail already used") {
-              document.getElementById("emailText").innerHTML =
-                "Email già in uso";
-              document.getElementById("email").style.borderColor = "red";
-              document.getElementById("emailText").style.color = "red";
+              emailTextElement.innerHTML = "Email già in uso";
+              emailElement.style.borderColor = "red";
+              emailTextElement.style.color = "red";
             } else if (response._data != "Mail already used") {
-              document.getElementById("emailText").innerHTML = "Email";
-              document.getElementById("email").style.borderColor =
-                "rgba(80,80,80,0.3)";
-              document.getElementById("emailText").style.color = "gray";
+              emailTextElement.innerHTML = "Email";
+              emailElement.style.borderColor = "rgba(80,80,80,0.3)";
+              emailTextElement.style.color = "gray";
             }
+
             if (response._data == "Username already used") {
-              document.getElementById("usernameText").innerHTML =
-                "Username già in uso";
-              document.getElementById("usernameRegister").style.borderColor =
-                "red";
-              document.getElementById("usernameText").style.color = "red";
+              usernameTextElement.innerHTML = "Username già in uso";
+              usernameElement.style.borderColor = "red";
+              usernameTextElement.style.color = "red";
             } else if (response._data != "Username already used") {
-              document.getElementById("usernameText").innerHTML = "Username";
-              document.getElementById("usernameRegister").style.borderColor =
-                "rgba(80,80,80,0.3)";
-              document.getElementById("usernameText").style.color = "gray";
+              usernameTextElement.innerHTML = "Username";
+              usernameElement.style.borderColor = "rgba(80,80,80,0.3)";
+              usernameTextElement.style.color = "gray";
             }
+
+            passwordElement.value = "";
+            confirmPasswordElement.value = "";
           },
         }
       );
@@ -211,7 +218,6 @@ export default {
     },
     async handleRegister() {
       const passwordInput = document.getElementById("passwordRegister");
-      const confirmPasswordInput = document.getElementById("confirmPassword");
       var data = {
         username: document.getElementById("usernameRegister").value,
         name: document.getElementById("name").value,
@@ -222,9 +228,6 @@ export default {
         dateOfBirth: document.getElementById("birthDate").value,
         password: passwordInput.value,
       };
-
-      passwordInput.value = "";
-      confirmPasswordInput.value = "";
 
       await this.api(data);
     },
