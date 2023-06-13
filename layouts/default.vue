@@ -23,7 +23,6 @@ const data = reactive({
 });
 
 const token = getToken();
-console.log(token);
 if (token !== null && token != 'undefined' && token !== 'null') {
   await useFetch('https://progettoeasynet.azurewebsites.net/User/IsCompany', {
     lazy: true,
